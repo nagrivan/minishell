@@ -106,3 +106,87 @@ echo $PWD | cat
 (вывел содердимое переменной окружения /Users/nagrivan/Desktop/minishell)
 echo $PWD | cat -e
 (вывел /Users/nagrivan/Desktop/minishell$)
+echo pwd
+(вывел pwd)
+echo | pwd
+(вывел /Users/nagrivan/Desktop/minishell)
+echo ; pwd
+(вывел 
+
+/Users/nagrivan/Desktop/minishell)
+echo ; pwd ; cat -e
+(вывел 
+
+/Users/nagrivan/Desktop/minishell
+sjkjdjdj
+sjkjdjdj$)
+echo ; pwd | cat -e
+(вывел 
+
+/Users/nagrivan/Desktop/minishell$)
+echo |cat -e ; pwd | cat -e
+(вывел 
+$
+/Users/nagrivan/Desktop/minishell$)
+echo ; cat -e ; pwd | cat -e
+(вывел 
+
+dfnksnfk
+dfnksnfk$
+lsjfljsflj
+lsjfljsflj$
+/Users/nagrivan/Desktop/minishell$)
+
+(вывел )
+
+(вывел )
+
+(вывел )
+
+(вывел )
+
+(вывел )
+
+(вывел )
+
+(вывел )
+
+(вывел )
+
+(вывел )
+
+(вывел )
+
+(вывел )
+
+(вывел )
+
+(вывел )
+
+(вывел )
+
+(вывел )
+
+(вывел )
+
+(вывел )
+
+(вывел )
+
+(вывел )
+
+(вывел )
+
+(вывел )
+
+(вывел )
+
+(вывел )
+
+(вывел )
+
+(вывел )
+
+(вывел )
+
+(вывел )
