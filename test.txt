@@ -1,0 +1,96 @@
+Команды для тестирования оболочки
+
+echo
+(выводит пустую строку)
+echo Hello
+(выводит Hello)
+echo -n Hello
+(выводит Hello%)
+echo Hello -n
+(выводит Hello -n)
+echo \NNN Hello
+(выводит NNN Hello)
+echo Hello \NNN
+(выводит Hello NNN)
+echo \\NNN Hello
+(выводит \NNN Hello)
+echo Hello \\NNN
+(выводит Hello \NNN)
+echo Hello | cat -e
+(выводит Hello$)
+echo "|     Hello     |     " |cat -e
+(выводит |     Hello     |     $)
+echo |     Hello     |
+(ожидает ввода команды)
+echo '|     Hello     |'|cat -e
+(выводит |     Hello     |$)
+echo '|     Hello     |         '|cat -e
+(выводит |     Hello     |         $)
+echo '|     Hello     |'               |cat -e
+(выводит |     Hello     |$)
+echo '|     Hello     |'jflhsllfkhslhflhslhlfhl|cat -e
+(выводит |     Hello     |jflhsllfkhslhflhslhlfhl$)
+echo '|     Hello     |'      jflhsllfkhslhflhslhlfhl     |cat -e
+(выводит |     Hello     | jflhsllfkhslhflhslhlfhl$)
+echo Hello\n
+(выводит Hellon)
+echo|cd|cat -e
+(не отрабатывает ни одну команду)
+echo    |cd Desktop  |cat -e
+(не отрабатывает ни одну команду)
+echo    |cd Desktop
+(совершает переход на указанную папку и выводит (pwd now: ~/Desktop))
+cd Desktop|echo
+(выводит пустую строку и не переходит на указанную папку)
+cd Desktop|echo   sjjs;j;slj
+(не переходит на указанную папку и выводит 
+sjjs
+zsh: command not found: j
+zsh: command not found: slj)
+cd Desktop|echo   "sjjs;j;slj"
+(не переходит на указанную папку и выводит sjjs;j;slj)
+cd Desktop|echo   "sjjs;j;slj"      |cat -e
+(не переходит на указанную папку и выводит sjjs;j;slj$)
+cd Desktop|echo   'sjjs;j;slj'      |cat -e
+(не переходит на указанную папку и выводит sjjs;j;slj$)
+cd Desktop|echo   '       sjjs;j;slj       '      |cat -e
+(не переходит на указанную папку и выводит        sjjs;j;slj       $)
+echo Hello ; cd Desktop
+(переходит на указанную папку и выводит Hello)
+echo Hello ; cd minishell | cat -e
+(не переходит на указанную папку и выводит Hello)
+echo Hello ; cd Desktop ; cat -e
+(отрабатывает все функции по порядку)
+echo Hello ; cd Desktop ; cat -e
+(Hello
+cd: no such file or directory: Desktop
+Руддщ
+Р�M-^Cдд�M-^I$
+Hello
+Hello$)
+echo Hello > Hello.txt
+(записывает Hello в файл Hello.txt)
+echo < Hello.txt > Hello2.txt
+(создал пустой файл Hello2.txt)
+echo < Hello.txt
+(выводит пустую строку)
+echo 1234 >> Hello2.txt
+(записывает 1234 в файл Hello2.txt не затирая ранее записанное)
+echo $?
+(выводит возвращаемое значение предыдущей выполненной команды)
+echo 1234 >> Hello2.txt Ё
+(записывает 1234 Ё в файл Hello2.txt не затирая ранее записанное)
+echo 1234 >> Hello.txt | echo $?
+(вывел статус 0 и не записал в текстовый файл)
+echo 1234 >> Hello.txt ; echo $?
+(вывел статус 0 и записал в текстовый файл 1234)
+echo 1234 >> Hello.txt sjlkslknlskfnlksnfl; echo $?
+(вывел статус 0 и записал в текстовый файл 1234  sjlkslknlskfnlksnfl)
+echo 1234 >> Hello.txt          sjlkslknlskfnlksnfl     $      ; echo $?
+(вывел статус 0 и записал в текстовый файл 1234 sjlkslknlskfnlksnfl $)
+echo 1234 >> Hello.txt          sjlkslknlskfnlksnfl$      ; echo $?
+(вывел статус 0 и записал в текстовый файл 1234 sjlkslknlskfnlksnfl$)
+echo 1234 >> Hello.txt          sjlkslknlskfnlksnfl$      | echo $?
+(вывел статус 0 и не записал в текстовый файл)
+echo 1234 > Hello.txt          sjlkslknlskfnlksnfl$      | echo $?
+(вывел статус 0 и стёр всё нахрен из текстового файла)
