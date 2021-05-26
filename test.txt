@@ -94,3 +94,15 @@ echo 1234 >> Hello.txt          sjlkslknlskfnlksnfl$      | echo $?
 (вывел статус 0 и не записал в текстовый файл)
 echo 1234 > Hello.txt          sjlkslknlskfnlksnfl$      | echo $?
 (вывел статус 0 и стёр всё нахрен из текстового файла)
+echo $PWD
+(вывел содердимое переменной окружения /Users/nagrivan/Desktop/minishell)
+echo $pwd
+(выводит пустую строку)
+echo $pwd | cat
+(выводит пустую строку)
+echo $pwd | cat -e
+(выводит $)
+echo $PWD | cat
+(вывел содердимое переменной окружения /Users/nagrivan/Desktop/minishell)
+echo $PWD | cat -e
+(вывел /Users/nagrivan/Desktop/minishell$)
