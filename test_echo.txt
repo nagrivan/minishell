@@ -136,36 +136,53 @@ dfnksnfk$
 lsjfljsflj
 lsjfljsflj$
 /Users/nagrivan/Desktop/minishell$)
+pwd|echo
+(выводит пустую строку)
+pwd | echo
+(выводит пустую строку)
+pwd ; echo
+(вывел 
+/Users/nagrivan/Desktop/minishell
 
-(вывел )
+)
+pwd ; echo Hello |cat -e
+(вывел 
+/Users/nagrivan/Desktop/minishell
+Hello$)
+echo | export
+(вывел переменные окружения)
+echo ; export
+(вывел пустую строку и переменные окружения)
+echo ; export | cat -e
+(вывел пустую строку и переменные окружения со знаком переноса строки у переменных окружения)
+echo $ ; unset
+(вывел 
+$
+unset: not enough arguments)
+echo $ ; unset man
+(вывел $ и удалил переменную окружения man)
+echo $ ; unset $man
+(вывел 
+$
+unset: not enough arguments)
+echo $ | unset bla
+(удалил переменную окружения man)
+echo $ ; env
+(вывел $ и переменные окружения)
+echo $ ; env pwd
+(вывел 
+$
+/Users/nagrivan/Desktop/minishell)
+echo ; env pwd
+(вывел 
 
-(вывел )
-
-(вывел )
-
-(вывел )
-
-(вывел )
-
-(вывел )
-
-(вывел )
-
-(вывел )
-
-(вывел )
-
-(вывел )
-
-(вывел )
-
-(вывел )
-
-(вывел )
-
-(вывел )
-
-(вывел )
+/Users/nagrivan/Desktop/minishell)
+echo | env pwd
+(вывел /Users/nagrivan/Desktop/minishell)
+env pwd | echo
+(выводит пустую строку)
+env pwd | echo Hello
+(вывел Hello)
 
 (вывел )
 
