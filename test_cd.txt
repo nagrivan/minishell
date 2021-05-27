@@ -1,0 +1,77 @@
+vo-k1% cd .. | pwd
+/Users/nagrivan/Desktop/minishell
+(отработана только вторая команда)
+
+vo-k1% pwd | cd ..
+(pwd now: ~/Desktop)
+(вышел из текущей директории и вывел папку текущего нахождения)
+
+vo-k1% cd jskfjsfjs;kjf
+cd: no such file or directory: jskfjsfjs
+zsh: command not found: kjf
+
+vo-k1% cd..
+zsh: command not found: cd..
+
+vo-k1% cd minishell ; pwd
+/Users/nagrivan/Desktop/minishell
+(зашел в директорию и вывел путь до нее)
+
+vo-k1% cd .. |export bla=12345 | pwd | echo bla
+bla
+(отработана только команда echo)
+
+vo-k1% cd .. |export bla=12345
+(отработана только команда export)
+
+vo-k1% cd .. | export bla=12345
+(отработана только команда export)
+
+vo-k1% cd .. ; export bla=654321
+(отработаны обе команды)
+
+vo-k1% cd .. ;export blac=12345 | pwd ; echo blac
+/Users/nagrivan
+blac
+
+vo-k1% cd <
+zsh: parse error near `\n'
+
+vo-k1% cd >> mini
+(создал файл mini текущей директории в вышел в /Users/nagrivan)
+
+vo-k1% cd < mini
+(вышел в /Users/nagrivan)
+
+vo-k1% cd > mini
+(вышел в /Users/nagrivan)
+
+vo-k1% cd $?
+cd: no such file or directory: 0
+
+vo-k1% cd "Desktop/"
+(вышел в /Users/nagrivan/Desktop)
+
+vo-k1% cd 'minishell/'
+(вышел в /Users/nagrivan/Desktop/minishell)
+
+vo-k1% cd "../'minicub'"
+cd: no such file or directory: ../'minicub'
+(остался на месте)
+
+vo-k1% cd "Desktop/'minishell'"
+cd: no such file or directory: Desktop/'minishell'
+(остался на месте)
+
+vo-k1% cd Desktop/$?
+cd: no such file or directory: Desktop/0
+(остался на месте)
+
+vo-k1% cd Desktop/ [ctrl-C]
+(остался на месте)
+
+vo-k1% cd Desktop/ [ctrl-D]
+(выводит список всех файлов и папок)
+
+vo-k1% cd Desktop/ [ctrl-\]
+(звуковой сигнал об ошибке)
