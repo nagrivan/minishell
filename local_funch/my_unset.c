@@ -6,7 +6,14 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:14:50 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/09/07 16:14:51 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/09/09 00:09:26 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+# include "minishell.h"
+
+int		my_unset(char **argv)
+{
+	
+	return (0);
+}

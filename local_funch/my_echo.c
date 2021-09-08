@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:13:35 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/09/07 19:55:13 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/09/08 17:28:40 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void	text_write(int flag, char *text)
 {
 	int		i;
+	int		status; /*переменная, ответственная за статус работы предыдущей команды*/
 	
 	i = 0;
 	while (text)
@@ -22,7 +23,7 @@ void	text_write(int flag, char *text)
 		if (text[i] == '$')
 		{
 			if (text[++i] == '?')
-				ft_putnbr_fd(, 1); /*необходима переменная, которая будет сохранять код ошибки*/
+				ft_putnbr_fd(status, 1); /*необходима переменная, которая будет сохранять код ошибки*/
 		}
 		ft_putchar_fd(text[i], 1);
 		i++;
