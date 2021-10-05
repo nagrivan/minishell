@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:13:35 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/09/08 17:28:40 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/09/21 19:09:38 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	flag_n(char *flag, char *text)
 	write(1, " ", 1);
 }
 
-int		my_echo(char *flag, char *text)
+int		my_echo(char *flag, char *text) //переделать входящие аргументы. Должен принимать **text
 {
 	if (flag)
 		flag_n(flag, text);
