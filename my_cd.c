@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:14:06 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/05 18:29:32 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/08 13:28:47 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,13 @@
 
 /*
 	При подаче нескольких аргументов - работает только с первым
-	OLD_PWD изменить;
-	PWD ;
-	Проверить, есть ли такая директория;
-	cd -;
-	chdir, stat, lstat, fstat
+	Разбить функции на несколько файлов
+	Соответствует Norminette
+	check leaks
+	++++
 */
 
-int		write_env(char *result, t_env *env)
+int	write_env(char *result, t_env *env)
 {
 	int		i;
 	char	**tmp;
@@ -43,11 +42,11 @@ int		write_env(char *result, t_env *env)
 	return (0);
 }
 
-int		check_env(char *argv, char **env)
+int	check_env(char *argv, char **env)
 {
 	char	*patch;
 	int		i;
-	
+
 	i = 0;
 	while (env[i])
 	{
@@ -55,7 +54,7 @@ int		check_env(char *argv, char **env)
 		if (patch)
 			break ;
 		i++;
-	};
+	}
 	if (!patch)
 		return (-1);
 	return (i);
@@ -101,54 +100,58 @@ int	write_old_pwd(char *old_pwd, t_env *env)
 	return (0);
 }
 
-int		my_cd(char **argv, t_env *env) /*Попробовать так*/
+char	*check_where_cd(char *argv, t_env *env)
 {
+	char	*result;
 	int		i;
-	char	*result = NULL;
-	int		size;
-	char	*old_pwd = NULL;
-	char	*pwd = NULL;
-	struct stat	stati;
 
-	size = num_argv(argv);
-	old_pwd = getcwd(old_pwd, 1024);
-	if (size == 1) /*возврат на HOME*/
+	if (!argv)
 	{
 		i = check_env("HOME", env->env);
 		result = ft_strtrim(env->env[i], "HOME=");
-		if ((stat(result, &stati)) == -1)
-		{
-			printf("minishell: cd: %s: No such file or directory\n", result);
-			return (1);
-		}
-		chdir(result);
+		printf("%s\n", result);
+	}	
+	else if (argv[0] == '-' && (ft_strlen(argv)) == 1)
+	{
+		i = check_env("OLDPWD", env->env);
+		result = ft_strtrim(env->env[i], "OLDPWD=");
 	}
 	else
+		result = ft_strdup(argv);
+	return (result);
+}
+
+void	cd_error(char *result, char *old_pwd)
+{
+	printf("minishell: cd: %s: No such file or directory\n", result);
+	free(result);
+	free(old_pwd);
+}
+
+int	my_cd(char **argv, t_env *env)
+{
+	char			*result;
+	int				size;
+	char			*old_pwd;
+	char			*pwd;
+	struct stat		stati;
+
+	pwd = NULL;
+	old_pwd = NULL;
+	size = num_argv(argv);
+	old_pwd = getcwd(old_pwd, 1024);
+	result = check_where_cd(argv[1], env);
+	if ((stat(result, &stati)) == -1)
 	{
-		if (argv[1][0] == '-' && (ft_strlen(argv[1])) == 1) /* Возвращает на OLDPWD*/
-		{
-			i = check_env("OLDPWD", env->env);
-			result = ft_strtrim(env->env[i], "OLDPWD=");
-			if ((stat(result, &stati)) == -1)
-			{
-				printf("minishell: cd: %s: No such file or directory\n", result);
-				return (1);
-			}
-			chdir(result);
-		}
-		else
-		{
-			if ((stat(argv[1], &stati)) == -1)
-			{
-				printf("minishell: cd: %s: No such file or directory\n", argv[1]);
-				return (1);
-			}
-			chdir(argv[1]);
-		}
+		cd_error(result, old_pwd);
+		return (1);
 	}
+	chdir(result);
 	pwd = getcwd(pwd, 1024);
 	write_pwd(pwd, env);
 	write_old_pwd(old_pwd, env);
 	free(result);
+	free(old_pwd);
+	free(pwd);
 	return (0);
 }

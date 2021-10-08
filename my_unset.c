@@ -6,11 +6,11 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:14:50 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/05 17:07:05 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/06 16:12:19 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "minishell.h"
+#include "minishell.h"
 
 /*
 	bash-3.2$ unset ""
@@ -21,9 +21,10 @@
 	bash: unset: `1235': not a valid identifier
 	bash-3.2$ echo $?
 	1
+	Проверено Norminette
 */
 
-int		delete_env(t_env *env, int geolock)
+int	delete_env(t_env *env, int geolock)
 {
 	int		i;
 	int		j;
@@ -50,11 +51,11 @@ int		delete_env(t_env *env, int geolock)
 	return (0);
 }
 
-int		my_unset(char **argv, t_env *env)
+int	my_unset(char **argv, t_env *env)
 {
 	int		i;
 	int		geolock;
-	int		status; //должна быть общая переменная для хранения возвращаемых значений функциями
+	int		status;
 
 	i = 0;
 	status = 0;

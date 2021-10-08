@@ -6,18 +6,27 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:13:35 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/09/29 16:41:33 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/06 16:55:51 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "minishell.h"
+#include "minishell.h"
+
+/*
+	Подумать о сокращении функции text_write
+	(возможно, перенести обработку $? в парсер)
+	проверено Norminette
+	check leaks
+	+++
+*/
 
 void	text_write(int flag, char **text)
 {
 	int		i;
 	int		j;
-	int		status = 0; /*переменная, ответственная за статус работы предыдущей команды*/
-	
+ /* переменная, ответственная за статус работы предыдущей команды */
+	int		status = 0;
+
 	i = flag;
 	while (text[i])
 	{
@@ -28,7 +37,8 @@ void	text_write(int flag, char **text)
 			{
 				if (text[i][++j] == '?')
 				{
-					ft_putnbr_fd(status, 1); /*необходима переменная, которая будет сохранять код ошибки*/
+				/*необходима переменная, которая будет сохранять код ошибки*/
+					ft_putnbr_fd(status, 1);
 					j++;
 				}
 			}
@@ -37,18 +47,17 @@ void	text_write(int flag, char **text)
 		}
 		if (text[++i] != NULL)
 			write(1, " ", 1);
-		// i++;
 	}
 	if (flag == 1)
 		write(1, "\n", 1);
 }
 
-int		flag_n(char **text)
+int	flag_n(char **text)
 {
 	int		i;
 	int		j;
 	int		flag;
-	
+
 	i = 1;
 	flag = 1;
 	while (text[i])
@@ -69,10 +78,10 @@ int		flag_n(char **text)
 	return (flag);
 }
 
-int		my_echo(char **text)
+int	my_echo(char **text)
 {
 	int		flag;
-	
+
 	flag = flag_n(text);
 	if (flag > 1)
 		text_write(flag, text);

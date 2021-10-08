@@ -6,13 +6,18 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:15:24 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/09/30 19:08:17 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/08 13:28:29 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "minishell.h"
+#include "minishell.h"
 
-int		it_is_num(char *argv)
+/*
+	Проверено Norminette
+	++++
+*/
+
+int	it_is_num(char *argv)
 {
 	int		i;
 
@@ -27,7 +32,7 @@ int		it_is_num(char *argv)
 	return (0);
 }
 
-int		num_argv(char **argv)
+int	num_argv(char **argv)
 {
 	int		i;
 
@@ -37,7 +42,7 @@ int		num_argv(char **argv)
 	return (i);
 }
 
-int		my_exit(char **argv)
+int	my_exit(char **argv)
 {
 	ft_putendl_fd("exit", 1);
 	if (num_argv(argv) == 1)

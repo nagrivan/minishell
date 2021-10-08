@@ -82,7 +82,7 @@ int main(int argc, char **argv, char **env)
 	if ((init_struct(&tmp, env)) != 0)
 		return (1);
 	int g = 0;
-	while (g < 5)
+	while (g < 10)
 	{
 		str = readline("mini_test$ ");
 		if (!(my_text = ft_split(str, ' ')))
@@ -99,7 +99,7 @@ int main(int argc, char **argv, char **env)
 		ft_free(my_text);
 		free(str);
 		g++;
-		// system("leaks minitest");
+		system("leaks minitest");
 	}
 	// ft_free(tmp.env); //ошибка valgrind
 	return (0);
