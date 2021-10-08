@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:14:06 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/08 13:28:47 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/08 15:01:47 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,6 @@ char	*check_where_cd(char *argv, t_env *env)
 	{
 		i = check_env("HOME", env->env);
 		result = ft_strtrim(env->env[i], "HOME=");
-		printf("%s\n", result);
 	}	
 	else if (argv[0] == '-' && (ft_strlen(argv)) == 1)
 	{
