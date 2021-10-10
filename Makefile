@@ -45,7 +45,7 @@ $(NAME): ${OBJS} ${OBJS_BILD} ${LIBFT}
 $(LIBFT):
 		make -C libft/
 clean:
-		${RM} ${OBJS} 
+		${RM} ${OBJS} ${OBJS_BILD}
 
 fclean: clean
 		${RM} ${NAME}

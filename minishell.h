@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:21:27 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/05 15:24:03 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/10 18:10:57 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,24 @@
 #include <limits.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <fcntl.h>
+
+# define	STDIN 0
+# define	STDOUT 1
+
+typedef struct s_fd
+{
+	int		in;
+	int		out;
+} t_fd;
+
 
 typedef struct s_env
 {
 	char	**env;
+	char	**redirect;
+	t_fd	fd;
+	int		file_d;
 } t_env;
 
 /*
