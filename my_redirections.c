@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/10 15:32:07 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/10 18:40:27 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/11 14:10:05 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,14 @@
 
 void	redir_heredoc(char **argv, t_env *env)
 {
+	char	*str;
+
+	str = NULL;
 	while (1)
 	{
-		readline("> ");
+		str = readline("> ");
+		if ()
+			return ;
 	}
 }
 
@@ -37,10 +42,14 @@ void	redir_one_from(char **argv, t_env *env)
 		return (1);
 	} /* вывод ошибки */
 	tmp_fd = dup(STDIN);
-	dup2(env->fd.in, STDIN);
-	close(tmp_fd);
+	close(STDIN);
+	dup2(env->file_d, STDIN);
+	close(env->file_d);
+	while () // пока строчки в файле для прочтения не закончатся
+	{
+		read(env->file_d, argv[1], 1000);
+	}
 	dup2(tmp_fd, STDIN);
-	close(env->fd.in);
 }
 
 void	redir_one_to(char **argv, t_env *env)
@@ -53,10 +62,14 @@ void	redir_one_to(char **argv, t_env *env)
 		return (1); /* вывод ошибки */
 	}
 	tmp_fd = dup(STDOUT);
-	dup2(env->fd.out, STDOUT);
-	close(tmp_fd);
+	close(STDOUT);
+	dup2(env->file_d, STDOUT);
+	close(env->file_d);
+	while () // пока все строчки длля внесения в файл не закончатся
+	{
+		write(env->file_d, "", ft_strlen(""));
+	}
 	dup2(tmp_fd, STDOUT);
-	close(env->fd.out);
 }
 
 void	redir_doubble_to(char **argv, t_env *env)
@@ -69,11 +82,23 @@ void	redir_doubble_to(char **argv, t_env *env)
 		return (1); /* вывод ошибки */
 	}
 	tmp_fd = dup(STDOUT);
-	dup2(env->fd.out, STDOUT);
-	close(tmp_fd);
+	close(STDOUT);
+	dup2(env->file_d, STDOUT); //
+	close(env->file_d);
+	while () // пока все строчки длля внесения в файл не закончатся
+	{
+		write(env->file_d, "", ft_strlen(""));
+	}
 	dup2(tmp_fd, STDOUT);
-	close(env->fd.out);
 }
 
 // void	my_redirect(char **redir, t_fd *fd)
-// {}
+// {
+// 	if (redir[0][0] == '>')
+// 	{
+// 	}
+// 	if (redir[0][0] == '<')
+// 	{
+// 		if (redir[0][1] == )
+// 	}
+// }
