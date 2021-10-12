@@ -25,7 +25,7 @@ void ft_free(char **my_text)
 	{
 		while (my_text[i])
 		{
-			free(my_text[i]); //ошибка valgrind
+			free(my_text[i]);
 			i++;
 		}
 	}
@@ -35,6 +35,7 @@ void ft_free(char **my_text)
 
 int	check_argv(char **my_text, t_env *env)
 {
+	what_is_redir(env);
 	if (!(ft_strncmp(my_text[0], "echo", 5)))
 		my_echo(my_text);
 	if (!(ft_strncmp(my_text[0], "cd", 3)))
@@ -44,11 +45,53 @@ int	check_argv(char **my_text, t_env *env)
 	if (!(ft_strncmp(my_text[0], "env", 4)))
 		my_env(my_text, env);
 	if (!(ft_strncmp(my_text[0], "export", 7)))
-		my_export(my_text, env); //ошибка valgrind
+		my_export(my_text, env);
 	if (!(ft_strncmp(my_text[0], "pwd", 4)))
 		my_pwd();
 	if (!(ft_strncmp(my_text[0], "unset", 6)))
 		my_unset(my_text, env);
+	else
+	{}
+	return (0);
+}
+
+int	check_redir(char **my_text, t_env *env)
+{
+	int i = 0;
+	int j = 0;
+	int num_redir = 0;
+	while (my_text[i])
+	{
+		if ((ft_strchr(my_text[i], '<')) ||
+			(ft_strchr(my_text[i], '>')))
+			num_redir++;
+		i++;
+	}
+	if (num_redir == 0)
+		return (0);
+	env->redir = (t_redirect *)ft_calloc(sizeof(t_redirect), num_redir);
+	i = -1;
+	j = -1;
+	while (++i < num_redir)
+	{
+		if (!(ft_strchr(my_text[++j], '<')) ||
+			!(ft_strchr(my_text[++j], '>')))
+			if (j >= num_argv(my_text))
+				j = -1;
+		else
+		{
+			if (!(ft_strncmp(my_text[j], ">", 2)))
+				env->redir[i].type_redir = ONE_TO;
+			if (!(ft_strncmp(my_text[j], ">>", 3)))
+				env->redir[i].type_redir = DOB_TO;
+			if (!(ft_strncmp(my_text[j], "<", 2)))
+				env->redir[i].type_redir = ONE_FROM;
+			if (!(ft_strncmp(my_text[j], "<<", 3)))
+				env->redir[i].type_redir = HEREDOC;
+			env->redir[i].filename = ft_strdup(my_text[++j]);
+			env->redir[i].file_d = 0;
+		}
+	}
 	return (0);
 }
 
@@ -90,6 +133,7 @@ int main(int argc, char **argv, char **env)
 			free(str);
 			return (1);
 		}
+		check_redir(my_text, &env);
 		if ((check_argv(my_text, &tmp)) != 0) //ошибка valgrind
 		{
 			free(str);

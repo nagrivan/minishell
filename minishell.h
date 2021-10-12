@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:21:27 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/10 18:10:57 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/12 18:44:07 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,11 @@
 # define	STDIN 0
 # define	STDOUT 1
 
+# define	ONE_FROM 0
+# define	ONE_TO 1
+# define	DOB_TO 2
+# define	HEREDOC 3
+
 typedef struct s_fd
 {
 	int		in;
@@ -34,12 +39,22 @@ typedef struct s_fd
 } t_fd;
 
 
+typedef struct s_redirect
+{
+	char		*filename;
+	int			type_redir;
+	int				file_d;
+} t_redirect;
+
+
 typedef struct s_env
 {
-	char	**env;
-	char	**redirect;
-	t_fd	fd;
-	int		file_d;
+	char			**path; //пути из $PATH
+	char			**env; //переменные окружения
+	char			**argv; //сами команды + флаги + аргументы
+	t_fd			fd;
+	t_redirect		*redir;
+	pid_t			dother;
 } t_env;
 
 /*
@@ -52,6 +67,7 @@ int		my_exit(char **argv);
 int		my_export(char **argv, t_env *env);
 int		my_pwd(void);
 int		my_unset(char **argv, t_env *env);
+void	what_is_redir(t_env *env);
 
 /*
 	Вспомогательная функция
