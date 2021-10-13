@@ -33,6 +33,31 @@ void ft_free(char **my_text)
 		free(my_text);
 }
 
+int	check_execve(char **my_text, t_env *env)
+{
+	int			geolock;
+	char		*paths;
+
+	paths = NULL;
+	geolock = check_env("PATH", env->env);
+	if (geolock == -1)
+	{
+		printf("minishell: %s: No such file or directory\n", my_text[0]);
+		return (127);
+	}
+	paths = ft_strtrim(env->env[geolock], "PATH=");
+	if (!paths)
+	{
+		printf("minishell: %s: No such file or directory\n", my_text[0]);
+		return (127);
+	}
+	env->path = ft_split(paths, ':');
+	if (!env->path)
+		return (-1);
+	execve(my_text[0], my_text, env->path);
+	return (0);
+}
+
 int	check_argv(char **my_text, t_env *env)
 {
 	what_is_redir(env);
@@ -51,49 +76,45 @@ int	check_argv(char **my_text, t_env *env)
 	if (!(ft_strncmp(my_text[0], "unset", 6)))
 		my_unset(my_text, env);
 	else
-	{}
+		if ((check_execve(my_text[0], env)) != 0)
+			return (1);
 	return (0);
 }
 
-int	check_redir(char **my_text, t_env *env)
-{
-	int i = 0;
-	int j = 0;
-	int num_redir = 0;
-	while (my_text[i])
-	{
-		if ((ft_strchr(my_text[i], '<')) ||
-			(ft_strchr(my_text[i], '>')))
-			num_redir++;
-		i++;
-	}
-	if (num_redir == 0)
-		return (0);
-	env->redir = (t_redirect *)ft_calloc(sizeof(t_redirect), num_redir);
-	i = -1;
-	j = -1;
-	while (++i < num_redir)
-	{
-		if (!(ft_strchr(my_text[++j], '<')) ||
-			!(ft_strchr(my_text[++j], '>')))
-			if (j >= num_argv(my_text))
-				j = -1;
-		else
-		{
-			if (!(ft_strncmp(my_text[j], ">", 2)))
-				env->redir[i].type_redir = ONE_TO;
-			if (!(ft_strncmp(my_text[j], ">>", 3)))
-				env->redir[i].type_redir = DOB_TO;
-			if (!(ft_strncmp(my_text[j], "<", 2)))
-				env->redir[i].type_redir = ONE_FROM;
-			if (!(ft_strncmp(my_text[j], "<<", 3)))
-				env->redir[i].type_redir = HEREDOC;
-			env->redir[i].filename = ft_strdup(my_text[++j]);
-			env->redir[i].file_d = 0;
-		}
-	}
-	return (0);
-}
+// int	check_redir(char **my_text, t_env *env)
+// {
+// 	int i = 0;
+// 	int j = 0;
+// 	int num_redir = 0;
+// 	while (my_text[i])
+// 	{
+// 		if (my_text[i][0] == '>' || my_text[i][0] == '<')
+// 			num_redir++;
+// 		i++;
+// 	}
+// 	if (num_redir == 0)
+// 		return (0);
+// 	env->redir = (t_redirect *)ft_calloc(sizeof(t_redirect), num_redir);
+// 	i = -1;
+// 	j = -1;
+// 	while (++i < num_redir)
+// 	{
+// 		if (my_text[++j][0] == '>' || my_text[++j][0] == '<')
+// 		{
+// 			if (!(ft_strncmp(my_text[j], ">", 2)))
+// 				env->redir[i].type_redir = ONE_TO;
+// 			if (!(ft_strncmp(my_text[j], ">>", 3)))
+// 				env->redir[i].type_redir = DOB_TO;
+// 			if (!(ft_strncmp(my_text[j], "<", 2)))
+// 				env->redir[i].type_redir = ONE_FROM;
+// 			if (!(ft_strncmp(my_text[j], "<<", 3)))
+// 				env->redir[i].type_redir = HEREDOC;
+// 			env->redir[i].filename = ft_strdup(my_text[j + 1]);
+// 			env->redir[i].file_d = 0;
+// 		}
+// 	}
+// 	return (0);
+// }
 
 int	init_struct(t_env *tmp, char **env)
 {

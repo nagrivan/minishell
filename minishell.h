@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:21:27 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/12 18:44:07 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/13 18:01:10 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,12 @@ typedef struct s_env
 	char			**argv; //сами команды + флаги + аргументы
 	t_fd			fd;
 	t_redirect		*redir;
+	int				num_redir;
 	pid_t			dother;
+	//
+	int				pipe;
+	struct s_env	*next;
+	//
 } t_env;
 
 /*
