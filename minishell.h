@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:21:27 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/14 15:04:07 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/14 15:10:29 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,5 +78,11 @@ int			check_env(char *argv, char **env);
 int			check_exp(char *argv, char **env, size_t size);
 int			my_export_argv(char *argv);
 size_t		check_equals(char *argv);
+
+/*
+	Редиректы и пайпы
+*/
+void	what_is_redir(t_env *env);
+void	my_pipe(t_env *env);
 
 #endif
