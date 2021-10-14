@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:21:27 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/13 18:01:10 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/14 15:04:07 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,6 @@
 # define	DOB_TO 2
 # define	HEREDOC 3
 
-typedef struct s_fd
-{
-	int		in;
-	int		out;
-} t_fd;
-
-
 typedef struct s_redirect
 {
 	char		*filename;
@@ -52,14 +45,13 @@ typedef struct s_env
 	char			**path; //пути из $PATH
 	char			**env; //переменные окружения
 	char			**argv; //сами команды + флаги + аргументы
-	t_fd			fd;
+	int				fd[2];
 	t_redirect		*redir;
 	int				num_redir;
 	pid_t			dother;
-	//
 	int				pipe;
+	int				status;
 	struct s_env	*next;
-	//
 } t_env;
 
 /*

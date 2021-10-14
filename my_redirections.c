@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/10 15:32:07 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/13 18:48:28 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/14 13:21:28 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@
 	bash: syntax error near unexpected token `>'
 	bash-3.2$ echo $?
 	258
-	bash-3.2$ <<<<
+	bash-3.2$ <<
 	bash: syntax error near unexpected token `<'
-	bash-3.2$ < <<<
-	bash: syntax error near unexpected token `<<<'
+	bash-3.2$ < <<
+	bash: syntax error near unexpected token `<<'
 	bash-3.2$ <
 	bash: syntax error near unexpected token `newline'
 	bash-3.2$
@@ -94,14 +94,14 @@ void	what_is_redir(t_env *env)
 		}
 		if (env->redir[i].type_redir == ONE_TO && env->redir[i].filename)
 		{
-			env->redir[i].file_d = open(env->redir[i].filename, O_WRONLY | O_CREAT | O_TRUNC);
+			env->redir[i].file_d = open(env->redir[i].filename, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 			if (env->redir[i].file_d == -1)
 				printf("Errors\n");
 			replace_fd(env, i, STDOUT);
 		}
 		if (env->redir[i].type_redir == DOB_TO && env->redir[i].filename)
 		{
-			env->redir[i].file_d = open(env->redir[i].filename, O_WRONLY | O_CREAT | O_APPEND);
+			env->redir[i].file_d = open(env->redir[i].filename, O_WRONLY | O_CREAT | O_APPEND, 0777);
 			if (env->redir[i].file_d == -1)
 				printf("Errors\n");
 			replace_fd(env, i, STDOUT);
