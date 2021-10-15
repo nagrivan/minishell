@@ -6,15 +6,17 @@
 #    By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/24 19:45:52 by nagrivan          #+#    #+#              #
-#    Updated: 2021/10/15 14:38:02 by nagrivan         ###   ########.fr        #
+#    Updated: 2021/10/15 16:21:20 by nagrivan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= minishell
 
-LIBFT	= ./libft/libft.a
+LIBFT_DIRS	= ./libft/
 
-LIBFT_INCLUDES	= ./libft/libft.h
+LIBFT	= ${LIBFT_DIRS}libft.a
+
+LIBFT_INCLUDES	= ${LIBFT_DIRS}libft.h
 
 SRCS_DIRS	=	bildins/	local_func/
 
@@ -42,18 +44,23 @@ RM	= rm -rf
 
 all: $(NAME)
 
-%.o : %.c ${INCLUDES} ${LIBFT_INCLUDES}
+$(OBJS_DIRS):
+		@mkdir -p $@
+
+$(OBJS_DIRS)%.o : %.c ${INCLUDES} ${LIBFT_INCLUDES} ${LIBFT}
 		${CC} ${CFLAGS} -c $< -o $@
 
-$(NAME): ${OBJS} ${OBJS_BILD} ${LIBFT}
+$(NAME): ${OBJS} ${OBJS_DIRS} ${LIBFT} Makefile
 		 ${CC} ${CFLAGS} ${OBJS} ${OBJS_BILD} ${LIBFT} -o ${NAME} -lreadline ${LDFLAGS} ${CPPFLAGS}
 
 $(LIBFT):
-		make -C libft/
+		make -C ${LIBFT_DIRS}
 clean:
-		${RM} ${OBJS} ${OBJS_BILD}
+		make clean -C ${LIBFT_DIRS}
+		${RM} ${OBJS_DIRS}
 
 fclean: clean
+		make -C ${LIBFT_DIRS}
 		${RM} ${NAME}
 
 re: fclean all
