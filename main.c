@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 13:51:10 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/15 13:53:04 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/15 18:54:12 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,36 +28,106 @@ void ft_free(char **my_text)
 		free(my_text);
 }
 
-int main(int argc, char **argv, char **env)
+char	*get_value(char *str, int *index)
 {
-	char *str;
-	char **my_text;
-	t_env tmp;
+	int	i;
+
+	i = 0;
+	while (str && str[i] != '=')
+		i++;
+	*index = ++i;
+	return (str + i);
+}
+
+void	init_shlvl(char ***env)
+{
+	int		i;
+	int		numb;
+	int		len;
+	char	*str;
+
+	i = check_exp("SHLVL=", *(env), 6);
+	if (i != -1)
+	{
+		numb = ft_atoi(get_value((*env)[i], &len));
+		str = ft_substr((*env)[i], 0, len);
+		free((*env)[i]);
+		(*env)[i] = ft_strjoin(str, ft_itoa(++numb));
+	}
+}
+
+t_all	*init_struct(void)
+{
+	t_all	*tmp;
+
+	tmp = (t_all *)malloc(sizeof(t_all));
+	tmp->argv = NULL;
+	tmp->dother = 0;
+	tmp->env = NULL;
+	tmp->fd[0] = STDIN;
+	tmp->fd[1] = STDOUT;
+	tmp->next = NULL;
+	tmp->num_redir = 0;
+	tmp->path = NULL;
+	tmp->pipe = NULL;
+	tmp->redir = NULL;
+	tmp->status = 0;
+	return (tmp);
+}
+
+char	**init_env(char **env)
+{
+	int		i;
+	int		size;
+	char	**result;
+
+	i = -1;
+	size = num_argv(env);
+	result = (char **)ft_calloc(sizeof(char *), size + 1);
+	if (!result)
+		return (NULL);
+	while (env[++i])
+	{
+		result[i] = ft_strdup(env[i]);
+		if (!result[i])
+			return (NULL);
+	}
+	result[i] = NULL;
+	return (result);
+}
+
+int	main(int argc, char **argv, char **env)
+{
+	char		*str;
+	char		**tmp_env;
+	t_all		*all;
 
 	(void)argc;
 	(void)argv;
-	if ((init_struct(&tmp, env)) != 0)
+	str = NULL;
+	tmp_env = init_env(env);
+	if (!tmp_env)
 		return (1);
-	int g = 0;
-	while (g < 10)
+	init_shlvl(&tmp_env);
+	while (1)
 	{
-		str = readline("mini_test$ ");
-		if (!(my_text = ft_split(str, ' ')))
+		all = init_struct();
+		str = readline("minishell$ ");
+		if (str && *str)
+			add_history(str); // сохранение истории
+		else
 		{
-			free(str);
-			return (1);
+			rl_on_new_line(); // даем понять, что у нас новая строка
+			rl_redisplay(); //меняем то, что отражается на экране
 		}
-		check_redir(my_text, &env);
-		if ((check_argv(my_text, &tmp)) != 0)
-		{
+		/* Здесь должен быть парсер.
+			А могла быть ваша реклама. */
+		start_minishell(&all); // подумать, как передавать именно ссылку на структуру
+		if (str)
 			free(str);
-			ft_free(my_text);
-			return (1);
-		}
-		ft_free(my_text);
-		free(str);
-		g++;
-		system("leaks minitest");
+		system("leaks minishell");// для проверки утечек
 	}
+	clear_history();
+	ft_free(tmp_env);
 	return (0);
 }

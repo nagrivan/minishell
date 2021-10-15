@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:14:50 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/15 13:47:51 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/15 16:49:42 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,34 +24,34 @@
 	Проверено Norminette
 */
 
-int	delete_env(t_env *env, int geolock)
+int	delete_env(t_all *all, int geolock)
 {
 	int		i;
 	int		j;
 	char	**tmp;
 	char	**free_env;
 
-	free_env = env->env;
-	i = num_argv(env->env);
+	free_env = all->env;
+	i = num_argv(all->env);
 	tmp = (char **)ft_calloc(sizeof(char *), i);
 	i = 0;
 	j = 0;
-	while (env->env[i])
+	while (all->env[i])
 	{
 		if (i != geolock)
 		{
-			tmp[j] = ft_strdup(env->env[i]);
+			tmp[j] = ft_strdup(all->env[i]);
 			j++;
 		}
 		i++;
 	}
 	tmp[j] = NULL;
-	env->env = tmp;
+	all->env = tmp;
 	ft_free(free_env);
 	return (0);
 }
 
-int	my_unset(t_env *env)
+int	my_unset(t_all *all)
 {
 	int		i;
 	int		geolock;
@@ -59,16 +59,16 @@ int	my_unset(t_env *env)
 
 	i = 0;
 	status = 0;
-	if ((num_argv(env->argv)) == 1)
+	if ((num_argv(all->argv)) == 1)
 		return (0);
-	while (env->argv[++i])
+	while (all->argv[++i])
 	{
-		if ((my_export_argv(env->argv[i])) == 1)
+		if ((my_export_argv(all->argv[i])) == 1)
 			status = 1;
 		else
 		{
-			geolock = check_exp(env->argv[i], env->env,
-					(check_equals(env->argv[i])));
+			geolock = check_exp(all->argv[i], all->env,
+					(check_equals(all->argv[i])));
 			if (geolock != -1)
 				delete_env(env, geolock);
 		}

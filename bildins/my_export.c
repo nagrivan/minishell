@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:14:25 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/15 13:45:56 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/15 16:49:42 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 	check leaks
 */
 
-char	**sort_env(char **env, int len)
+char	**sort_all(char **env, int len)
 {
 	int		i;
 	int		j;
@@ -99,13 +99,13 @@ int	my_export_argv(char *argv)
 	return (0);
 }
 
-void	print_exp(t_env *env)
+void	print_exp(t_all *all)
 {
 	int		i;
 	char	**tmp;
 
 	i = 0;
-	tmp = sort_env(env->env, num_argv(env->env));
+	tmp = sort_all(all->env, num_argv(all->env));
 	while (tmp[i])
 	{
 		printf("%d declare -x %s\n", i, tmp[i]);
@@ -114,40 +114,40 @@ void	print_exp(t_env *env)
 	ft_free(tmp);
 }
 
-void	write_argv_exp(char *argv, t_env *env)
+void	write_argv_exp(char *argv, t_all *all)
 {
 	int		geolock;
 
-	geolock = check_exp(argv, env->env, (check_equals(argv)));
+	geolock = check_exp(argv, all->env, (check_equals(argv)));
 	if (geolock == -1)
-		write_env(argv, env);
+		write_env(argv, all);
 	else
 	{
 		if (!(ft_strchr(argv, '=')))
 			return ;
-		free(env->env[geolock]);
-		env->env[geolock] = ft_strdup(argv);
+		free(all->env[geolock]);
+		all->env[geolock] = ft_strdup(argv);
 	}
 }
 
-int	my_export(t_env *env)
+int	my_export(t_all *all)
 {
 	int		i;
 	int		status;
 
 	i = 0;
 	status = 0;
-	if (num_argv(env->argv) == 1)
+	if (num_argv(all->argv) == 1)
 	{
-		print_exp(env);
+		print_exp(all);
 		return (0);
 	}
-	while (env->argv[++i])
+	while (all->argv[++i])
 	{
-		if ((my_export_argv(env->argv[i])) == 1)
+		if ((my_export_argv(all->argv[i])) == 1)
 			status = 1;
 		else
-			write_argv_exp(env->argv[i], env);
+			write_argv_exp(all->argv[i], all);
 	}
 	return (status);
 }

@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/10 15:32:07 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/15 13:48:38 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/15 16:49:42 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 	bash-3.2$
 */
 
-void	redir_heredoc(t_env *env, int i)
+void	redir_heredoc(t_all *all, int i)
 {
 	char	*str;
 	int		fd[2];
@@ -34,15 +34,15 @@ void	redir_heredoc(t_env *env, int i)
 	str = NULL;
 	if ((pipe(fd)) == -1)
 		return ;
-	env->dother = fork();
-	if (env->dother == -1)
+	all->dother = fork();
+	if (all->dother == -1)
 		return ;
-	if (env->dother == 0)
+	if (all->dother == 0)
 	{
 		while (1)
 		{
 			str = readline("> ");
-			if (!str && !(ft_strncmp(str, env->redir[i].filename, ft_strlen(str))))
+			if (!str && !(ft_strncmp(str, all->redir[i].filename, ft_strlen(str))))
 				exit(0);
 			ft_putendl_fd(str, fd[1]);
 			free(str);
@@ -50,7 +50,7 @@ void	redir_heredoc(t_env *env, int i)
 	}
 	else
 	{
-		if (env->argv[0])
+		if (all->argv[0])
 		{			
 			close(fd[1]);
 			dup2(fd[0], STDIN);
@@ -59,7 +59,7 @@ void	redir_heredoc(t_env *env, int i)
 	}
 }
 
-int	replace_fd(t_env *env, int num, int fd)
+int	replace_fd(t_all *all, int num, int fd)
 {
 	int		tmp_fd;
 
@@ -67,44 +67,44 @@ int	replace_fd(t_env *env, int num, int fd)
 	tmp_fd = dup(fd);
 	if ((close(fd)) == -1)
 		return (1);
-	if ((dup2(env->redir[num].file_d, fd)) == -1)
+	if ((dup2(all->redir[num].file_d, fd)) == -1)
 		return (1);
-	if ((close(env->redir[num].file_d)) == -1)
+	if ((close(all->redir[num].file_d)) == -1)
 		return (1);
 	if ((dup2(tmp_fd, fd)) == -1)
 		return (1);
 	return (0);
 }
 
-void	what_is_redir(t_env *env)
+void	what_is_redir(t_all *all)
 {
 	int		i;
 	
 	i = -1;
-	while (++i < env->num_redir)
+	while (++i < all->num_redir)
 	{
-		if 	(env->redir[i].type_redir == HEREDOC && env->redir[i].filename)
-			redir_heredoc(env, i);
-		if (env->redir[i].type_redir == ONE_FROM && env->redir[i].filename)
+		if 	(all->redir[i].type_redir == HEREDOC && all->redir[i].filename)
+			redir_heredoc(all, i);
+		if (all->redir[i].type_redir == ONE_FROM && all->redir[i].filename)
 		{
-			env->redir[i].file_d = open(env->redir[i].filename, O_RDONLY);
-			if (env->redir[i].file_d == -1)
+			all->redir[i].file_d = open(all->redir[i].filename, O_RDONLY);
+			if (all->redir[i].file_d == -1)
 				printf("Errors\n");
-			replace_fd(env, i, STDIN);
+			replace_fd(all, i, STDIN);
 		}
-		if (env->redir[i].type_redir == ONE_TO && env->redir[i].filename)
+		if (all->redir[i].type_redir == ONE_TO && all->redir[i].filename)
 		{
-			env->redir[i].file_d = open(env->redir[i].filename, O_WRONLY | O_CREAT | O_TRUNC, 0777);
-			if (env->redir[i].file_d == -1)
+			all->redir[i].file_d = open(all->redir[i].filename, O_WRONLY | O_CREAT | O_TRUNC, 0777);
+			if (all->redir[i].file_d == -1)
 				printf("Errors\n");
-			replace_fd(env, i, STDOUT);
+			replace_fd(all, i, STDOUT);
 		}
-		if (env->redir[i].type_redir == DOB_TO && env->redir[i].filename)
+		if (all->redir[i].type_redir == DOB_TO && all->redir[i].filename)
 		{
-			env->redir[i].file_d = open(env->redir[i].filename, O_WRONLY | O_CREAT | O_APPEND, 0777);
-			if (env->redir[i].file_d == -1)
+			all->redir[i].file_d = open(all->redir[i].filename, O_WRONLY | O_CREAT | O_APPEND, 0777);
+			if (all->redir[i].file_d == -1)
 				printf("Errors\n");
-			replace_fd(env, i, STDOUT);
+			replace_fd(all, i, STDOUT);
 		}
 	}
 }

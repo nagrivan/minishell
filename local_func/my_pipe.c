@@ -6,77 +6,77 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 13:22:15 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/15 13:48:31 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/15 16:49:42 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	num_pipe(t_env *env)
+int	num_pipe(t_all *all)
 {
 	int		result;
 	
-	while(env->next != NULL)
+	while(all->next != NULL)
 	{
 		result++;
-		env = env->next;
+		all = all->next;
 	}
 	return (result);
 }
 
-void	shaman_fd(t_env *env)
+void	shaman_fd(t_all *all)
 {
 	int		count_pipe;
 	int		tmp_fd[2];
 
-	count_pipe = num_pipe(env);
-	if (env->pipe != 0)
+	count_pipe = num_pipe(all);
+	if (all->pipe != 0)
 	{
 		tmp_fd[0] = dup(STDIN);
 		if ((close(STDIN)) == -1)
 			return ;
-		if ((dup2(env->fd[0], STDIN)) == -1)
+		if ((dup2(all->fd[0], STDIN)) == -1)
 			return ;
-		if ((close(env->fd[0])) == -1)
+		if ((close(all->fd[0])) == -1)
 			return ;
-		if ((close(env->fd[1])) == -1)
+		if ((close(all->fd[1])) == -1)
 			return ;
 	}
-	if (env->pipe != count_pipe)
+	if (all->pipe != count_pipe)
 	{
 		tmp_fd[0] = dup(STDOUT);
 		if ((close(STDOUT)) == -1)
 			return ;
-		if ((dup2(env->fd[1], STDOUT)) == -1)
+		if ((dup2(all->fd[1], STDOUT)) == -1)
 			return ;
-		if ((close(env->fd[1])) == -1)
+		if ((close(all->fd[1])) == -1)
 			return ;
-		if ((close(env->fd[0])) == -1)
+		if ((close(all->fd[0])) == -1)
 			return ;
 	}
 }
 
-void	my_pipe(t_env *env)
+void	my_pipe(t_all *all)
 {
-	if ((pipe(env->fd)) == -1)
+	if ((pipe(all->fd)) == -1)
 		return ;
-	env->dother = fork();
-	if (env->dother == -1)
+	all->dother = fork();
+	if (all->dother == -1)
 		return ;
-	if (env->dother == 0)
-		shaman_fd(env);
+	if (all->dother == 0)
+		shaman_fd(all);
 	else
 	{
-		waitpid(env->dother, &env->status, WUNTRACED);
-		if (env->fd[0] != STDIN)
+		waitpid(all->dother, &all->status, WUNTRACED);
+		if (all->fd[0] != STDIN)
 		{
-			dup2(env->fd[0], STDIN);
-			close(env->fd[0]);
+			dup2(all->fd[0], STDIN);
+			close(all->fd[0]);
 		}
-		if (env->fd[0] != STDOUT)
+		if (all->fd[0] != STDOUT)
 		{
-			dup2(env->fd[1], STDOUT);
-			close(env->fd[1]);
+			dup2(all->fd[1], STDOUT);
+			close(all->fd[1]);
 		}
 	}
 }

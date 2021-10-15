@@ -6,13 +6,13 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 15:06:55 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/15 13:50:06 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/15 16:33:40 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	check_patch(t_env *env)
+int	check_patch(t_all *env)
 {
 	int		i;
 
@@ -38,7 +38,7 @@ int	check_patch(t_env *env)
 	return (1);
 }
 
-int	create_path(t_env *env)
+int	create_path(t_all *env)
 {
 	int			geolock;
 	char		*paths;
@@ -64,7 +64,7 @@ int	create_path(t_env *env)
 	return (0);
 }
 
-int	check_execve(t_env *env)
+int	check_execve(t_all *env)
 {
 	pid_t		pid;
 	int			fd[2];
@@ -91,7 +91,7 @@ int	check_execve(t_env *env)
 	return (0);
 }
 
-int	is_bildins(t_env *env)
+int	is_bildins(t_all *env)
 {
 	if (!(ft_strncmp(env->argv[0], "echo", 5))
 		|| !(ft_strncmp(env->argv[0], "Echo", 5)))
@@ -113,7 +113,7 @@ int	is_bildins(t_env *env)
 	return (1);
 }
 
-void	start_minishell(t_env *env)
+void	start_minishell(t_all *env)
 {
 	while (env->next != NULL)
 	{

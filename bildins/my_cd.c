@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:14:06 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/15 13:39:53 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/15 16:50:42 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,24 +20,24 @@
 	++++
 */
 
-int	write_env(char *result, t_env *env)
+int	write_env(char *result, t_all *all)
 {
 	int		i;
 	char	**tmp;
 	char	**free_env;
 
-	free_env = env->env;
-	i = num_argv(env->env);
+	free_env = all->env;
+	i = num_argv(all->env);
 	tmp = (char **)ft_calloc(sizeof(char *), i + 2);
 	i = 0;
-	while (env->env[i])
+	while (all->env[i])
 	{
-		tmp[i] = ft_strdup(env->env[i]);
+		tmp[i] = ft_strdup(all->env[i]);
 		i++;
 	}
 	tmp[i] = ft_strdup(result);
 	tmp[++i] = NULL;
-	env->env = tmp;
+	all->env = tmp;
 	ft_free(free_env);
 	return (0);
 }
@@ -60,60 +60,60 @@ int	check_env(char *argv, char **env)
 	return (i);
 }
 
-int	write_pwd(char *pwd, t_env *env)
+int	write_pwd(char *pwd, t_all *all)
 {
 	int		i;
 	char	*result;
 
-	i = check_env("PWD", env->env);
+	i = check_env("PWD", all->env);
 	result = ft_strjoin("PWD=", pwd);
 	if (i != -1)
 	{
-		free(env->env[i]);
-		env->env[i] = result;
+		free(all->env[i]);
+		all->env[i] = result;
 	}
 	else
 	{
-		if ((write_env(result, env)) != 0)
+		if ((write_env(result, all)) != 0)
 			return (1);
 	}
 	return (0);
 }
 
-int	write_old_pwd(char *old_pwd, t_env *env)
+int	write_old_pwd(char *old_pwd, t_all *all)
 {
 	int		i;
 	char	*result;
 
-	i = check_env("OLDPWD", env->env);
+	i = check_env("OLDPWD", all->env);
 	result = ft_strjoin("OLDPWD=", old_pwd);
 	if (i != -1)
 	{
-		free(env->env[i]);
-		env->env[i] = result;
+		free(all->env[i]);
+		all->env[i] = result;
 	}
 	else
 	{
-		if ((write_env(result, env)) != 0)
+		if ((write_env(result, all)) != 0)
 			return (1);
 	}
 	return (0);
 }
 
-char	*check_where_cd(char *argv, t_env *env)
+char	*check_where_cd(char *argv, t_all *all)
 {
 	char	*result;
 	int		i;
 
 	if (!argv)
 	{
-		i = check_env("HOME", env->env);
-		result = ft_strtrim(env->env[i], "HOME=");
+		i = check_env("HOME", all->env);
+		result = ft_strtrim(all->env[i], "HOME=");
 	}	
 	else if (argv[0] == '-' && (ft_strlen(argv)) == 1)
 	{
-		i = check_env("OLDPWD", env->env);
-		result = ft_strtrim(env->env[i], "OLDPWD=");
+		i = check_env("OLDPWD", all->env);
+		result = ft_strtrim(all->env[i], "OLDPWD=");
 	}
 	else
 		result = ft_strdup(argv);
@@ -127,7 +127,7 @@ void	cd_error(char *result, char *old_pwd)
 	free(old_pwd);
 }
 
-int	my_cd(t_env *env)
+int	my_cd(t_all *all)
 {
 	char			*result;
 	int				size;
@@ -137,9 +137,9 @@ int	my_cd(t_env *env)
 
 	pwd = NULL;
 	old_pwd = NULL;
-	size = num_argv(env->argv);
+	size = num_argv(all->argv);
 	old_pwd = getcwd(old_pwd, 1024);
-	result = check_where_cd(env->argv[1], env);
+	result = check_where_cd(all->argv[1], all);
 	if ((stat(result, &stati)) == -1)
 	{
 		cd_error(result, old_pwd);
@@ -147,8 +147,8 @@ int	my_cd(t_env *env)
 	}
 	chdir(result);
 	pwd = getcwd(pwd, 1024);
-	write_pwd(pwd, env);
-	write_old_pwd(old_pwd, env);
+	write_pwd(pwd, all);
+	write_old_pwd(old_pwd, all);
 	free(result);
 	free(old_pwd);
 	free(pwd);
