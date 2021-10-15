@@ -1,33 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   my_unset.c                                         :+:      :+:    :+:   */
+/*   my_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/09/07 16:14:50 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/09/10 17:29:07 by nagrivan         ###   ########.fr       */
+/*   Created: 2021/09/07 16:15:04 by nagrivan          #+#    #+#             */
+/*   Updated: 2021/10/15 13:40:22 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "minishell.h"
+#include "../minishell.h"
 
-int		my_unset(char *argv, char **env)
+/*
+	Проверено Norminette
+	check leaks
+	+++
+*/
+
+int	my_env(t_env *env)
 {
 	int		i;
 
 	i = 0;
-	if (!argv)
-		return (0);
-	while (env[i])
+	if ((num_argv(env->argv)) != 1)
 	{
-		if (strnstr(env[i], argv, ft_strlen(argv)))
-		{
-			/*Подумать и реализовать принцип удаления переменной окружения*/
-			free(env[i]);
-			return (0);
-		}
+		printf("env: %s: No such file or directory\n", env->argv[1]);
+		return (127);
+	}
+	while (env->env[i])
+	{
+		if ((ft_strchr(env->env[i], '=')))
+			ft_putendl_fd(env->env[i], 1);
 		i++;
 	}
-	return (1);
+	return (0);
 }

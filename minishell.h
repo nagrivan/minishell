@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:21:27 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/09/27 17:55:36 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/15 13:38:31 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,68 +14,73 @@
 # define MINISHELL_H
 
 # include "./libft/libft.h"
-# include <stdio.h>
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <limits.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
-/*
-	Предполагаемая структура для записи
-	переменных окружения
-*/
+# define	STDIN 0
+# define	STDOUT 1
 
-typedef struct s_list // Предлагаю записывать в листы переменные окружения
+# define	ONE_FROM 0 // <
+# define	ONE_TO 1 // >
+# define	DOB_TO 2 // >>
+# define	HEREDOC 3 // <<
+
+typedef struct s_redirect
 {
-	void			*content;
-	struct s_list	*next;
-} t_list;
+	char		*filename;
+	int			type_redir;
+	int				file_d;
+} t_redirect;
 
-/*
-	Увидела идею: для облегчения сортировки можно разделить одну строку
-	с переменной окружения на две части:
-	1) Название переменной;
-	2) Содержание самой переменной;
-	Затем происходит сортировка по названию переменных методом пузырька.
-	В этой версии такой подход не реализован, но идея интересная и над этим можно подумать.
-	
-	P.S. В одной из структур должно идти деление на название и на содержание. Подумать, в какой.
-*/
-typedef struct	s_env
+typedef struct s_env
 {
-	t_list			*list_env; //лист, где содержится переменная окружения
-	int				number; //номер листа с переменной окружения
+	char			**path; //пути из $PATH
+	char			**env; //переменные окружения
+	char			**argv; //сами команды + флаги + аргументы
+	int				fd[2]; 
+	t_redirect		*redir;
+	int				num_redir;
+	pid_t			dother;
+	int				pipe;
+	int				status;
+	struct s_env	*next;
 } t_env;
 
 /*
-	Структура для записи команд, флагов и аргументов
+	Функции builtins
 */
-typedef struct s_comand
-{
-	char			**comand; //Пока что предлагаю все записывать в двойной массив (и команды, и аргументы)
-} t_comand;
-
-/*
-	Общая структура для объединения остальных структур
-*/
-typedef struct s_all
-{
-	t_env			*env_dt;
-	t_comand		*comand;
-	int				pipe; //Пока эта переменная просто считает количество пайпов. 
-	int				redir; //см. переменную pipe
-} t_all;
-
-
-/*
-	Функции builtins. Нуждаются в правке и пересмотре аргументов.
-*/
-int		my_cd(char **argv, char **env);
-int		my_echo(char *flag, char **text);
-int		my_env(char *argv, char **env);
-int		my_exit(char **argv);
-int		my_export(char *argv, char **env);
+int		my_cd(t_env *env);
+int		my_echo(char **text);
+int		my_env(t_env *env);
+int		my_exit(t_env *env);
+int		my_export(t_env *env);
 int		my_pwd(void);
-int		my_unset(char *argv, char **env);
+int		my_unset(t_env *env);
+
+/*
+	Вспомогательная функция
+*/
+int			num_argv(char **argv);
+void		ft_free(char **my_text);
+int			init_struct(t_env *tmp, char **env);
+int			write_env(char *result, t_env *env);
+void		ft_print(char **my_text);
+int			check_env(char *argv, char **env);
+int			check_exp(char *argv, char **env, size_t size);
+int			my_export_argv(char *argv);
+size_t		check_equals(char *argv);
+
+/*
+	Редиректы и пайпы
+*/
+void	what_is_redir(t_env *env);
+void	my_pipe(t_env *env);
 
 #endif

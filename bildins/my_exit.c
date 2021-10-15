@@ -6,13 +6,18 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:15:24 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/09/08 20:40:07 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/15 13:44:44 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "minishell.h"
+#include "../minishell.h"
 
-int		it_is_num(char *argv)
+/*
+	Проверено Norminette
+	++++
+*/
+
+int	it_is_num(char *argv)
 {
 	int		i;
 
@@ -27,7 +32,7 @@ int		it_is_num(char *argv)
 	return (0);
 }
 
-int		num_argv(char **argv)
+int	num_argv(char **argv)
 {
 	int		i;
 
@@ -37,25 +42,28 @@ int		num_argv(char **argv)
 	return (i);
 }
 
-int		my_exit(char **argv)
+int	my_exit(t_env *env)
 {
-	ft_putendl_fd("Exit", 1);
-	if (num_argv(argv) == 0)
+	ft_putendl_fd("exit", 1);
+	if (num_argv(env->argv) == 1)
 		exit(0);
 	else
 	{
-		if (!(it_is_num(argv[0])))
+		if (!(it_is_num(env->argv[1])))
 		{
-			if ((num_argv(argv)) > 1)
+			if ((num_argv(env->argv)) > 2)
 			{
 				ft_putendl_fd("minishell: exit: too many arguments", 1);
 				return (1);
 			}
-			exit(ft_atoi(argv[0]));
+			if ((ft_atoi(env->argv[1])) < 0 && (ft_atoi(env->argv[1])) > 255)
+				exit((unsigned int) ft_atoi(env->argv[1]) % 256);
+			exit(ft_atoi(env->argv[1]));
 		}
 		else
 		{
-			printf("minishell: exit: %s: numeric argument required\n", argv[0]);
+			printf("minishell: exit: %s: numeric argument required\n",
+				env->argv[1]);
 			exit(255);
 		}
 	}
