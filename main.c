@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 13:51:10 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/15 18:54:12 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/16 13:44:58 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ t_all	*init_struct(void)
 	tmp->next = NULL;
 	tmp->num_redir = 0;
 	tmp->path = NULL;
-	tmp->pipe = NULL;
+	tmp->pipe = 0;
 	tmp->redir = NULL;
 	tmp->status = 0;
 	return (tmp);
@@ -120,12 +120,13 @@ int	main(int argc, char **argv, char **env)
 			rl_on_new_line(); // даем понять, что у нас новая строка
 			rl_redisplay(); //меняем то, что отражается на экране
 		}
+		printf("%s\n", str);
 		/* Здесь должен быть парсер.
 			А могла быть ваша реклама. */
-		start_minishell(&all); // подумать, как передавать именно ссылку на структуру
-		if (str)
-			free(str);
-		system("leaks minishell");// для проверки утечек
+		// start_minishell(&all); // подумать, как передавать именно ссылку на структуру
+		// if (str)
+		// 	free(str);
+		// system("leaks minishell");// для проверки утечек
 	}
 	clear_history();
 	ft_free(tmp_env);

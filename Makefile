@@ -6,7 +6,7 @@
 #    By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/24 19:45:52 by nagrivan          #+#    #+#              #
-#    Updated: 2021/10/15 16:21:20 by nagrivan         ###   ########.fr        #
+#    Updated: 2021/10/16 13:55:31 by nagrivan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,7 +42,7 @@ CPPFLAGS	= -I/Users/nagrivan/.brew/opt/readline/include
 
 RM	= rm -rf
 
-all: $(NAME)
+all: libft_make $(NAME)
 
 $(OBJS_DIRS):
 		@mkdir -p $@
@@ -50,22 +50,19 @@ $(OBJS_DIRS):
 $(OBJS_DIRS)%.o : %.c ${INCLUDES} ${LIBFT_INCLUDES} ${LIBFT}
 		${CC} ${CFLAGS} -c $< -o $@
 
-$(NAME): ${OBJS} ${OBJS_DIRS} ${LIBFT} Makefile
-		 ${CC} ${CFLAGS} ${OBJS} ${OBJS_BILD} ${LIBFT} -o ${NAME} -lreadline ${LDFLAGS} ${CPPFLAGS}
+$(NAME): ${OBJS_DIRS} ${OBJS} ${LIBFT} Makefile
+		 ${CC} ${CFLAGS} ${OBJS} ${LIBFT} -o ${NAME} -lreadline ${LDFLAGS} ${CPPFLAGS}
 
-$(LIBFT):
+libft_make:
 		make -C ${LIBFT_DIRS}
 clean:
 		make clean -C ${LIBFT_DIRS}
 		${RM} ${OBJS_DIRS}
 
 fclean: clean
-		make -C ${LIBFT_DIRS}
+		make fclean -C ${LIBFT_DIRS}
 		${RM} ${NAME}
 
 re: fclean all
 
-norma:
-		norminette ${SRCS} ${INCLUDES}
-
-.PHONY: all clean fclean re norma
+.PHONY: clean fclean re norma

@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:14:50 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/15 16:49:42 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/16 13:45:46 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int	my_unset(t_all *all)
 			geolock = check_exp(all->argv[i], all->env,
 					(check_equals(all->argv[i])));
 			if (geolock != -1)
-				delete_env(env, geolock);
+				delete_env(all, geolock);
 		}
 	}
 	return (status);

@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 13:22:15 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/15 16:49:42 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/16 13:46:18 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int	num_pipe(t_all *all)
 {
 	int		result;
 	
+	result = 0;
 	while(all->next != NULL)
 	{
 		result++;
