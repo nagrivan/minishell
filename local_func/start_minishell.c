@@ -6,69 +6,69 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 15:06:55 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/15 16:33:40 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/16 14:37:26 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	check_patch(t_all *env)
+int	check_patch(t_all *all)
 {
 	int		i;
 
 	i = -1;
-	while (env->path[++i])
+	while (all->path[++i])
 	{
-		env->path[i] = ft_strjoin(env->path[i], "/");
-		if (!env->path[i])
+		all->path[i] = ft_strjoin(all->path[i], "/");
+		if (!all->path[i])
 			return (-1);
 	}
 	i = -1;
-	while (env->path[++i])
+	while (all->path[++i])
 	{
-		env->path[i] = ft_strjoin(env->path[i], env->argv[0]);
-		if (!env->path[i])
+		all->path[i] = ft_strjoin(all->path[i], all->argv[0]);
+		if (!all->path[i])
 			return (-1);
-		if (!(access(env->path[i], X_OK)))
+		if (!(access(all->path[i], X_OK)))
 		{
-			env->argv[0] = ft_strdup(env->path[i]);
+			all->argv[0] = ft_strdup(all->path[i]);
 			return (0);
 		}
 	}
 	return (1);
 }
 
-int	create_path(t_all *env)
+int	create_path(t_all *all)
 {
 	int			geolock;
 	char		*paths;
 
 	paths = NULL;
-	geolock = check_env("PATH", env->env);
+	geolock = check_env("PATH", all->env);
 	if (geolock == -1)
 	{
-		printf("minishell: %s: No such file or directory\n", env->argv[0]);
+		printf("minishell: %s: No such file or directory\n", all->argv[0]);
 		return (127);
 	}
-	paths = ft_strtrim(env->env[geolock], "PATH=");
+	paths = ft_strtrim(all->env[geolock], "PATH=");
 	if (!paths)
 	{
-		printf("minishell: %s: No such file or directory\n", env->argv[0]);
+		printf("minishell: %s: No such file or directory\n", all->argv[0]);
 		return (127);
 	}
-	env->path = ft_split(paths, ':');
-	if (!env->path)
+	all->path = ft_split(paths, ':');
+	if (!all->path)
 		return (-1);
-	if ((check_patch(env)))
+	if ((check_patch(all)))
 		return (-1);
 	return (0);
 }
 
-int	check_execve(t_all *env)
+int	check_execve(t_all *all)
 {
 	pid_t		pid;
 	int			fd[2];
-	if ((create_path(env)))
+	if ((create_path(all)))
 		return (1);
 	if ((pipe(fd)) == -1)
 		return (1);
@@ -80,7 +80,7 @@ int	check_execve(t_all *env)
 		close(fd[0]);
 		dup2(fd[1], STDOUT);
 		close(fd[1]);
-		execve(env->argv[0], env->argv, env->env);
+		execve(all->argv[0], all->argv, all->env);
 	}
 	else
 	{
@@ -91,39 +91,39 @@ int	check_execve(t_all *env)
 	return (0);
 }
 
-int	is_bildins(t_all *env)
+int	is_bildins(t_all *all)
 {
-	if (!(ft_strncmp(env->argv[0], "echo", 5))
-		|| !(ft_strncmp(env->argv[0], "Echo", 5)))
-		my_echo(env->argv);
-	if (!(ft_strncmp(env->argv[0], "cd", 3)))
-		my_cd(env);
-	if (!(ft_strncmp(env->argv[0], "exit", 5)))
-		my_exit(env);
-	if (!(ft_strncmp(env->argv[0], "env", 4)))
-		my_env(env);
-	if (!(ft_strncmp(env->argv[0], "export", 7)))
-		my_export(env);
-	if (!(ft_strncmp(env->argv[0], "pwd", 4)))
+	if (!(ft_strncmp(all->argv[0], "echo", 5))
+		|| !(ft_strncmp(all->argv[0], "Echo", 5)))
+		my_echo(all->argv);
+	if (!(ft_strncmp(all->argv[0], "cd", 3)))
+		my_cd(all);
+	if (!(ft_strncmp(all->argv[0], "exit", 5)))
+		my_exit(all);
+	if (!(ft_strncmp(all->argv[0], "env", 4)))
+		my_env(all);
+	if (!(ft_strncmp(all->argv[0], "export", 7)))
+		my_export(all);
+	if (!(ft_strncmp(all->argv[0], "pwd", 4)))
 		my_pwd();
-	if (!(ft_strncmp(env->argv[0], "unset", 6)))
-		my_unset(env);
+	if (!(ft_strncmp(all->argv[0], "unset", 6)))
+		my_unset(all);
 	else
 		return (0);
 	return (1);
 }
 
-void	start_minishell(t_all *env)
+void	start_minishell(t_all *all)
 {
-	while (env->next != NULL)
+	while (all->next != NULL)
 	{
-		my_pipe(env);
-		if (env->next != NULL)
-			start_minishell(env->next);
-		what_is_redir(env);
-		if (!(is_bildins(env)) && (access(env->argv[0], X_OK)))
-			if ((check_execve(env)))
+		my_pipe(all);
+		if (all->next != NULL)
+			start_minishell(all->next);
+		what_is_redir(all);
+		if (!(is_bildins(all)) && (access(all->argv[0], X_OK)))
+			if ((check_execve(all)))
 				exit(127);
-		env = env->next;
+		all = all->next;
 	}
 }
