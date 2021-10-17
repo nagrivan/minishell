@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 15:06:55 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/14 18:13:06 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/17 16:02:01 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,10 @@ int	check_execve(t_env *env)
 {
 	pid_t		pid;
 	int			fd[2];
-	if ((create_path(env)))
-		return (1);
+	
+	if ((access(env->argv[0], X_OK)) != 0)
+		if ((create_path(env)))
+			return (1);
 	if ((pipe(fd)) == -1)
 		return (1);
 	pid = fork();
@@ -78,9 +80,10 @@ int	check_execve(t_env *env)
 	if (pid == 0)
 	{
 		close(fd[0]);
-		dup2(fd[1], STDOUT);
+		// dup2(fd[1], STDOUT_FILENO);
 		close(fd[1]);
-		execve(env->argv[0], env->argv, env->path);
+		execve(env->argv[0], env->argv, env->env);
+		// exit(0);
 	}
 	else
 	{
@@ -94,20 +97,20 @@ int	check_execve(t_env *env)
 int	is_bildins(t_env *env)
 {
 	if (!(ft_strncmp(env->argv[0], "echo", 5))
-		|| !(ft_strncmp(env->argv[0], "Echo", 5))
-		my_echo();
+		|| !(ft_strncmp(env->argv[0], "Echo", 5)))
+		my_echo(env->argv);
 	if (!(ft_strncmp(env->argv[0], "cd", 3)))
-		my_cd();
+		my_cd(env->argv, env);
 	if (!(ft_strncmp(env->argv[0], "exit", 5)))
-		my_exit();
+		my_exit(env->argv);
 	if (!(ft_strncmp(env->argv[0], "env", 4)))
-		my_env();
+		my_env(env->argv, env);
 	if (!(ft_strncmp(env->argv[0], "export", 7)))
-		my_export();
+		my_export(env->argv, env);
 	if (!(ft_strncmp(env->argv[0], "pwd", 4)))
 		my_pwd();
 	if (!(ft_strncmp(env->argv[0], "unset", 6)))
-		my_unset();
+		my_unset(env->argv, env);
 	else
 		return (0);
 	return (1);
@@ -115,15 +118,14 @@ int	is_bildins(t_env *env)
 
 void	start_minishell(t_env *env)
 {
-	while (env->next != NULL)
+	while (env != NULL)
 	{
 		my_pipe(env);
 		if (env->next != NULL)
 			start_minishell(env->next);
 		what_is_redir(env);
-		// if (!(is_bildins(env)) && (access(env->argv[0], X_OK)))
-			if ((check_execve(env)))
-				exit(127);
+		if (!(is_bildins(env)))
+			check_execve(env);
 		env = env->next;
 	}
 }

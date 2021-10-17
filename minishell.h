@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:21:27 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/14 15:10:29 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/17 16:11:13 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,10 @@
 # define	STDIN 0
 # define	STDOUT 1
 
-# define	ONE_FROM 0
-# define	ONE_TO 1
-# define	DOB_TO 2
-# define	HEREDOC 3
+# define	ONE_FROM 0 // <
+# define	ONE_TO 1 // >
+# define	DOB_TO 2 // >>
+# define	HEREDOC 3 // <<
 
 typedef struct s_redirect
 {
@@ -39,13 +39,29 @@ typedef struct s_redirect
 	int				file_d;
 } t_redirect;
 
+/*
+	ls > text > all | cat all |
+*/
+
+/*
+	cat << file.txt
+	argv[0] = cat
+	
+*/
+
+/*
+	echo -n hello
+	argv[0] = echo;
+	argv[1] = -n;
+	argv[2] = hello;
+*/
 
 typedef struct s_env
 {
 	char			**path; //пути из $PATH
 	char			**env; //переменные окружения
 	char			**argv; //сами команды + флаги + аргументы
-	int				fd[2];
+	int				fd[2]; 
 	t_redirect		*redir;
 	int				num_redir;
 	pid_t			dother;
@@ -78,6 +94,8 @@ int			check_env(char *argv, char **env);
 int			check_exp(char *argv, char **env, size_t size);
 int			my_export_argv(char *argv);
 size_t		check_equals(char *argv);
+
+void	start_minishell(t_env *env);
 
 /*
 	Редиректы и пайпы

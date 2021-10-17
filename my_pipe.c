@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 13:22:15 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/14 14:56:01 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/16 17:34:20 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	num_pipe(t_env *env)
 {
-	int		result;
+	int		result = 0;
 	
 	while(env->next != NULL)
 	{

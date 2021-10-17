@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/10 15:32:07 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/14 13:21:28 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/17 16:05:04 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	redir_heredoc(t_env *env, int i)
 		while (1)
 		{
 			str = readline("> ");
-			if (!str && !(ft_strncmp(str, env->redir[i].filename, ft_strlen(str))))
+			if (str && (!(ft_strncmp(str, env->redir[i].filename, ft_strlen(str)))))
 				exit(0);
 			ft_putendl_fd(str, fd[1]);
 			free(str);
@@ -50,10 +50,11 @@ void	redir_heredoc(t_env *env, int i)
 	}
 	else
 	{
+		wait(NULL);
 		if (env->argv[0])
 		{			
 			close(fd[1]);
-			dup2(fd[0], STDIN);
+			dup2(fd[0], STDIN_FILENO);
 			close(fd[0]);
 		}
 	}
@@ -71,9 +72,11 @@ int	replace_fd(t_env *env, int num, int fd)
 		return (1);
 	if ((close(env->redir[num].file_d)) == -1)
 		return (1);
-	if ((dup2(tmp_fd, fd)) == -1)
-		return (1);
 	return (0);
+
+
+		// if ((dup2(tmp_fd, fd)) == -1)
+		// 	return (1);	
 }
 
 void	what_is_redir(t_env *env)
@@ -89,21 +92,21 @@ void	what_is_redir(t_env *env)
 		{
 			env->redir[i].file_d = open(env->redir[i].filename, O_RDONLY);
 			if (env->redir[i].file_d == -1)
-				printf("Errors\n");
+				printf("minishell: %s: No such file or directory\n", env->redir[i].filename);
 			replace_fd(env, i, STDIN);
 		}
 		if (env->redir[i].type_redir == ONE_TO && env->redir[i].filename)
 		{
 			env->redir[i].file_d = open(env->redir[i].filename, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 			if (env->redir[i].file_d == -1)
-				printf("Errors\n");
+				printf("minishell: %s: No such file or directory\n", env->redir[i].filename);
 			replace_fd(env, i, STDOUT);
 		}
 		if (env->redir[i].type_redir == DOB_TO && env->redir[i].filename)
 		{
 			env->redir[i].file_d = open(env->redir[i].filename, O_WRONLY | O_CREAT | O_APPEND, 0777);
 			if (env->redir[i].file_d == -1)
-				printf("Errors\n");
+				printf("minishell: %s: No such file or directory\n", env->redir[i].filename);
 			replace_fd(env, i, STDOUT);
 		}
 	}

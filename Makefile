@@ -6,7 +6,7 @@ NAME	= minitest
 
 LIBFT	= ./libft/libft.a
 
-SRCS	=	main_test.c \
+SRCS	=	main_test.c		start_minishell.c		my_redirections.c		my_pipe.c\
 
 SRCS_BILD	=	my_pwd.c \
 				my_echo.c \
