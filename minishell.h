@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:21:27 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/17 16:11:13 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/19 15:25:02 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ typedef struct s_env
 	pid_t			dother;
 	int				pipe;
 	int				status;
+	int				tmp_fd; //временная переменная для сохранения исходного fd до шаманства
 	struct s_env	*next;
 } t_env;
 

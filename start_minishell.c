@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 15:06:55 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/17 16:02:01 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/19 14:58:17 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,9 +123,10 @@ void	start_minishell(t_env *env)
 		my_pipe(env);
 		if (env->next != NULL)
 			start_minishell(env->next);
-		what_is_redir(env);
+		what_is_redir(env);// попробовать в парсере
 		if (!(is_bildins(env)))
 			check_execve(env);
+		
 		env = env->next;
 	}
 }

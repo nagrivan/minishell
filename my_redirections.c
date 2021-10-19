@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/10 15:32:07 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/17 16:05:04 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/19 15:28:31 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,8 @@ void	redir_heredoc(t_env *env, int i)
 
 int	replace_fd(t_env *env, int num, int fd)
 {
-	int		tmp_fd;
-
-	tmp_fd = 0;
-	tmp_fd = dup(fd);
+	env->tmp_fd = 0;
+	env->tmp_fd = dup(fd); //запихнуть в структуру
 	if ((close(fd)) == -1)
 		return (1);
 	if ((dup2(env->redir[num].file_d, fd)) == -1)
@@ -74,9 +72,8 @@ int	replace_fd(t_env *env, int num, int fd)
 		return (1);
 	return (0);
 
-
 		// if ((dup2(tmp_fd, fd)) == -1)
-		// 	return (1);	
+		// 	return (1);	куда запихнуть??!!
 }
 
 void	what_is_redir(t_env *env)
