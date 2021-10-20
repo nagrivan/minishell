@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 13:51:10 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/16 14:38:38 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/20 13:59:04 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,14 +45,18 @@ void	init_shlvl(char ***env)
 	int		numb;
 	int		len;
 	char	*str;
+	char	*number;
 
 	i = check_exp("SHLVL=", *(env), 6);
 	if (i != -1)
 	{
 		numb = ft_atoi(get_value((*env)[i], &len));
 		str = ft_substr((*env)[i], 0, len);
+		number = ft_itoa(++numb);
 		free((*env)[i]);
-		(*env)[i] = ft_strjoin(str, ft_itoa(++numb));
+		(*env)[i] = ft_strjoin(str, number);
+		free(str);
+		free(number);
 	}
 }
 
@@ -100,7 +104,7 @@ int	main(int argc, char **argv, char **env)
 {
 	char		*str;
 	char		**tmp_env;
-	t_all		*all;
+	// t_all		*all;
 
 	(void)argc;
 	(void)argv;
@@ -108,10 +112,11 @@ int	main(int argc, char **argv, char **env)
 	tmp_env = init_env(env);
 	if (!tmp_env)
 		return (1);
-	while (1)
+	int g = 0;
+	while (g < 10)
 	{
 		init_shlvl(&tmp_env); // leaks
-		all = init_struct();
+		// all = init_struct();
 		str = readline("minishell$ ");
 		if (str && *str)
 			add_history(str); // сохранение истории
@@ -122,10 +127,11 @@ int	main(int argc, char **argv, char **env)
 		}
 		/* Здесь должен быть парсер.
 			А могла быть ваша реклама. */
-		start_minishell(&all); // подумать, как передавать именно ссылку на структуру
+		// start_minishell(&all); // подумать, как передавать именно ссылку на структуру
 		if (str)
 			free(str);
-		system("leaks minishell");// для проверки утечек
+		// system("leaks minishell");// для проверки утечек
+		g++;
 	}
 	clear_history();
 	ft_free(tmp_env);
