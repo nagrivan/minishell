@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/10 15:32:07 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/19 18:18:42 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/20 16:33:51 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	redir_heredoc(t_env *env, int i)
 	{
 		wait(NULL);
 		if (env->argv[0])
-		{			
+		{
 			close(fd[1]);
 			dup2(fd[0], STDIN_FILENO);
 			close(fd[0]);
@@ -76,34 +76,17 @@ int	replace_fd(t_env *env, int num, int fd)
 		// 	return (1);	куда запихнуть??!!
 }
 
-// void	open_file(t_env *env, int i)
-// {
-// 	if (env->redir[i].type_redir == ONE_FROM && env->redir[i].filename)
-// 		env->redir[i].file_d = open(env->redir[i].filename, O_RDONLY);
-// 	if (env->redir[i].type_redir == ONE_TO && env->redir[i].filename)
-// 		env->redir[i].file_d = open(env->redir[i].filename, O_WRONLY | O_CREAT | O_TRUNC, 0777);
-// 	if (env->redir[i].type_redir == DOB_TO && env->redir[i].filename)
-// 		env->redir[i].file_d = open(env->redir[i].filename, O_WRONLY | O_CREAT | O_APPEND, 0777);
-// 	if (env->redir[i].file_d == -1)
-// 		printf("minishell: %s: No such file or directory\n", env->redir[i].filename);
-// }
-
-// void	what_is_redir(t_env *env)
-// {
-// 	int		i;
-	
-// 	i = -1;
-// 	while (++i < env->num_redir)
-// 	{		
-// 		if (env->redir[i].type_redir == HEREDOC && env->redir[i].filename)
-// 			redir_heredoc(env, i);
-// 		open_file(env, i);
-// 		if (env->redir[i].type_redir == ONE_FROM)
-// 			replace_fd(env, i, STDIN);
-// 		else
-// 			replace_fd(env, i, STDOUT);
-// 	}
-// }
+void	open_file(t_env *env, int i)
+{
+	if (env->redir[i].type_redir == ONE_FROM && env->redir[i].filename)
+		env->redir[i].file_d = open(env->redir[i].filename, O_RDONLY);
+	if (env->redir[i].type_redir == ONE_TO && env->redir[i].filename)
+		env->redir[i].file_d = open(env->redir[i].filename, O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	if (env->redir[i].type_redir == DOB_TO && env->redir[i].filename)
+		env->redir[i].file_d = open(env->redir[i].filename, O_WRONLY | O_CREAT | O_APPEND, 0777);
+	if (env->redir[i].file_d == -1)
+		printf("minishell: %s: No such file or directory\n", env->redir[i].filename);
+}
 
 void	what_is_redir(t_env *env)
 {
@@ -111,29 +94,46 @@ void	what_is_redir(t_env *env)
 	
 	i = -1;
 	while (++i < env->num_redir)
-	{
-		if 	(env->redir[i].type_redir == HEREDOC && env->redir[i].filename)
+	{		
+		if (env->redir[i].type_redir == HEREDOC && env->redir[i].filename)
 			redir_heredoc(env, i);
-		if (env->redir[i].type_redir == ONE_FROM && env->redir[i].filename)
-		{
-			env->redir[i].file_d = open(env->redir[i].filename, O_RDONLY);
-			if (env->redir[i].file_d == -1)
-				printf("minishell: %s: No such file or directory\n", env->redir[i].filename);
+		open_file(env, i);
+		if (env->redir[i].type_redir == ONE_FROM)
 			replace_fd(env, i, STDIN);
-		}
-		if (env->redir[i].type_redir == ONE_TO && env->redir[i].filename)
-		{
-			env->redir[i].file_d = open(env->redir[i].filename, O_WRONLY | O_CREAT | O_TRUNC, 0777);
-			if (env->redir[i].file_d == -1)
-				printf("minishell: %s: No such file or directory\n", env->redir[i].filename);
+		else
 			replace_fd(env, i, STDOUT);
-		}
-		if (env->redir[i].type_redir == DOB_TO && env->redir[i].filename)
-		{
-			env->redir[i].file_d = open(env->redir[i].filename, O_WRONLY | O_CREAT | O_APPEND, 0777);
-			if (env->redir[i].file_d == -1)
-				printf("minishell: %s: No such file or directory\n", env->redir[i].filename);
-			replace_fd(env, i, STDOUT);
-		}
 	}
 }
+
+// void	what_is_redir(t_env *env)
+// {
+// 	int		i;
+	
+// 	i = -1;
+// 	while (++i < env->num_redir)
+// 	{
+// 		if 	(env->redir[i].type_redir == HEREDOC && env->redir[i].filename)
+// 			redir_heredoc(env, i);
+// 		if (env->redir[i].type_redir == ONE_FROM && env->redir[i].filename)
+// 		{
+// 			env->redir[i].file_d = open(env->redir[i].filename, O_RDONLY);
+// 			if (env->redir[i].file_d == -1)
+// 				printf("minishell: %s: No such file or directory\n", env->redir[i].filename);
+// 			replace_fd(env, i, STDIN);
+// 		}
+// 		if (env->redir[i].type_redir == ONE_TO && env->redir[i].filename)
+// 		{
+// 			env->redir[i].file_d = open(env->redir[i].filename, O_WRONLY | O_CREAT | O_TRUNC, 0777);
+// 			if (env->redir[i].file_d == -1)
+// 				printf("minishell: %s: No such file or directory\n", env->redir[i].filename);
+// 			replace_fd(env, i, STDOUT);
+// 		}
+// 		if (env->redir[i].type_redir == DOB_TO && env->redir[i].filename)
+// 		{
+// 			env->redir[i].file_d = open(env->redir[i].filename, O_WRONLY | O_CREAT | O_APPEND, 0777);
+// 			if (env->redir[i].file_d == -1)
+// 				printf("minishell: %s: No such file or directory\n", env->redir[i].filename);
+// 			replace_fd(env, i, STDOUT);
+// 		}
+// 	}
+// }

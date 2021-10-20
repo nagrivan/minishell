@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 15:06:55 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/19 18:57:29 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/20 16:30:25 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,8 @@ int	check_execve(t_env *env)
 		close(fd[0]);
 		// dup2(fd[1], STDOUT_FILENO);
 		close(fd[1]);
-		execve(env->argv[0], env->argv, env->env);
+		// printf("fd_file = %d\n", env->redir[0].file_d);
+		execve(env->argv[0], env->argv, env->env);//поправить поведение при несуществующем файле
 		// exit(0);
 	}
 	else
@@ -96,20 +97,19 @@ int	check_execve(t_env *env)
 
 int	is_bildins(t_env *env)
 {
-	if (!(ft_strncmp(env->argv[0], "echo", 5))
-		|| !(ft_strncmp(env->argv[0], "Echo", 5)))
+	if (!(ft_strncmp(env->argv[0], "echo", 5)))
 		my_echo(env->argv);
-	if (!(ft_strncmp(env->argv[0], "cd", 3)))
+	else if (!(ft_strncmp(env->argv[0], "cd", 3)))
 		my_cd(env->argv, env);
-	if (!(ft_strncmp(env->argv[0], "exit", 5)))
+	else if (!(ft_strncmp(env->argv[0], "exit", 5)))
 		my_exit(env->argv);
-	if (!(ft_strncmp(env->argv[0], "env", 4)))
+	else if (!(ft_strncmp(env->argv[0], "env", 4)))
 		my_env(env->argv, env);
-	if (!(ft_strncmp(env->argv[0], "export", 7)))
+	else if (!(ft_strncmp(env->argv[0], "export", 7)))
 		my_export(env->argv, env);
-	if (!(ft_strncmp(env->argv[0], "pwd", 4)))
+	else if (!(ft_strncmp(env->argv[0], "pwd", 4)))
 		my_pwd();
-	if (!(ft_strncmp(env->argv[0], "unset", 6)))
+	else if (!(ft_strncmp(env->argv[0], "unset", 6)))
 		my_unset(env->argv, env);
 	else
 		return (0);
@@ -121,14 +121,11 @@ void	start_minishell(t_env *env)
 	while (env != NULL)
 	{
 		my_pipe(env);
-		// if (env->next != NULL)
-		// 	start_minishell(env->next);
+		if (env->next != NULL)
+			start_minishell(env->next);
 		what_is_redir(env);// попробовать в парсере
 		if (!(is_bildins(env)))
-		{
-			printf("Exit\n");
 			check_execve(env);
-		}
 		env = env->next;
 	}
 }

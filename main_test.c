@@ -36,8 +36,8 @@ void ft_free(char **my_text)
 void	init_test_struct(t_env *tmp)
 {
 	tmp->argv = (char **)malloc(sizeof(char *) * 3);
-	tmp->argv[0] = "echo";
-	tmp->argv[1] = "Hello";
+	tmp->argv[0] = "cat";
+	// tmp->argv[1] = "Hi";
 	tmp->argv[2] = NULL;
 	tmp->dother = 0;
 	tmp->fd[0] = dup(STDIN_FILENO);
@@ -48,7 +48,7 @@ void	init_test_struct(t_env *tmp)
 	tmp->pipe = 0;
 	tmp->redir = (t_redirect *)malloc(sizeof(t_redirect) * tmp->num_redir);
 	tmp->redir[0].filename = "file";
-	tmp->redir[0].type_redir = DOB_TO;
+	tmp->redir[0].type_redir = HEREDOC;
 	tmp->status = 0;
 }
 
