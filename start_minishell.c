@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 15:06:55 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/20 17:21:18 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/20 18:01:57 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,23 @@
 int	check_patch(t_env *env)
 {
 	int		i;
+	char	*free_str;
 
 	i = -1;
 	while (env->path[++i])
 	{
+		free_str = env->path[i];
 		env->path[i] = ft_strjoin(env->path[i], "/");
+		free(free_str);
 		if (!env->path[i])
 			return (-1);
 	}
 	i = -1;
 	while (env->path[++i])
 	{
+		free_str = env->path[i];
 		env->path[i] = ft_strjoin(env->path[i], env->argv[0]);
+		free(free_str);
 		if (!env->path[i])
 			return (-1);
 		if (!(access(env->path[i], X_OK)))
@@ -61,6 +66,8 @@ int	create_path(t_env *env)
 		return (-1);
 	if ((check_patch(env)))
 		return (-1);
+	ft_free(env->path);
+	free(paths);
 	return (0);
 }
 
@@ -82,9 +89,7 @@ int	check_execve(t_env *env)
 		close(fd[0]);
 		// dup2(fd[1], STDOUT_FILENO);
 		close(fd[1]);
-		// printf("fd_file = %d\n", env->redir[0].file_d);
-		execve(env->argv[0], env->argv, env->env);//поправить поведение при несуществующем файле
-		// exit(0);
+		execve(env->argv[0], env->argv, env->env);
 	}
 	else
 	{
