@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/10 15:32:07 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/20 16:33:51 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/20 17:17:43 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,11 +97,14 @@ void	what_is_redir(t_env *env)
 	{		
 		if (env->redir[i].type_redir == HEREDOC && env->redir[i].filename)
 			redir_heredoc(env, i);
-		open_file(env, i);
-		if (env->redir[i].type_redir == ONE_FROM)
-			replace_fd(env, i, STDIN);
 		else
-			replace_fd(env, i, STDOUT);
+		{
+			open_file(env, i);
+			if (env->redir[i].type_redir == ONE_FROM)
+				replace_fd(env, i, STDIN);
+			else
+				replace_fd(env, i, STDOUT);	
+		}
 	}
 }
 
