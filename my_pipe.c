@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 13:22:15 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/16 17:34:20 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/19 18:58:56 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	my_pipe(t_env *env)
 {
 	if ((pipe(env->fd)) == -1)
 		return ;
-	env->dother = fork();
+	// env->dother = fork();
 	if (env->dother == -1)
 		return ;
 	if (env->dother == 0)

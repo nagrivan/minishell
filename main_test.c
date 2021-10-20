@@ -35,15 +35,20 @@ void ft_free(char **my_text)
 
 void	init_test_struct(t_env *tmp)
 {
-	tmp->argv = NULL;
+	tmp->argv = (char **)malloc(sizeof(char *) * 3);
+	tmp->argv[0] = "echo";
+	tmp->argv[1] = "Hello";
+	tmp->argv[2] = NULL;
 	tmp->dother = 0;
 	tmp->fd[0] = dup(STDIN_FILENO);
 	tmp->fd[1] = dup(STDOUT_FILENO);
 	tmp->next = NULL;
-	tmp->num_redir = 0;
+	tmp->num_redir = 1;
 	tmp->path = NULL;
 	tmp->pipe = 0;
-	tmp->redir = NULL;
+	tmp->redir = (t_redirect *)malloc(sizeof(t_redirect) * tmp->num_redir);
+	tmp->redir[0].filename = "file";
+	tmp->redir[0].type_redir = DOB_TO;
 	tmp->status = 0;
 }
 
@@ -68,7 +73,7 @@ int	init_struct(t_env *tmp, char **env)
 
 int main(int argc, char **argv, char **env)
 {
-	char *str;
+	// char *str;
 	// char **my_text;
 	t_env tmp;
 
@@ -80,12 +85,12 @@ int main(int argc, char **argv, char **env)
 	while (g < 1)
 	{
 		init_test_struct(&tmp);
-		str = readline("mini_test$ ");
-		if (!(tmp.argv = ft_split(str, ' ')))
-		{
-			free(str);
-			return (1);
-		}
+		// str = readline("mini_test$ ");
+		// if (!(tmp.argv = ft_split(str, ' ')))
+		// {
+		// 	free(str);
+		// 	return (1);
+		// }
 		start_minishell(&tmp);
 		// ft_free(tmp.argv);
 		// free(str);

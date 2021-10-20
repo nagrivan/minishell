@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:21:27 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/19 15:25:02 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/19 18:08:50 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@ int		my_exit(char **argv);
 int		my_export(char **argv, t_env *env);
 int		my_pwd(void);
 int		my_unset(char **argv, t_env *env);
-void	what_is_redir(t_env *env);
 
 /*
 	Вспомогательная функция
