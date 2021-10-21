@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 15:06:55 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/20 18:01:57 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/21 16:36:29 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,9 @@ int	is_bildins(t_env *env)
 
 void	start_minishell(t_env *env)
 {
+	int		i;
+
+	i = -1;
 	while (env != NULL)
 	{
 		my_pipe(env);
@@ -132,6 +135,13 @@ void	start_minishell(t_env *env)
 		if (!(is_bildins(env)))
 			if (env->redir[env->num_redir - 1].file_d != -1)
 				check_execve(env);
+		while (++i < env->num_redir)
+		{
+			if ((close(env->redir[i].fd)) == -1)
+				return ;
+			if ((dup2(env->redir[i].tmp_fd, env->redir[i].fd)) == -1)
+				return ;
+		}
 		env = env->next;
 	}
 }
