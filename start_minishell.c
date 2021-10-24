@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 15:06:55 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/21 16:36:29 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/24 15:58:56 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,9 @@ int	check_patch(t_env *env)
 			return (-1);
 		if (!(access(env->path[i], X_OK)))
 		{
+			free_str = env->argv[0];
 			env->argv[0] = ft_strdup(env->path[i]);
+			free(free_str);
 			return (0);
 		}
 	}
@@ -124,16 +126,24 @@ int	is_bildins(t_env *env)
 void	start_minishell(t_env *env)
 {
 	int		i;
+	int		count_pipe;
+	int		tmp_fd[2];
+	int		status;
 
 	i = -1;
+	count_pipe = num_pipe(env);
+	tmp_fd[0] = dup(STDIN_FILENO);
+	tmp_fd[1] = dup(STDOUT_FILENO);
 	while (env != NULL)
 	{
-		my_pipe(env);
-		if (env->next != NULL)
-			start_minishell(env->next);
-		what_is_redir(env);// попробовать в парсере
+		if (env->pipe != count_pipe)
+			my_pipe(env, count_pipe, tmp_fd);
+		// if (env->next != NULL)
+		// 	my_pipe(env->next, count_pipe);
+		if (env->redir)
+			what_is_redir(env);
 		if (!(is_bildins(env)))
-			if (env->redir[env->num_redir - 1].file_d != -1)
+			if (!env->redir || env->redir[env->num_redir - 1].file_d != -1)
 				check_execve(env);
 		while (++i < env->num_redir)
 		{
@@ -144,4 +154,7 @@ void	start_minishell(t_env *env)
 		}
 		env = env->next;
 	}
+	for (int k = 0; k <= count_pipe; k++)
+		waitpid(0, &status, WUNTRACED);
+	dup2(tmp_fd[0], STDIN_FILENO);
 }
