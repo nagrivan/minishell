@@ -177,7 +177,7 @@ void go_pipe(t_env *tmp, char **env)
 		/* функция проверки редиректов и перезаписи argv */
 		if (tmp->num_redir > 0)
 		{
-			char **tmp_ar = (char **)ft_calloc(sizeof(char *), tmp->num_redir * 2);
+			char **tmp_ar = (char **)ft_calloc(sizeof(char *), (num_argv(tmp->argv) - (tmp->num_redir * 2)) + 1);
 			int l = 0;
 			for (int k = 0; tmp->argv[k]; k++)
 			{

@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 15:06:55 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/25 17:28:14 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/25 20:05:37 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,30 +169,23 @@ void	start_minishell(t_env *env)
 	tmp_fd[1] = dup(STDOUT_FILENO);
 	while (env != NULL)
 	{
-		// if (what_bild(env))
-		// {
-		// 	bildin_exec(env);
-		// }
-		// else 
-		// if (env->pipe <= count_pipe && env->pipe)
+		if (count_pipe > 1)
 			my_pipe(env, count_pipe, tmp_fd);
-		// if (env->next != NULL)
-		// 	my_pipe(env->next, count_pipe);
-		// else 
-		// {
-		// 	if (env->redir)
-		// 		what_is_redir(env);
-		// 	if (!(is_bildins(env)))
-		// 		if (!env->redir || env->redir[env->num_redir - 1].file_d != -1)
-		// 			check_execve(env);
-		// }
-		// while (++i < env->num_redir)
-		// {
-		// 	if ((close(env->redir[i].fd)) == -1)
-		// 		return ;
-		// 	if ((dup2(env->redir[i].tmp_fd, env->redir[i].fd)) == -1)
-		// 		return ;
-		// }
+		else 
+		{
+			if (env->redir)
+				what_is_redir(env);
+			if (env->argv[0] && !(is_bildins(env)))
+				if (!env->redir || env->redir[env->num_redir - 1].file_d != -1)
+					check_execve(env);
+			while (++i < env->num_redir)
+			{
+				if ((close(env->redir[i].fd)) == -1)
+					return ;
+				if ((dup2(env->redir[i].tmp_fd, env->redir[i].fd)) == -1)
+					return ;
+			}
+		}
 		env = env->next;
 	}
 	for (int k = 0; k <= count_pipe; k++)
