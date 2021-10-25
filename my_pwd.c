@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:11:11 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/06 16:54:43 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/25 16:46:27 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 
 int	my_pwd(void)
 {
+	printf("my pwd\n");
 	char	*pwd;
 
 	pwd = NULL;

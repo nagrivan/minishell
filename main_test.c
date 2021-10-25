@@ -134,10 +134,70 @@ void go_pipe(t_env *tmp, char **env)
 			free(str);
 			exit(66);
 		}
+		for (int k=0; tmp->argv[k]; k++)
+		{
+			if (!(ft_strncmp(tmp->argv[k], ">", 2))
+				|| !(ft_strncmp(tmp->argv[k], ">>", 3))
+				|| !(ft_strncmp(tmp->argv[k], "<", 2))
+				|| !(ft_strncmp(tmp->argv[k], "<<", 3)))
+				tmp->num_redir += 1;
+		}
+		if (tmp->num_redir > 0)
+		{
+			tmp->redir = (t_redirect *)ft_calloc(sizeof(t_redirect), tmp->num_redir + 1);
+			int j = 0;
+			int k = 0;
+			while (tmp->argv[k])
+			{
+				if (!(ft_strncmp(tmp->argv[k], ">", 2))
+				|| !(ft_strncmp(tmp->argv[k], ">>", 3))
+				|| !(ft_strncmp(tmp->argv[k], "<", 2))
+				|| !(ft_strncmp(tmp->argv[k], "<<", 3)))
+				{
+					if (!(ft_strncmp(tmp->argv[k], ">", 2)))
+						tmp->redir[j].type_redir = ONE_TO;
+					else if (!(ft_strncmp(tmp->argv[k], ">>", 3)))
+						tmp->redir[j].type_redir = DOB_TO;
+					else if (!(ft_strncmp(tmp->argv[k], "<", 2)))
+						tmp->redir[j].type_redir = ONE_FROM;
+					else
+						tmp->redir[j].type_redir = HEREDOC;
+					tmp->redir[j].filename = ft_strdup(tmp->argv[++k]);
+					// printf("%s\n",tmp->redir[0].filename);
+					j++;
+
+				}
+				k++;
+			}
+		}
 		tmp->pipe = i + 1;
 		i++;
 		if (i < size)
 			tmp->next = init_struct_pipe(env);
+		/* функция проверки редиректов и перезаписи argv */
+		if (tmp->num_redir > 0)
+		{
+			char **tmp_ar = (char **)ft_calloc(sizeof(char *), tmp->num_redir * 2);
+			int l = 0;
+			for (int k = 0; tmp->argv[k]; k++)
+			{
+			// printf("2%s\n",tmp->redir[0].filename);
+				if (!(ft_strncmp(tmp->argv[k], ">", 2))
+					|| !(ft_strncmp(tmp->argv[k], ">>", 3))
+					|| !(ft_strncmp(tmp->argv[k], "<", 2))
+					|| !(ft_strncmp(tmp->argv[k], "<<", 3)))
+				{
+					k++;
+				}
+				else
+				{
+					tmp_ar[l] = ft_strdup(tmp->argv[k]);
+					l++;
+				}
+			}
+			ft_free(tmp->argv);
+			tmp->argv = tmp_ar;
+		}
 		tmp = tmp->next;
 	}
 	tmp = NULL;
@@ -162,6 +222,7 @@ int main(int argc, char **argv, char **env)
 	{
 		tmp = init_struct_pipe(tmp_env);
 		go_pipe(tmp, tmp_env);
+		// printf("%s\n",tmp->redir[0].filename);
 		start_minishell(tmp);
 		// while (pipes < (num_pipe(tmp) + 1))
 		// {

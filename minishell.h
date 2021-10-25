@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:21:27 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/19 18:08:50 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/25 16:12:29 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,25 +36,10 @@ typedef struct s_redirect
 {
 	char		*filename;
 	int			type_redir;
-	int				file_d;
+	int			file_d;
+	int			fd;
+	int			tmp_fd; //временная переменная для сохранения исходного fd до шаманства
 } t_redirect;
-
-/*
-	ls > text > all | cat all |
-*/
-
-/*
-	cat << file.txt
-	argv[0] = cat
-	
-*/
-
-/*
-	echo -n hello
-	argv[0] = echo;
-	argv[1] = -n;
-	argv[2] = hello;
-*/
 
 typedef struct s_env
 {
@@ -67,7 +52,6 @@ typedef struct s_env
 	pid_t			dother;
 	int				pipe;
 	int				status;
-	int				tmp_fd; //временная переменная для сохранения исходного fd до шаманства
 	struct s_env	*next;
 } t_env;
 
@@ -101,6 +85,12 @@ void	start_minishell(t_env *env);
 	Редиректы и пайпы
 */
 void	what_is_redir(t_env *env);
-void	my_pipe(t_env *env);
+void	my_pipe(t_env *env, int count_pipe, int *tmp_fd);
+int		num_pipe(t_env *env);
+
+
+int	create_path(t_env *env);
+int	is_bildins(t_env *env);
+
 
 #endif
