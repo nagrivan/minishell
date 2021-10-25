@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 15:06:55 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/24 15:58:56 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/25 12:36:36 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,15 +136,15 @@ void	start_minishell(t_env *env)
 	tmp_fd[1] = dup(STDOUT_FILENO);
 	while (env != NULL)
 	{
-		if (env->pipe != count_pipe)
+		if (env->pipe <= count_pipe && env->pipe)
 			my_pipe(env, count_pipe, tmp_fd);
 		// if (env->next != NULL)
 		// 	my_pipe(env->next, count_pipe);
 		if (env->redir)
 			what_is_redir(env);
-		if (!(is_bildins(env)))
-			if (!env->redir || env->redir[env->num_redir - 1].file_d != -1)
-				check_execve(env);
+		// if (!(is_bildins(env)))
+		// 	if (!env->redir || env->redir[env->num_redir - 1].file_d != -1)
+		// 		check_execve(env);
 		while (++i < env->num_redir)
 		{
 			if ((close(env->redir[i].fd)) == -1)

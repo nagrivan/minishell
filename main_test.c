@@ -134,7 +134,7 @@ void go_pipe(t_env *tmp, char **env)
 			free(str);
 			exit(66);
 		}
-		tmp->pipe = i;
+		tmp->pipe = i + 1;
 		i++;
 		if (i < size)
 			tmp->next = init_struct_pipe(env);
