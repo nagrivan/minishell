@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 13:51:10 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/20 13:59:04 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/26 16:52:16 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,25 +60,6 @@ void	init_shlvl(char ***env)
 	}
 }
 
-t_all	*init_struct(void)
-{
-	t_all	*tmp;
-
-	tmp = (t_all *)malloc(sizeof(t_all));
-	tmp->argv = NULL;
-	tmp->dother = 0;
-	tmp->env = NULL;
-	tmp->fd[0] = STDIN;
-	tmp->fd[1] = STDOUT;
-	tmp->next = NULL;
-	tmp->num_redir = 0;
-	tmp->path = NULL;
-	tmp->pipe = 0;
-	tmp->redir = NULL;
-	tmp->status = 0;
-	return (tmp);
-}
-
 char	**init_env(char **env)
 {
 	int		i;
@@ -100,11 +81,31 @@ char	**init_env(char **env)
 	return (result);
 }
 
+t_all	*init_struct(char **env)
+{
+	t_all	*tmp;
+
+	tmp = (t_all *)malloc(sizeof(t_all));
+	tmp->env = init_env(env);
+	tmp->argv = NULL;
+	tmp->dother = 0;
+	tmp->fd[0] = dup(STDIN_FILENO);
+	tmp->fd[1] = dup(STDOUT_FILENO);
+	tmp->next = NULL;
+	tmp->num_redir = 0;
+	tmp->path = NULL;
+	tmp->pipe = 0;
+	tmp->redir = NULL;
+	tmp->status = 0;
+	return (tmp);
+}
+
+
 int	main(int argc, char **argv, char **env)
 {
 	char		*str;
 	char		**tmp_env;
-	// t_all		*all;
+	t_all		*all;
 
 	(void)argc;
 	(void)argv;
@@ -112,11 +113,11 @@ int	main(int argc, char **argv, char **env)
 	tmp_env = init_env(env);
 	if (!tmp_env)
 		return (1);
+	init_shlvl(&tmp_env); // leaks
 	int g = 0;
-	while (g < 10)
+	while (g < 10)// должен быть бесконечный цикл
 	{
-		init_shlvl(&tmp_env); // leaks
-		// all = init_struct();
+		all = init_struct(tmp_env);
 		str = readline("minishell$ ");
 		if (str && *str)
 			add_history(str); // сохранение истории
@@ -125,11 +126,21 @@ int	main(int argc, char **argv, char **env)
 			rl_on_new_line(); // даем понять, что у нас новая строка
 			rl_redisplay(); //меняем то, что отражается на экране
 		}
+
 		/* Здесь должен быть парсер.
 			А могла быть ваша реклама. */
-		// start_minishell(&all); // подумать, как передавать именно ссылку на структуру
+
+		start_minishell(all);
+		tmp_env = init_env(all->env);
 		if (str)
 			free(str);
+		while(all != NULL)
+		{
+			free(all->argv);
+			ft_free(all->env);
+			all = all->next;
+			// free(tmp);
+		}
 		// system("leaks minishell");// для проверки утечек
 		g++;
 	}

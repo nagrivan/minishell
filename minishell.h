@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:21:27 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/16 14:36:21 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/26 16:51:38 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,9 @@ typedef struct s_redirect
 {
 	char		*filename;
 	int			type_redir;
-	int				file_d;
+	int			file_d;
+	int			fd;
+	int			tmp_fd;
 } t_redirect;
 
 typedef struct s_all
@@ -69,7 +71,7 @@ int		my_unset(t_all *all);
 */
 int			num_argv(char **argv);
 void		ft_free(char **my_text);
-t_all		*init_struct(void);
+t_all		*init_struct(char **env);
 int			write_env(char *result, t_all *all);
 void		ft_print(char **my_text);
 int			check_env(char *argv, char **env);
@@ -86,6 +88,9 @@ void	start_minishell(t_all *all);
 	Редиректы и пайпы
 */
 void	what_is_redir(t_all *all);
-void	my_pipe(t_all *all);
+void	my_pipe(t_all *all, int count_pipe, int *tmp_fd);
+int		num_pipe(t_all *all);
+int		create_path(t_all *all);
+int		is_bildins(t_all *all);
 
 #endif

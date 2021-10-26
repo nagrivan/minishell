@@ -6,32 +6,39 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 15:06:55 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/16 14:37:26 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/26 17:22:03 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 int	check_patch(t_all *all)
 {
 	int		i;
+	char	*free_str;
 
 	i = -1;
 	while (all->path[++i])
 	{
+		free_str = all->path[i];
 		all->path[i] = ft_strjoin(all->path[i], "/");
+		free(free_str);
 		if (!all->path[i])
 			return (-1);
 	}
 	i = -1;
 	while (all->path[++i])
 	{
+		free_str = all->path[i];
 		all->path[i] = ft_strjoin(all->path[i], all->argv[0]);
+		free(free_str);
 		if (!all->path[i])
 			return (-1);
 		if (!(access(all->path[i], X_OK)))
 		{
+			free_str = all->argv[0];
 			all->argv[0] = ft_strdup(all->path[i]);
+			free(free_str);
 			return (0);
 		}
 	}
@@ -61,6 +68,8 @@ int	create_path(t_all *all)
 		return (-1);
 	if ((check_patch(all)))
 		return (-1);
+	ft_free(all->path);
+	free(paths);
 	return (0);
 }
 
@@ -68,8 +77,10 @@ int	check_execve(t_all *all)
 {
 	pid_t		pid;
 	int			fd[2];
-	if ((create_path(all)))
-		return (1);
+	
+	if ((access(all->argv[0], X_OK)) != 0)
+		if ((create_path(all)))
+			return (1);
 	if ((pipe(fd)) == -1)
 		return (1);
 	pid = fork();
@@ -78,7 +89,7 @@ int	check_execve(t_all *all)
 	if (pid == 0)
 	{
 		close(fd[0]);
-		dup2(fd[1], STDOUT);
+		// dup2(fd[1], STDOUT_FILENO);
 		close(fd[1]);
 		execve(all->argv[0], all->argv, all->env);
 	}
@@ -93,37 +104,91 @@ int	check_execve(t_all *all)
 
 int	is_bildins(t_all *all)
 {
-	if (!(ft_strncmp(all->argv[0], "echo", 5))
-		|| !(ft_strncmp(all->argv[0], "Echo", 5)))
+	if (!(ft_strncmp(all->argv[0], "echo", 5)))
 		my_echo(all->argv);
-	if (!(ft_strncmp(all->argv[0], "cd", 3)))
+	else if (!(ft_strncmp(all->argv[0], "cd", 3)))
 		my_cd(all);
-	if (!(ft_strncmp(all->argv[0], "exit", 5)))
+	else if (!(ft_strncmp(all->argv[0], "exit", 5)))
 		my_exit(all);
-	if (!(ft_strncmp(all->argv[0], "env", 4)))
+	else if (!(ft_strncmp(all->argv[0], "env", 4)))
 		my_env(all);
-	if (!(ft_strncmp(all->argv[0], "export", 7)))
+	else if (!(ft_strncmp(all->argv[0], "export", 7)))
 		my_export(all);
-	if (!(ft_strncmp(all->argv[0], "pwd", 4)))
+	else if (!(ft_strncmp(all->argv[0], "pwd", 4)))
 		my_pwd();
-	if (!(ft_strncmp(all->argv[0], "unset", 6)))
+	else if (!(ft_strncmp(all->argv[0], "unset", 6)))
 		my_unset(all);
 	else
 		return (0);
 	return (1);
 }
 
+int	what_bild(t_all *all)
+{
+	if (!(ft_strncmp(all->argv[0], "echo", 5))
+		|| !(ft_strncmp(all->argv[0], "cd", 3))
+		|| !(ft_strncmp(all->argv[0], "exit", 5))
+		|| !(ft_strncmp(all->argv[0], "env", 4))
+		|| !(ft_strncmp(all->argv[0], "export", 7))
+		|| !(ft_strncmp(all->argv[0], "pwd", 4))
+		|| !(ft_strncmp(all->argv[0], "unset", 6)))
+		return (1);
+	return (0);
+}
+
+void	bildin_exec(t_all *all)
+{
+	if (all->next)
+	{
+		if ((pipe(all->fd)) == -1)
+			return ;
+		if ((dup2(all->fd[1], STDOUT_FILENO)) == -1)
+			return ;
+		if ((close(all->fd[1])) == -1)
+			return ;
+		is_bildins(all);
+		if ((dup2(all->fd[0], STDIN_FILENO)) == -1)
+			return ;
+		if ((close(all->fd[0])) == -1)
+			return ;
+	}
+	else
+		is_bildins(all);
+}
+
 void	start_minishell(t_all *all)
 {
-	while (all->next != NULL)
+	int		i;
+	int		count_pipe;
+	int		tmp_fd[2];
+	int		status;
+
+	i = -1;
+	count_pipe = num_pipe(all);
+	tmp_fd[0] = dup(STDIN_FILENO);
+	tmp_fd[1] = dup(STDOUT_FILENO);
+	while (all != NULL)
 	{
-		my_pipe(all);
-		if (all->next != NULL)
-			start_minishell(all->next);
-		what_is_redir(all);
-		if (!(is_bildins(all)) && (access(all->argv[0], X_OK)))
-			if ((check_execve(all)))
-				exit(127);
+		if (count_pipe > 1)
+			my_pipe(all, count_pipe, tmp_fd);
+		else // вынести в отдельную функцию
+		{
+			if (all->redir)
+				what_is_redir(all);
+			if (all->argv[0] && !(is_bildins(all)))
+				if (!all->redir || all->redir[all->num_redir - 1].file_d != -1)
+					check_execve(all);
+			while (++i < all->num_redir)
+			{
+				if ((close(all->redir[i].fd)) == -1)
+					return ;
+				if ((dup2(all->redir[i].tmp_fd, all->redir[i].fd)) == -1)
+					return ;
+			}
+		}
 		all = all->next;
 	}
+	for (int k = 0; k <= count_pipe; k++)
+		waitpid(0, &status, WUNTRACED);
+	dup2(tmp_fd[0], STDIN_FILENO);
 }
