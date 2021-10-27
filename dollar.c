@@ -1,4 +1,4 @@
-#include "parser.h"
+#include "minishell.h"
 
 static int	valid_sym(char c)
 {

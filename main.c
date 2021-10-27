@@ -1,4 +1,4 @@
-# include "parser.h"
+# include "minishell.h"
 
 static char	*clean_quotes(char **str, int *i, int j)
 {
