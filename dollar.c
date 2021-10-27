@@ -25,6 +25,22 @@ static char	*swap(char **str, char *val, int *i, int j)
 	return (dst);
 }
 
+static char	*env_not_exist(char **str, int *i, int j)
+{
+	char	*dst;
+	char	*dst2;
+	char	*res;
+
+	dst = ft_substr(*str, 0, j);
+	dst2 = ft_strdup(*str + *i);
+	res = ft_strjoin(dst, dst2);
+	free(dst);
+	free(dst2);
+	*i -= *i - j;
+	free(*str);
+	return (res);
+}
+
 char	*dollar(char **str, int *i, char **env)
 {
 	int		j;
@@ -41,7 +57,7 @@ char	*dollar(char **str, int *i, char **env)
 	val = getenv(arg);
 	free(arg);
 	if (!val)
-		return (*str);
+		return (env_not_exist(str, i, j));
 	arg = swap(str, val, i, j);
 	free(*str);
 	if ((*i - j) > ft_strlen(val))
