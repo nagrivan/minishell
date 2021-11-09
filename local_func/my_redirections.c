@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/10 15:32:07 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/26 17:20:15 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/26 19:43:43 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,15 @@ void	redir_heredoc(t_all *all, int i)
 	all->dother = fork();
 	if (all->dother == -1)
 		return ;
-	if (all->dother == 0)
+	if (all->dother == 0) // вынести в отдельную функцию
 	{
+		signal_off();
+		signal_on_her();
 		while (1)
 		{
 			str = readline("> ");
-			if (str && (!(ft_strncmp(str, all->redir[i].filename, ft_strlen(str)))))
+			if (str && (!(ft_strncmp(str, all->redir[i].filename,
+							ft_strlen(str)))))
 				exit(0);
 			ft_putendl_fd(str, fd[1]);
 			free(str);
@@ -50,7 +53,9 @@ void	redir_heredoc(t_all *all, int i)
 	}
 	else
 	{
+		signal_off();
 		wait(NULL);
+		signal_on();
 		if (all->argv[0])
 		{
 			close(fd[1]);
@@ -79,17 +84,20 @@ void	open_file(t_all *all, int i)
 	if (all->redir[i].type_redir == ONE_FROM && all->redir[i].filename)
 		all->redir[i].file_d = open(all->redir[i].filename, O_RDONLY);
 	if (all->redir[i].type_redir == ONE_TO && all->redir[i].filename)
-		all->redir[i].file_d = open(all->redir[i].filename, O_WRONLY | O_CREAT | O_TRUNC, 0777);
+		all->redir[i].file_d = open(all->redir[i].filename,
+				O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (all->redir[i].type_redir == DOB_TO && all->redir[i].filename)
-		all->redir[i].file_d = open(all->redir[i].filename, O_WRONLY | O_CREAT | O_APPEND, 0777);
+		all->redir[i].file_d = open(all->redir[i].filename,
+				O_WRONLY | O_CREAT | O_APPEND, 0777);
 	if (all->redir[i].file_d == -1)
-		printf("minishell: %s: No such file or directory\n", all->redir[i].filename);
+		printf("minishell: %s: No such file or directory\n",
+			all->redir[i].filename);
 }
 
 void	what_is_redir(t_all *all)
 {
 	int		i;
-	
+
 	i = -1;
 	while (++i < all->num_redir)
 	{		
@@ -101,7 +109,7 @@ void	what_is_redir(t_all *all)
 			if (all->redir[i].type_redir == ONE_FROM)
 				replace_fd(all, i, STDIN_FILENO);
 			else
-				replace_fd(all, i, STDOUT_FILENO);	
+				replace_fd(all, i, STDOUT_FILENO);
 		}
 	}
 }

@@ -6,16 +6,17 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 13:51:10 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/26 16:52:16 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/27 14:33:46 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void ft_free(char **my_text)
+void	ft_free(char **my_text)
 {
-	int	i = 0;
+	int		i;
 
+	i = 0;
 	if (my_text)
 	{
 		while (my_text[i])
@@ -100,7 +101,6 @@ t_all	*init_struct(char **env)
 	return (tmp);
 }
 
-
 int	main(int argc, char **argv, char **env)
 {
 	char		*str;
@@ -114,27 +114,27 @@ int	main(int argc, char **argv, char **env)
 	if (!tmp_env)
 		return (1);
 	init_shlvl(&tmp_env); // leaks
-	int g = 0;
-	while (g < 10)// должен быть бесконечный цикл
+	signal_on();
+	while (1)
 	{
 		all = init_struct(tmp_env);
 		str = readline("minishell$ ");
 		if (str && *str)
-			add_history(str); // сохранение истории
+			add_history(str);
 		else
 		{
-			rl_on_new_line(); // даем понять, что у нас новая строка
-			rl_redisplay(); //меняем то, что отражается на экране
+			rl_on_new_line();
+			rl_redisplay();
+			write(1, "\033[Aexit\n", 9);
+			exit(0);
 		}
-
 		/* Здесь должен быть парсер.
 			А могла быть ваша реклама. */
-
 		start_minishell(all);
 		tmp_env = init_env(all->env);
 		if (str)
 			free(str);
-		while(all != NULL)
+		while (all != NULL)
 		{
 			free(all->argv);
 			ft_free(all->env);
@@ -142,7 +142,6 @@ int	main(int argc, char **argv, char **env)
 			// free(tmp);
 		}
 		// system("leaks minishell");// для проверки утечек
-		g++;
 	}
 	clear_history();
 	ft_free(tmp_env);

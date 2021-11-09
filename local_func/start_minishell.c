@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 15:06:55 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/26 17:22:03 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/27 19:43:55 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int	check_execve(t_all *all)
 {
 	pid_t		pid;
 	int			fd[2];
-	
+
 	if ((access(all->argv[0], X_OK)) != 0)
 		if ((create_path(all)))
 			return (1);
@@ -188,7 +188,14 @@ void	start_minishell(t_all *all)
 		}
 		all = all->next;
 	}
-	for (int k = 0; k <= count_pipe; k++)
+	i = -1;
+	while (++i <= count_pipe)
+	{
+		signal_off();
 		waitpid(0, &status, WUNTRACED);
+		if (WIFSIGNALED(status))
+			signal_dother(status);
+		signal_on();
+	}
 	dup2(tmp_fd[0], STDIN_FILENO);
 }

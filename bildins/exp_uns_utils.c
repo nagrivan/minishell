@@ -1,38 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   my_env.c                                           :+:      :+:    :+:   */
+/*   exp_uns_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/09/07 16:15:04 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/15 16:49:42 by nagrivan         ###   ########.fr       */
+/*   Created: 2021/10/27 14:14:17 by nagrivan          #+#    #+#             */
+/*   Updated: 2021/10/27 14:15:07 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-/*
-	Проверено Norminette
-	check leaks
-	+++
-*/
-
-int	my_env(t_all *all)
+size_t	check_equals(char *argv)
 {
+	size_t		i;
+
+	i = 0;
+	while (argv[i] && argv[i] != '=')
+		i++;
+	return (i);
+}
+
+int	check_exp(char *argv, char **env, size_t size)
+{
+	int		res;
 	int		i;
 
 	i = 0;
-	if ((num_argv(all->argv)) != 1)
+	while (env[i])
 	{
-		printf("env: %s: No such file or directory\n", all->argv[1]);
-		return (127);
-	}
-	while (all->env[i])
-	{
-		if ((ft_strchr(all->env[i], '=')))
-			ft_putendl_fd(all->env[i], 1);
+		if (!(ft_strchr(env[i], '=')))
+			size = ft_strlen(env[i]);
+		res = ft_strncmp(env[i], argv, size);
+		if (res == 0)
+			break ;
 		i++;
 	}
-	return (0);
+	if (res != 0)
+		return (-1);
+	return (i);
 }
