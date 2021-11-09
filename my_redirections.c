@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/10 15:32:07 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/25 20:07:49 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/27 16:52:33 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ void	redir_heredoc(t_env *env, int i)
 		return ;
 	if (env->dother == 0)
 	{
+		signal_off();
+		signal_on_her();
 		while (1)
 		{
 			str = readline("> ");
@@ -50,7 +52,9 @@ void	redir_heredoc(t_env *env, int i)
 	}
 	else
 	{
+		signal_off();
 		wait(NULL);
+		signal_on();
 		if (env->argv[0])
 		{
 			close(fd[1]);

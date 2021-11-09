@@ -111,7 +111,7 @@ t_env	*init_struct_pipe(char **env)
 }
 
 
-void go_pipe(t_env *tmp, char **env)
+void go_pipe(t_env *tmp, char **env) // псевдопарсер
 {
 	char *str;
 	char **my_text;
@@ -208,8 +208,6 @@ void go_pipe(t_env *tmp, char **env)
 int main(int argc, char **argv, char **env)
 {
 	t_env *tmp;
-	// int pipes = 0;
-	// int status = 0;
 	char **tmp_env;
 
 	(void)argc;
@@ -218,28 +216,21 @@ int main(int argc, char **argv, char **env)
 	tmp_env = init_env(env);
 	if (!tmp_env)
 		return (13);
+	signal_on();
 	while (g < 5)
 	{
 		tmp = init_struct_pipe(tmp_env);
 		go_pipe(tmp, tmp_env);
-		// printf("%s\n",tmp->redir[0].filename);
 		start_minishell(tmp);
-		// while (pipes < (num_pipe(tmp) + 1))
-		// {
-		// 	waitpid(0, &status, WUNTRACED);
-		// 	pipes++;
-		// }
 		tmp_env = init_env(tmp->env);
 		while(tmp != NULL)
 		{
 			free(tmp->argv);
 			ft_free(tmp->env);
 			tmp = tmp->next;
-			// free(tmp);
 		}
 		// system("leaks minitest");
 		g++;
 	}
-	// ft_free(tmp->env); //ошибка valgrind
 	return (0);
 }

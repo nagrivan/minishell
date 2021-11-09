@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 13:22:15 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/25 20:07:05 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/09 17:15:26 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,19 +57,24 @@ void	my_pipe(t_env *env, int count_pipe, int *tmp_fd)
 {
 	if ((pipe(env->fd)) == -1)
 		return ;
-	env->dother = fork(); //начинается задвоение в редиректах, какого??
+	// signal_off();
+	env->dother = fork();
 	if (env->dother == -1)
 		return ;
 	if (env->dother == 0)
 		shaman_fd(env, count_pipe, tmp_fd);
 	else
 	{
-		waitpid(env->dother, &env->status, WUNTRACED);
+		// signal_off(); //отловить в какой момент это необходимо
+		// waitpid(env->dother, &env->status, WUNTRACED);
+		// if (WIFSIGNALED(env->status))
+		// 	signal_dother(env->status);
+		signal_on();
+		if ((close(env->fd[1])) == -1)
+			return ;
 		if ((dup2(env->fd[0], STDIN_FILENO)) == -1)
 			return ;
 		if ((close(env->fd[0])) == -1)
-			return ;
-		if ((close(env->fd[1])) == -1)
 			return ;
 	}
 }

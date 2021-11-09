@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 15:06:55 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/25 20:05:37 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/27 20:08:56 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ int	check_execve(t_env *env)
 	if ((access(env->argv[0], X_OK)) != 0)
 		if ((create_path(env)))
 			return (1);
+	// signal_off();
 	if ((pipe(fd)) == -1)
 		return (1);
 	pid = fork();
@@ -88,16 +89,20 @@ int	check_execve(t_env *env)
 		return (1);
 	if (pid == 0)
 	{
+		// signal_dother()
 		close(fd[0]);
 		// dup2(fd[1], STDOUT_FILENO);
 		close(fd[1]);
 		execve(env->argv[0], env->argv, env->env);
+		exit(0);
 	}
 	else
 	{
+		// signal_on();
 		close(fd[1]);
 		dup2(fd[0], STDIN);
 		close(fd[0]);
+		
 	}
 	return (0);
 }
@@ -189,6 +194,12 @@ void	start_minishell(t_env *env)
 		env = env->next;
 	}
 	for (int k = 0; k <= count_pipe; k++)
+	{
+		signal_off();
 		waitpid(0, &status, WUNTRACED);
+		if (WIFSIGNALED(status))
+			signal_dother(status);
+		signal_on();
+	}
 	dup2(tmp_fd[0], STDIN_FILENO);
 }

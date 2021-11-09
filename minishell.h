@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:21:27 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/25 16:12:29 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/10/27 16:33:37 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <signal.h>
 
 # define	STDIN 0
 # define	STDOUT 1
@@ -92,5 +93,13 @@ int		num_pipe(t_env *env);
 int	create_path(t_env *env);
 int	is_bildins(t_env *env);
 
+/*
+	Сигналы
+*/
+
+void	signal_on(void);
+void	signal_off(void);
+void	signal_dother(int status);
+void	signal_on_her(void);
 
 #endif
