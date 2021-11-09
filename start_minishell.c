@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 15:06:55 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/27 20:08:56 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/09 18:27:54 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,7 +180,7 @@ void	start_minishell(t_env *env)
 		{
 			if (env->redir)
 				what_is_redir(env);
-			if (env->argv[0] && !(is_bildins(env)))
+			if (env->argv && env->argv[0] && !(is_bildins(env)))
 				if (!env->redir || env->redir[env->num_redir - 1].file_d != -1)
 					check_execve(env);
 			while (++i < env->num_redir)

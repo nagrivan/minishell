@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 15:01:30 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/09 15:42:43 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/09 18:35:54 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,12 @@
 void	my_sigint(int signal)
 {
 	(void)signal;
+	// write(1, "123", 3);
 	rl_on_new_line();
 	rl_redisplay();
-	write(1, "  \n", 3);
+	write(2, "  \n", 3);
 	rl_on_new_line();
-	// rl_replace_line("", 0);
+	rl_replace_line("", 0);
 	rl_redisplay();
 }
 

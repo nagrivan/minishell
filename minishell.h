@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:21:27 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/27 16:33:37 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/09 18:17:19 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,5 +101,7 @@ void	signal_on(void);
 void	signal_off(void);
 void	signal_dother(int status);
 void	signal_on_her(void);
+
+void	rl_replace_line(const char *text, int clear_undo);
 
 #endif

@@ -119,6 +119,15 @@ void go_pipe(t_env *tmp, char **env) // псевдопарсер
 	int i = 0;
 
 	str = readline("mini_test$ ");
+	if (str)
+		add_history(str);
+	else
+	{
+		rl_on_new_line();
+		rl_redisplay();
+		write(1, " \bexit\n", 8);
+		exit(0);
+	}
 	// printf("str = %s\n", str);
 	if (!(my_text = ft_split(str, '|')))
 	{
@@ -232,5 +241,6 @@ int main(int argc, char **argv, char **env)
 		// system("leaks minitest");
 		g++;
 	}
+	clear_history();
 	return (0);
 }

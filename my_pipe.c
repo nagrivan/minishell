@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 13:22:15 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/09 17:15:26 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/09 17:42:13 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ void	shaman_fd(t_env *env, int count_pipe, int *tmp_fd)
 			create_path(env);
 		execve(env->argv[0], env->argv, env->env);
 	}
-	
 }
 
 void	my_pipe(t_env *env, int count_pipe, int *tmp_fd)
