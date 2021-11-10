@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 13:51:10 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/27 14:33:46 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/10 18:41:32 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,10 @@ char	**init_env(char **env)
 	{
 		result[i] = ft_strdup(env[i]);
 		if (!result[i])
+		{
+			printf("minishell %s\n", strerror(errno));
 			return (NULL);
+		}
 	}
 	result[i] = NULL;
 	return (result);
@@ -87,11 +90,26 @@ t_all	*init_struct(char **env)
 	t_all	*tmp;
 
 	tmp = (t_all *)malloc(sizeof(t_all));
+	if (!tmp)
+	{
+		printf("minishell %s\n", strerror(errno));
+		return (NULL);
+	}
 	tmp->env = init_env(env);
 	tmp->argv = NULL;
 	tmp->dother = 0;
 	tmp->fd[0] = dup(STDIN_FILENO);
+	if (tmp->fd[0] == -1)
+	{
+		printf("minishell %s\n", strerror(errno));
+		return (NULL);
+	}
 	tmp->fd[1] = dup(STDOUT_FILENO);
+	if (tmp->fd[1] == -1)
+	{
+		printf("minishell %s\n", strerror(errno));
+		return (NULL);
+	}
 	tmp->next = NULL;
 	tmp->num_redir = 0;
 	tmp->path = NULL;
@@ -112,12 +130,20 @@ int	main(int argc, char **argv, char **env)
 	str = NULL;
 	tmp_env = init_env(env);
 	if (!tmp_env)
-		return (1);
+	{
+		printf("minishell %s\n", strerror(errno));
+		return (errno);
+	}
 	init_shlvl(&tmp_env); // leaks
 	signal_on();
 	while (1)
 	{
 		all = init_struct(tmp_env);
+		if (!all)
+		{
+			ft_free(tmp_env);
+			return (errno);
+		}
 		str = readline("minishell$ ");
 		if (str && *str)
 			add_history(str);
@@ -132,6 +158,8 @@ int	main(int argc, char **argv, char **env)
 			А могла быть ваша реклама. */
 		start_minishell(all);
 		tmp_env = init_env(all->env);
+		if (!tmp_env)
+			printf("minishell %s\n", strerror(errno));
 		if (str)
 			free(str);
 		while (all != NULL)

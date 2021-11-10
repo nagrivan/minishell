@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:14:06 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/27 14:10:54 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/10 17:57:45 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,14 @@ char	*check_where_cd(char *argv, t_all *all)
 		result = ft_strtrim(all->env[i], "OLDPWD=");
 	}
 	else
+	{
 		result = ft_strdup(argv);
+		if (!result)
+		{
+			printf("minishell %s\n", strerror(errno));
+			return (NULL);
+		}
+	}
 	return (result);
 }
 
@@ -100,6 +107,8 @@ int	my_cd(t_all *all)
 	size = num_argv(all->argv);
 	old_pwd = getcwd(old_pwd, 1024);
 	result = check_where_cd(all->argv[1], all);
+	if (!result)
+		return (1);
 	if ((stat(result, &stati)) == -1)
 	{
 		cd_error(result, old_pwd);

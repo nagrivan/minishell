@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:14:50 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/16 13:45:46 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/10 17:50:24 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,12 @@ int	delete_env(t_all *all, int geolock)
 	free_env = all->env;
 	i = num_argv(all->env);
 	tmp = (char **)ft_calloc(sizeof(char *), i);
+	if (!tmp)
+	{
+		printf("minishell %s\n", strerror(errno));
+		exit_status = errno;
+		return (1);
+	}
 	i = 0;
 	j = 0;
 	while (all->env[i])
@@ -41,6 +47,12 @@ int	delete_env(t_all *all, int geolock)
 		if (i != geolock)
 		{
 			tmp[j] = ft_strdup(all->env[i]);
+			if (!tmp[j])
+			{
+				printf("minishell %s\n", strerror(errno));
+				exit_status = errno;
+				return (1);
+			}
 			j++;
 		}
 		i++;
@@ -70,7 +82,8 @@ int	my_unset(t_all *all)
 			geolock = check_exp(all->argv[i], all->env,
 					(check_equals(all->argv[i])));
 			if (geolock != -1)
-				delete_env(all, geolock);
+				if ((delete_env(all, geolock)) != 0)
+					status = 1;
 		}
 	}
 	return (status);

@@ -6,11 +6,11 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 15:06:55 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/27 19:43:55 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/10 18:36:17 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int	check_patch(t_all *all)
 {
@@ -24,7 +24,10 @@ int	check_patch(t_all *all)
 		all->path[i] = ft_strjoin(all->path[i], "/");
 		free(free_str);
 		if (!all->path[i])
+		{
+			printf("minishell %s\n", strerror(errno));
 			return (-1);
+		}
 	}
 	i = -1;
 	while (all->path[++i])
@@ -39,6 +42,11 @@ int	check_patch(t_all *all)
 			free_str = all->argv[0];
 			all->argv[0] = ft_strdup(all->path[i]);
 			free(free_str);
+			if (!all->argv[0])
+			{
+				printf("minishell %s\n", strerror(errno));
+				return (-1);
+			}
 			return (0);
 		}
 	}
@@ -82,22 +90,50 @@ int	check_execve(t_all *all)
 		if ((create_path(all)))
 			return (1);
 	if ((pipe(fd)) == -1)
+	{
+		printf("minishell %s\n", strerror(errno));
+		exit_status = errno;
 		return (1);
+	}
 	pid = fork();
 	if (pid == -1)
+	{
+		printf("minishell %s\n", strerror(errno));
+		exit_status = errno;
 		return (1);
+	}
 	if (pid == 0)
 	{
-		close(fd[0]);
-		// dup2(fd[1], STDOUT_FILENO);
-		close(fd[1]);
+		if ((close(fd[0])) == -1)
+		{
+			printf("minishell: Invalid close\n");
+			return (1);
+		}
+		if ((close(fd[1])) == -1)
+		{
+			printf("minishell: Invalid close\n");
+			return (1);
+		}
 		execve(all->argv[0], all->argv, all->env);
 	}
 	else
 	{
-		close(fd[1]);
-		dup2(fd[0], STDIN);
-		close(fd[0]);
+		if ((close(fd[1])) == -1)
+		{
+			printf("minishell: Invalid close\n");
+			return (1);
+		}
+		if ((dup2(fd[0], STDIN)) == -1)
+		{
+			printf("minishell %s\n", strerror(errno));
+			exit_status = errno;
+			return (1);
+		}
+		if ((close(fd[0])) == -1)
+		{
+			printf("minishell: Invalid close\n");
+			return (1);
+		}
 	}
 	return (0);
 }
@@ -105,56 +141,56 @@ int	check_execve(t_all *all)
 int	is_bildins(t_all *all)
 {
 	if (!(ft_strncmp(all->argv[0], "echo", 5)))
-		my_echo(all->argv);
+		exit_status = my_echo(all->argv);
 	else if (!(ft_strncmp(all->argv[0], "cd", 3)))
-		my_cd(all);
+		exit_status = my_cd(all);
 	else if (!(ft_strncmp(all->argv[0], "exit", 5)))
-		my_exit(all);
+		exit_status = my_exit(all);
 	else if (!(ft_strncmp(all->argv[0], "env", 4)))
-		my_env(all);
+		exit_status = my_env(all);
 	else if (!(ft_strncmp(all->argv[0], "export", 7)))
-		my_export(all);
+		exit_status = my_export(all);
 	else if (!(ft_strncmp(all->argv[0], "pwd", 4)))
-		my_pwd();
+		exit_status = my_pwd();
 	else if (!(ft_strncmp(all->argv[0], "unset", 6)))
-		my_unset(all);
+		exit_status = my_unset(all);
 	else
 		return (0);
 	return (1);
 }
 
-int	what_bild(t_all *all)
-{
-	if (!(ft_strncmp(all->argv[0], "echo", 5))
-		|| !(ft_strncmp(all->argv[0], "cd", 3))
-		|| !(ft_strncmp(all->argv[0], "exit", 5))
-		|| !(ft_strncmp(all->argv[0], "env", 4))
-		|| !(ft_strncmp(all->argv[0], "export", 7))
-		|| !(ft_strncmp(all->argv[0], "pwd", 4))
-		|| !(ft_strncmp(all->argv[0], "unset", 6)))
-		return (1);
-	return (0);
-}
+// int	what_bild(t_all *all)
+// {
+// 	if (!(ft_strncmp(all->argv[0], "echo", 5))
+// 		|| !(ft_strncmp(all->argv[0], "cd", 3))
+// 		|| !(ft_strncmp(all->argv[0], "exit", 5))
+// 		|| !(ft_strncmp(all->argv[0], "env", 4))
+// 		|| !(ft_strncmp(all->argv[0], "export", 7))
+// 		|| !(ft_strncmp(all->argv[0], "pwd", 4))
+// 		|| !(ft_strncmp(all->argv[0], "unset", 6)))
+// 		return (1);
+// 	return (0);
+// }
 
-void	bildin_exec(t_all *all)
-{
-	if (all->next)
-	{
-		if ((pipe(all->fd)) == -1)
-			return ;
-		if ((dup2(all->fd[1], STDOUT_FILENO)) == -1)
-			return ;
-		if ((close(all->fd[1])) == -1)
-			return ;
-		is_bildins(all);
-		if ((dup2(all->fd[0], STDIN_FILENO)) == -1)
-			return ;
-		if ((close(all->fd[0])) == -1)
-			return ;
-	}
-	else
-		is_bildins(all);
-}
+// void	bildin_exec(t_all *all)
+// {
+// 	if (all->next)
+// 	{
+// 		if ((pipe(all->fd)) == -1)
+// 			return ;
+// 		if ((dup2(all->fd[1], STDOUT_FILENO)) == -1)
+// 			return ;
+// 		if ((close(all->fd[1])) == -1)
+// 			return ;
+// 		is_bildins(all);
+// 		if ((dup2(all->fd[0], STDIN_FILENO)) == -1)
+// 			return ;
+// 		if ((close(all->fd[0])) == -1)
+// 			return ;
+// 	}
+// 	else
+// 		is_bildins(all);
+// }
 
 void	start_minishell(t_all *all)
 {

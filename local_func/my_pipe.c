@@ -6,11 +6,11 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 13:22:15 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/26 19:39:46 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/10 18:59:42 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int	num_pipe(t_all *all)
 {
@@ -30,18 +30,38 @@ void	shaman_fd(t_all *all, int count_pipe, int *tmp_fd)
 	if (all->pipe != count_pipe)
 	{
 		if ((dup2(all->fd[1], STDOUT_FILENO)) == -1)
+		{
+			printf("minishell %s\n", strerror(errno));
+			exit_status = errno;
 			return ;
+		}
 		if ((close(all->fd[1])) == -1)
+		{
+			printf("minishell %s\n", strerror(errno));
+			exit_status = errno;
 			return ;
+		}
 		if ((close(all->fd[0])) == -1)
+		{
+			printf("minishell %s\n", strerror(errno));
+			exit_status = errno;
 			return ;
+		}
 	}
 	if (all->pipe == count_pipe)
 	{
 		if ((dup2(tmp_fd[1], STDOUT_FILENO)) == -1)
+		{
+			printf("minishell %s\n", strerror(errno));
+			exit_status = errno;
 			return ;
+		}
 		if ((close(tmp_fd[1])) == -1)
+		{
+			printf("minishell %s\n", strerror(errno));
+			exit_status = errno;
 			return ;
+		}
 	}
 	if (all->num_redir) // вынести в отдельную функцию
 		what_is_redir(all);
@@ -68,14 +88,24 @@ void	my_pipe(t_all *all, int count_pipe, int *tmp_fd)
 	{
 		signal_off();
 		waitpid(all->dother, &all->status, WUNTRACED);
-		if (WIFSIGNALED(env->status))
-			signal_dother(env->status);
+		if (WIFSIGNALED(all->status))
+			signal_dother(all->status);
 		signal_on();
 		if ((dup2(all->fd[0], STDIN_FILENO)) == -1)
+		{
+			printf("minishell %s\n", strerror(errno));
+			exit_status = errno;
 			return ;
+		}
 		if ((close(all->fd[0])) == -1)
+		{
+			printf("minishell: Invalid close\n");
 			return ;
+		}
 		if ((close(all->fd[1])) == -1)
+		{
+			printf("minishell: Invalid close\n");
 			return ;
+		}
 	}
 }

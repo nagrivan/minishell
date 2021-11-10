@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/10 15:32:07 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/26 19:43:43 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/10 19:15:06 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,12 +69,23 @@ int	replace_fd(t_all *all, int num, int fd)
 {
 	all->redir[num].tmp_fd = 0;
 	all->redir[num].tmp_fd = dup(fd);
-	if ((close(fd)) == -1)
+	if (all->redir[num].tmp_fd == -1)
+	{
+		printf("minishell %s\n", strerror(errno));
 		return (1);
+	}
+	if ((close(fd)) == -1)
+	{
+		printf("minishell: Invalid close\n");
+		return (1);
+	}
 	if ((dup2(all->redir[num].file_d, fd)) == -1)
 		return (1);
 	if ((close(all->redir[num].file_d)) == -1)
+	{
+		printf("minishell: Invalid close\n");
 		return (1);
+	}
 	all->redir[num].fd = fd;
 	return (0);
 }

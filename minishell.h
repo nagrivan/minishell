@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:21:27 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/27 14:25:36 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/10 16:34:25 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 # include <signal.h>
+# include <errno.h>
 
 # define	STDIN 0
 # define	STDOUT 1
@@ -32,6 +33,8 @@
 # define	ONE_TO 1 // >
 # define	DOB_TO 2 // >>
 # define	HEREDOC 3 // <<
+
+int	exit_status;
 
 typedef struct s_redirect
 {

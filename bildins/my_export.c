@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:14:25 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/27 14:14:53 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/10 18:09:22 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,24 @@ char	**sort_all(char **env, int len)
 	char	*tmp;
 
 	new = (char **)ft_calloc(sizeof(char *), (len + 1));
+	if (!new)
+	{
+		printf("minishell %s\n", strerror(errno));
+		exit_status = errno;
+		return (NULL);
+	}
 	new[len] = NULL;
 	i = -1;
 	while (env[++i])
+	{
 		new[i] = ft_strdup(env[i]);
+		if (!new[i])
+		{
+			printf("minishell %s\n", strerror(errno));
+			exit_status = errno;
+			return (NULL);
+		}
+	}
 	i = -1;
 	while (++i < len)
 	{
@@ -69,35 +83,45 @@ int	my_export_argv(char *argv)
 	return (0);
 }
 
-void	print_exp(t_all *all)
+int	print_exp(t_all *all)
 {
 	int		i;
 	char	**tmp;
 
 	i = 0;
 	tmp = sort_all(all->env, num_argv(all->env));
+	if (!tmp)
+		return (1);
 	while (tmp[i])
 	{
 		printf("%d declare -x %s\n", i, tmp[i]);
 		i++;
 	}
 	ft_free(tmp);
+	return (0);
 }
 
-void	write_argv_exp(char *argv, t_all *all)
+int	write_argv_exp(char *argv, t_all *all)
 {
 	int		geolock;
 
 	geolock = check_exp(argv, all->env, (check_equals(argv)));
 	if (geolock == -1)
-		write_env(argv, all);
+		if ((write_env(argv, all)) != 0)
+			return (1);
 	else
 	{
 		if (!(ft_strchr(argv, '=')))
-			return ;
+			return (1);
 		free(all->env[geolock]);
 		all->env[geolock] = ft_strdup(argv);
+		if (!all->env[geolock])
+		{
+			printf("minishell %s\n", strerror(errno));
+			return (1);
+		}
 	}
+	return (0);
 }
 
 int	my_export(t_all *all)
@@ -109,7 +133,8 @@ int	my_export(t_all *all)
 	status = 0;
 	if (num_argv(all->argv) == 1)
 	{
-		print_exp(all);
+		if ((print_exp(all)) != 0)
+			return (1);
 		return (0);
 	}
 	while (all->argv[++i])
@@ -117,7 +142,8 @@ int	my_export(t_all *all)
 		if ((my_export_argv(all->argv[i])) == 1)
 			status = 1;
 		else
-			write_argv_exp(all->argv[i], all);
+			if ((write_argv_exp(all->argv[i], all)) != 0)
+				status = 1;
 	}
 	return (status);
 }
