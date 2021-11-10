@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 15:06:55 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/09 18:27:54 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/10 15:55:57 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,9 @@ int	check_execve(t_env *env)
 {
 	pid_t		pid;
 	int			fd[2];
+	int			status;
 	
+	status = 0;
 	if ((access(env->argv[0], X_OK)) != 0)
 		if ((create_path(env)))
 			return (1);
@@ -89,7 +91,7 @@ int	check_execve(t_env *env)
 		return (1);
 	if (pid == 0)
 	{
-		// signal_dother()
+		// signal_on();
 		close(fd[0]);
 		// dup2(fd[1], STDOUT_FILENO);
 		close(fd[1]);
@@ -98,6 +100,10 @@ int	check_execve(t_env *env)
 	}
 	else
 	{
+		// signal_on();
+		// signal_off();
+		// if ((WIFSIGNALED(status)))
+		// 	signal_dother(status);
 		// signal_on();
 		close(fd[1]);
 		dup2(fd[0], STDIN);
@@ -196,9 +202,9 @@ void	start_minishell(t_env *env)
 	for (int k = 0; k <= count_pipe; k++)
 	{
 		signal_off();
-		waitpid(0, &status, WUNTRACED);
 		if (WIFSIGNALED(status))
 			signal_dother(status);
+		waitpid(0, &status, WUNTRACED);
 		signal_on();
 	}
 	dup2(tmp_fd[0], STDIN_FILENO);
