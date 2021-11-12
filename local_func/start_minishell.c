@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 15:06:55 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/12 13:24:56 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/12 13:37:05 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,7 +223,7 @@ void	start_minishell(t_all *all)
 		{
 			if (all->redir)
 				what_is_redir(all);
-			if (all->argv[0] && !(is_bildins(all)))
+			if (all->argv && all->argv[0] && !(is_bildins(all)))
 				if (!all->redir || all->redir[all->num_redir - 1].file_d != -1)
 					check_execve(all);
 			while (++i < all->num_redir)
@@ -248,6 +248,9 @@ void	start_minishell(t_all *all)
 		signal_off();
 		if (WIFSIGNALED(status))
 			signal_dother(status);
+		else
+			if (count_pipe || WEXITSTATUS(status))
+				exit_status = WEXITSTATUS(status);
 		waitpid(0, &status, WUNTRACED);
 		signal_on();
 	}

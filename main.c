@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 13:51:10 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/10 18:41:32 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/12 13:33:12 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ int	main(int argc, char **argv, char **env)
 			return (errno);
 		}
 		str = readline("minishell$ ");
-		if (str && *str)
+		if (str)
 			add_history(str);
 		else
 		{
