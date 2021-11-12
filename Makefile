@@ -6,7 +6,7 @@
 #    By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/24 19:45:52 by nagrivan          #+#    #+#              #
-#    Updated: 2021/10/27 14:16:49 by nagrivan         ###   ########.fr        #
+#    Updated: 2021/11/12 14:37:03 by nagrivan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,9 +23,10 @@ SRCS_DIRS	=	bildins/	local_func/
 VPATH	=	${SRCS_DIRS}
 			
 SRCS		=	main.c \
-				my_cd.c		cd_utils.c		my_echo.c	my_env.c	my_exit.c \
-				my_export.c		exp_uns_utils.c		my_pwd.c	my_unset.c \
-				my_pipe.c	my_redirections.c	start_minishell.c my_signal.c\
+				my_cd.c			cd_utils.c			my_echo.c			my_env.c \
+				my_export.c		exp_uns_utils.c		my_pwd.c			my_unset.c \
+				my_exit.c \
+				my_pipe.c		my_redirections.c	start_minishell.c	my_signal.c\
 
 OBJS_DIRS	=	.objs/
 
