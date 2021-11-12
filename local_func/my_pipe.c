@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 13:22:15 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/10 18:59:42 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/12 13:29:14 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,13 @@ void	shaman_fd(t_all *all, int count_pipe, int *tmp_fd)
 		}
 		if ((close(all->fd[1])) == -1)
 		{
-			printf("minishell %s\n", strerror(errno));
+			printf("minishell: Invalid close\n");
 			exit_status = errno;
 			return ;
 		}
 		if ((close(all->fd[0])) == -1)
 		{
-			printf("minishell %s\n", strerror(errno));
+			printf("minishell: Invalid close\n");
 			exit_status = errno;
 			return ;
 		}
@@ -58,12 +58,12 @@ void	shaman_fd(t_all *all, int count_pipe, int *tmp_fd)
 		}
 		if ((close(tmp_fd[1])) == -1)
 		{
-			printf("minishell %s\n", strerror(errno));
+			printf("minishell: Invalid close\n");
 			exit_status = errno;
 			return ;
 		}
 	}
-	if (all->num_redir) // вынести в отдельную функцию
+	if (all->num_redir)
 		what_is_redir(all);
 	if (is_bildins(all))
 		exit(0);
@@ -78,19 +78,30 @@ void	shaman_fd(t_all *all, int count_pipe, int *tmp_fd)
 void	my_pipe(t_all *all, int count_pipe, int *tmp_fd)
 {
 	if ((pipe(all->fd)) == -1)
+	{
+		printf("minishell %s\n", strerror(errno));
 		return ;
+	}
 	all->dother = fork();
 	if (all->dother == -1)
+	{
+		printf("minishell %s\n", strerror(errno));
 		return ;
+	}
 	if (all->dother == 0)
 		shaman_fd(all, count_pipe, tmp_fd);
 	else
 	{
-		signal_off();
-		waitpid(all->dother, &all->status, WUNTRACED);
-		if (WIFSIGNALED(all->status))
-			signal_dother(all->status);
+		// signal_off();
+		// waitpid(all->dother, &all->status, WUNTRACED); //отловить в какой момент это необходимо
+		// if (WIFSIGNALED(all->status))
+		// 	signal_dother(all->status);
 		signal_on();
+		if ((close(all->fd[1])) == -1)
+		{
+			printf("minishell: Invalid close\n");
+			return ;
+		}
 		if ((dup2(all->fd[0], STDIN_FILENO)) == -1)
 		{
 			printf("minishell %s\n", strerror(errno));
@@ -98,11 +109,6 @@ void	my_pipe(t_all *all, int count_pipe, int *tmp_fd)
 			return ;
 		}
 		if ((close(all->fd[0])) == -1)
-		{
-			printf("minishell: Invalid close\n");
-			return ;
-		}
-		if ((close(all->fd[1])) == -1)
 		{
 			printf("minishell: Invalid close\n");
 			return ;

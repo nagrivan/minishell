@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 15:06:55 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/10 18:36:17 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/12 13:24:56 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,7 +202,19 @@ void	start_minishell(t_all *all)
 	i = -1;
 	count_pipe = num_pipe(all);
 	tmp_fd[0] = dup(STDIN_FILENO);
+	if (tmp_fd[0] == -1)
+	{
+		printf("minishell %s\n", strerror(errno));
+		exit_status = errno;
+		return ;
+	}
 	tmp_fd[1] = dup(STDOUT_FILENO);
+	if (tmp_fd[1] == -1)
+	{
+		printf("minishell %s\n", strerror(errno));
+		exit_status = errno;
+		return ;
+	}
 	while (all != NULL)
 	{
 		if (count_pipe > 1)
@@ -217,9 +229,15 @@ void	start_minishell(t_all *all)
 			while (++i < all->num_redir)
 			{
 				if ((close(all->redir[i].fd)) == -1)
+				{
+					printf("minishell: Invalid close\n");
 					return ;
+				}
 				if ((dup2(all->redir[i].tmp_fd, all->redir[i].fd)) == -1)
+				{
+					printf("minishell %s\n", strerror(errno));
 					return ;
+				}
 			}
 		}
 		all = all->next;
@@ -228,10 +246,14 @@ void	start_minishell(t_all *all)
 	while (++i <= count_pipe)
 	{
 		signal_off();
-		waitpid(0, &status, WUNTRACED);
 		if (WIFSIGNALED(status))
 			signal_dother(status);
+		waitpid(0, &status, WUNTRACED);
 		signal_on();
 	}
-	dup2(tmp_fd[0], STDIN_FILENO);
+	if ((dup2(tmp_fd[0], STDIN_FILENO)) == -1)
+	{
+		printf("minishell %s\n", strerror(errno));
+		exit_status = errno;
+	}
 }
