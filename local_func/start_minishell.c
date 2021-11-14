@@ -6,13 +6,32 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 15:06:55 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/12 13:37:05 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/14 17:36:14 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	check_patch(t_all *all)
+int	search_patch(t_all *all, int i)
+{
+	char	*free_str;
+
+	if (!(access(all->path[i], X_OK)))
+	{
+		free_str = all->argv[0];
+		all->argv[0] = ft_strdup(all->path[i]);
+		free(free_str);
+		if (!all->argv[0])
+		{
+			printf("minishell %s\n", strerror(errno));
+			return (-1);
+		}
+		return (0);
+	}
+	return (1);
+}
+
+int	write_patch(t_all *all)
 {
 	int		i;
 	char	*free_str;
@@ -29,6 +48,16 @@ int	check_patch(t_all *all)
 			return (-1);
 		}
 	}
+	return (0);
+}
+
+int	check_patch(t_all *all)
+{
+	int		i;
+	char	*free_str;
+
+	if ((write_patch(all)) != 0)
+		return (-1);
 	i = -1;
 	while (all->path[++i])
 	{
@@ -36,19 +65,12 @@ int	check_patch(t_all *all)
 		all->path[i] = ft_strjoin(all->path[i], all->argv[0]);
 		free(free_str);
 		if (!all->path[i])
-			return (-1);
-		if (!(access(all->path[i], X_OK)))
 		{
-			free_str = all->argv[0];
-			all->argv[0] = ft_strdup(all->path[i]);
-			free(free_str);
-			if (!all->argv[0])
-			{
-				printf("minishell %s\n", strerror(errno));
-				return (-1);
-			}
-			return (0);
+			printf("minishell %s\n", strerror(errno));
+			return (-1);
 		}
+		if (!(search_patch(all, i)))
+			return (0);
 	}
 	return (1);
 }
@@ -92,14 +114,14 @@ int	check_execve(t_all *all)
 	if ((pipe(fd)) == -1)
 	{
 		printf("minishell %s\n", strerror(errno));
-		exit_status = errno;
+		g_exit_status = errno;
 		return (1);
 	}
 	pid = fork();
 	if (pid == -1)
 	{
 		printf("minishell %s\n", strerror(errno));
-		exit_status = errno;
+		g_exit_status = errno;
 		return (1);
 	}
 	if (pid == 0)
@@ -126,7 +148,7 @@ int	check_execve(t_all *all)
 		if ((dup2(fd[0], STDIN)) == -1)
 		{
 			printf("minishell %s\n", strerror(errno));
-			exit_status = errno;
+			g_exit_status = errno;
 			return (1);
 		}
 		if ((close(fd[0])) == -1)
@@ -141,56 +163,23 @@ int	check_execve(t_all *all)
 int	is_bildins(t_all *all)
 {
 	if (!(ft_strncmp(all->argv[0], "echo", 5)))
-		exit_status = my_echo(all->argv);
+		g_exit_status = my_echo(all->argv);
 	else if (!(ft_strncmp(all->argv[0], "cd", 3)))
-		exit_status = my_cd(all);
+		g_exit_status = my_cd(all);
 	else if (!(ft_strncmp(all->argv[0], "exit", 5)))
-		exit_status = my_exit(all);
+		g_exit_status = my_exit(all);
 	else if (!(ft_strncmp(all->argv[0], "env", 4)))
-		exit_status = my_env(all);
+		g_exit_status = my_env(all);
 	else if (!(ft_strncmp(all->argv[0], "export", 7)))
-		exit_status = my_export(all);
+		g_exit_status = my_export(all);
 	else if (!(ft_strncmp(all->argv[0], "pwd", 4)))
-		exit_status = my_pwd();
+		g_exit_status = my_pwd();
 	else if (!(ft_strncmp(all->argv[0], "unset", 6)))
-		exit_status = my_unset(all);
+		g_exit_status = my_unset(all);
 	else
 		return (0);
 	return (1);
 }
-
-// int	what_bild(t_all *all)
-// {
-// 	if (!(ft_strncmp(all->argv[0], "echo", 5))
-// 		|| !(ft_strncmp(all->argv[0], "cd", 3))
-// 		|| !(ft_strncmp(all->argv[0], "exit", 5))
-// 		|| !(ft_strncmp(all->argv[0], "env", 4))
-// 		|| !(ft_strncmp(all->argv[0], "export", 7))
-// 		|| !(ft_strncmp(all->argv[0], "pwd", 4))
-// 		|| !(ft_strncmp(all->argv[0], "unset", 6)))
-// 		return (1);
-// 	return (0);
-// }
-
-// void	bildin_exec(t_all *all)
-// {
-// 	if (all->next)
-// 	{
-// 		if ((pipe(all->fd)) == -1)
-// 			return ;
-// 		if ((dup2(all->fd[1], STDOUT_FILENO)) == -1)
-// 			return ;
-// 		if ((close(all->fd[1])) == -1)
-// 			return ;
-// 		is_bildins(all);
-// 		if ((dup2(all->fd[0], STDIN_FILENO)) == -1)
-// 			return ;
-// 		if ((close(all->fd[0])) == -1)
-// 			return ;
-// 	}
-// 	else
-// 		is_bildins(all);
-// }
 
 void	start_minishell(t_all *all)
 {
@@ -205,21 +194,21 @@ void	start_minishell(t_all *all)
 	if (tmp_fd[0] == -1)
 	{
 		printf("minishell %s\n", strerror(errno));
-		exit_status = errno;
+		g_exit_status = errno;
 		return ;
 	}
 	tmp_fd[1] = dup(STDOUT_FILENO);
 	if (tmp_fd[1] == -1)
 	{
 		printf("minishell %s\n", strerror(errno));
-		exit_status = errno;
+		g_exit_status = errno;
 		return ;
 	}
 	while (all != NULL)
 	{
 		if (count_pipe > 1)
 			my_pipe(all, count_pipe, tmp_fd);
-		else // вынести в отдельную функцию
+		else
 		{
 			if (all->redir)
 				what_is_redir(all);
@@ -250,13 +239,13 @@ void	start_minishell(t_all *all)
 			signal_dother(status);
 		else
 			if (count_pipe || WEXITSTATUS(status))
-				exit_status = WEXITSTATUS(status);
+				g_exit_status = WEXITSTATUS(status);
 		waitpid(0, &status, WUNTRACED);
 		signal_on();
 	}
 	if ((dup2(tmp_fd[0], STDIN_FILENO)) == -1)
 	{
 		printf("minishell %s\n", strerror(errno));
-		exit_status = errno;
+		g_exit_status = errno;
 	}
 }

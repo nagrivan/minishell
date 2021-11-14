@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:21:27 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/14 15:59:41 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/14 16:46:43 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ int		is_bildins(t_all *all);
 	Редиректы и пайпы
 */
 void	what_is_redir(t_all *all);
+void	redir_heredoc(t_all *all, int i);
 void	my_pipe(t_all *all, int count_pipe, int *tmp_fd);
 int		num_pipe(t_all *all);
 

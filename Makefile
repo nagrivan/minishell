@@ -6,7 +6,7 @@
 #    By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/24 19:45:52 by nagrivan          #+#    #+#              #
-#    Updated: 2021/11/14 16:00:01 by nagrivan         ###   ########.fr        #
+#    Updated: 2021/11/14 16:54:30 by nagrivan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,7 @@ SRCS		=	main.c \
 				my_export.c		exp_uns_utils.c		my_pwd.c			my_unset.c \
 				my_exit.c 		sort.c\
 				my_pipe.c		my_redirections.c	start_minishell.c	my_signal.c\
+				my_heredoc.c	my_heredoc_sign.c\
 
 OBJS_DIRS	=	.objs/
 
