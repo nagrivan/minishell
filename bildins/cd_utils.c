@@ -6,11 +6,36 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 14:10:15 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/10 17:51:42 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/14 14:29:17 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	tmp_write(char ***tmp, t_all *all, char result)
+{
+	int		i;
+
+	i = 0;
+	while (all->env[i])
+	{
+		(*tmp)[i] = ft_strdup(all->env[i]);
+		if (!(*tmp)[i])
+		{
+			printf("minishell %s\n", strerror(errno));
+			return (1);
+		}
+		i++;
+	}
+	(*tmp)[i] = ft_strdup(result);
+	if (!(*tmp)[i])
+	{
+		printf("minishell %s\n", strerror(errno));
+		return (1);
+	}
+	(*tmp)[++i] = NULL;
+	return (0);
+}
 
 int	write_env(char *result, t_all *all)
 {
@@ -24,29 +49,10 @@ int	write_env(char *result, t_all *all)
 	if (!tmp)
 	{
 		printf("minishell %s\n", strerror(errno));
-		exit_status = errno;
 		return (1);
 	}
-	i = 0;
-	while (all->env[i])
-	{
-		tmp[i] = ft_strdup(all->env[i]);
-		if (!tmp[i])
-		{
-			printf("minishell %s\n", strerror(errno));
-			exit_status = errno;
-			return (1);
-		}
-		i++;
-	}
-	tmp[i] = ft_strdup(result);
-	if (!tmp[i])
-	{
-		printf("minishell %s\n", strerror(errno));
-		exit_status = errno;
+	if ((tmp_write(&tmp, all, result)) != 0)
 		return (1);
-	}
-	tmp[++i] = NULL;
 	all->env = tmp;
 	ft_free(free_env);
 	return (0);

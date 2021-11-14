@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:14:25 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/10 18:09:22 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/14 16:01:18 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,52 +14,8 @@
 
 /*
 	Проверено Norminette
-	Необходимо разбить функции на файлы
 	check leaks
 */
-
-char	**sort_all(char **env, int len)
-{
-	int		i;
-	int		j;
-	char	**new;
-	char	*tmp;
-
-	new = (char **)ft_calloc(sizeof(char *), (len + 1));
-	if (!new)
-	{
-		printf("minishell %s\n", strerror(errno));
-		exit_status = errno;
-		return (NULL);
-	}
-	new[len] = NULL;
-	i = -1;
-	while (env[++i])
-	{
-		new[i] = ft_strdup(env[i]);
-		if (!new[i])
-		{
-			printf("minishell %s\n", strerror(errno));
-			exit_status = errno;
-			return (NULL);
-		}
-	}
-	i = -1;
-	while (++i < len)
-	{
-		j = -1;
-		while (++j < len - 1)
-		{
-			if (ft_strncmp(new[j], new[j + 1], ft_strlen(new[j]) + 1) > 0)
-			{
-				tmp = new[j + 1];
-				new[j + 1] = new[j];
-				new[j] = tmp;
-			}
-		}
-	}
-	return (new);
-}
 
 int	my_export_argv(char *argv)
 {

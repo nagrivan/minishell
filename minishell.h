@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:21:27 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/12 13:20:29 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/14 15:59:41 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@
 # define	DOB_TO 2 // >>
 # define	HEREDOC 3 // <<
 
-int	exit_status;
+int	g_exit_status;
 
 typedef struct s_redirect
 {
@@ -83,6 +83,7 @@ int		write_env(char *result, t_all *all);
 int		check_exp(char *argv, char **env, size_t size);
 int		my_export_argv(char *argv);
 size_t	check_equals(char *argv);
+char	**sort_all(char **env, int len);
 
 /*
 	Запуск команд
