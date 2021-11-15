@@ -6,13 +6,13 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/14 16:45:42 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/14 16:51:56 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/15 16:19:57 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	parent_heredoc(t_all *all, int fd[2])
+void	parent_heredoc(t_all *all, int *fd)
 {
 	signal_off();
 	wait(NULL);
@@ -37,7 +37,7 @@ void	parent_heredoc(t_all *all, int fd[2])
 	}
 }
 
-void	dother_heredoc(t_all *all, int fd[2], int i)
+void	dother_heredoc(t_all *all, int *fd, int i)
 {
 	char	*str;
 
@@ -71,7 +71,7 @@ void	redir_heredoc(t_all *all, int i)
 		return ;
 	}
 	if (all->dother == 0)
-		dother_heredoc(all, fd[2], i);
+		dother_heredoc(all, fd, i);
 	else
 		parent_heredoc(all, fd);
 }

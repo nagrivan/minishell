@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 15:06:55 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/15 15:47:37 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/15 16:20:55 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	is_bildins(t_all *all)
 	return (1);
 }
 
-void	one_command(t_all *all, int tmp_fd[2], int i)
+void	one_command(t_all *all, int *tmp_fd, int i)
 {
 	if (all->redir)
 		what_is_redir(all);
@@ -55,7 +55,7 @@ void	one_command(t_all *all, int tmp_fd[2], int i)
 	}	
 }
 
-void	end_command(int count_pipe, int tmp_fd[2])
+void	end_command(int count_pipe, int *tmp_fd)
 {
 	int		i;
 	int		status;
@@ -105,8 +105,8 @@ void	start_minishell(t_all *all)
 		if (count_pipe > 1)
 			my_pipe(all, count_pipe, tmp_fd);
 		else
-			one_command(all, tmp_fd[2], i);
+			one_command(all, tmp_fd, i);
 		all = all->next;
 	}
-	end_command(count_pipe, tmp_fd[2]);
+	end_command(count_pipe, tmp_fd);
 }

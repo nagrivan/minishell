@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 13:51:10 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/12 13:33:12 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/15 16:15:12 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,13 +99,8 @@ t_all	*init_struct(char **env)
 	tmp->argv = NULL;
 	tmp->dother = 0;
 	tmp->fd[0] = dup(STDIN_FILENO);
-	if (tmp->fd[0] == -1)
-	{
-		printf("minishell %s\n", strerror(errno));
-		return (NULL);
-	}
 	tmp->fd[1] = dup(STDOUT_FILENO);
-	if (tmp->fd[1] == -1)
+	if (tmp->fd[0] == -1 || tmp->fd[1] == -1)
 	{
 		printf("minishell %s\n", strerror(errno));
 		return (NULL);
@@ -128,6 +123,7 @@ int	main(int argc, char **argv, char **env)
 	(void)argc;
 	(void)argv;
 	str = NULL;
+	g_exit_status = 0;
 	tmp_env = init_env(env);
 	if (!tmp_env)
 	{
@@ -154,8 +150,6 @@ int	main(int argc, char **argv, char **env)
 			write(1, "\033[Aexit\n", 9);
 			exit(0);
 		}
-		/* Здесь должен быть парсер.
-			А могла быть ваша реклама. */
 		start_minishell(all);
 		tmp_env = init_env(all->env);
 		if (!tmp_env)
@@ -167,7 +161,6 @@ int	main(int argc, char **argv, char **env)
 			free(all->argv);
 			ft_free(all->env);
 			all = all->next;
-			// free(tmp);
 		}
 		// system("leaks minishell");// для проверки утечек
 	}

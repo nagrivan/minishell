@@ -1,0 +1,13 @@
+/bin/ls
+/bin/ls -la
+/bin/ls -cu
+
+echo hello
+echo -n hello
+echo -nnnnnnnnnnnnn hello
+echo -n -n -n -n hello
+echo -nnnnnnnnnnnnnj hello
+echo hello -n
+echo - n hello
+echo -n -n -nj -n hello
+
