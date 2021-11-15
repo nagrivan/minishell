@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:21:27 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/15 15:48:33 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/15 16:07:26 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,8 @@ void	what_is_redir(t_all *all);
 void	redir_heredoc(t_all *all, int i);
 void	my_pipe(t_all *all, int count_pipe, int *tmp_fd);
 int		num_pipe(t_all *all);
+void	shaman_stdin_fd(t_all *all);
+void	shaman_stdout_fd(t_all *all, int count_pipe, int *tmp_fd);
 
 /*
 	Сигналы
