@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:21:27 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/14 16:46:43 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/15 15:48:33 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ char	**sort_all(char **env, int len);
 void	start_minishell(t_all *all);
 int		create_path(t_all *all);
 int		is_bildins(t_all *all);
+int		check_execve(t_all *all);
 
 /*
 	Редиректы и пайпы
