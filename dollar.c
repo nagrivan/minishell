@@ -62,6 +62,40 @@ char	*dollar(char **str, int *i, char **env)
 	free(*str);
 	if ((*i - j) > ft_strlen(val))
 		*i -= *i - j - ft_strlen(val);
-	printf("dollar arg = %s\n", arg);
 	return (arg);
 }
+
+char *space(char **str, int *i)
+{
+	int		j;
+	char	*res;
+	char	*dst;
+	char	*dst2;
+
+	j = *i;
+	while ((*str)[*i] == ' ' || (*str)[*i] == '\t')
+		(*i)++;
+	dst = ft_substr(*str, 0, j + 1);
+	dst2 = ft_strdup(*str + *i);
+	res = ft_strjoin(dst, dst2);
+	free(dst);
+	free(dst2);
+	*i -= *i - j;
+	free(*str);
+	return (res);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

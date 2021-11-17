@@ -99,6 +99,6 @@ int		is_bildins(t_all *all);
 	Функции парсера:
 */
 char	*dollar(char **str, int *i, char **env);
-
+char	*space(char **str, int *i);
 
 #endif
