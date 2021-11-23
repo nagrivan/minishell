@@ -62,6 +62,8 @@ char	*dollar(char **str, int *i, char **env)
 	free(*str);
 	if ((*i - j) > ft_strlen(val))
 		*i -= *i - j - ft_strlen(val);
+	else
+		*i += ft_strlen(val) - (*i - j);
 	return (arg);
 }
 
