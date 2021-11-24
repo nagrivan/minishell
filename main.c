@@ -122,12 +122,19 @@ char	**split_tokens(char *str, int num)
 	return (tokens);
 }
 
-void	fill_struct(char **str, t_all *all)
+int find_pipe(char **tokens)
 {
-
+	int i = 0;
+	while (tokens[i])
+	{
+		if (strcmp(tokens[i], "|") == 0)
+			return 1;
+		i++;
+	}
+	return 0;
 }
 
-void	parser(char **str, char **env, t_all *all)
+void	parser(char **str, char **env, t_all *tmp)
 {
 	int		i;
 	int		num;
@@ -139,12 +146,53 @@ void	parser(char **str, char **env, t_all *all)
 	printf("FINAL NUMBER OF TOKENS IS %d\n", num);
 	tokens = split_tokens(*str, num);
 	tokens = clear_tokens(tokens, num);
+	/*while (tokens[i])*/
+	/*{*/
+		/*printf("Token number %d is \t|\033[32m%s\033[0m|\n", i + 1, tokens[i]);*/
+		/*i++;*/
+	/*}*/
+
+	while (find_pipe(tokens))
+	{
+		num_of_redir(tokens, tmp);
+		num_of_argv(tokens, tmp);
+		fill_argv(tokens, tmp);
+		printf("\n");
+		printf("NUM OF REDIR = %d\n", tmp->num_redir);
+		printf("NUM OF ARGV = %d\n", tmp->num_argv);
+		i = 0;
+		while (ft_strcmp(tokens[i], "|"))
+		{
+			printf("Token number %d is \t|\033[32m%s\033[0m|\n", i + 1, tokens[i]);
+			i++;
+		}
+		tokens = trim_tokens(tokens, tmp);
+		tmp->num_redir = 0;
+		tmp->num_argv = 0;
+	}
+	num_of_redir(tokens, tmp);
+	num_of_argv(tokens, tmp);
+	printf("\n");
+	printf("NUM OF REDIR = %d\n", tmp->num_redir);
+	printf("NUM OF ARGV = %d\n", tmp->num_argv);
+	tmp->num_redir = 0;
+	tmp->num_argv = 0;
+	i = 0;
 	while (tokens[i])
 	{
 		printf("Token number %d is \t|\033[32m%s\033[0m|\n", i + 1, tokens[i]);
 		i++;
 	}
-	free_all(tokens, num);
+
+	/*tokens = fill_struct(tokens, tmp);*/
+	/*i = 0;*/
+	/*while (tokens[i])*/
+	/*{*/
+		/*printf("Token number %d is \t|\033[32m%s\033[0m|\n", i + 1, tokens[i]);*/
+		/*i++;*/
+	/*}*/
+	free_split(tokens);
+	/*free_all(tokens, num);*/
 }
 
 void	free_all(char **token, int num)
@@ -159,9 +207,13 @@ void	free_all(char **token, int num)
 
 int	main(int argc, char **argv, char **env)
 {
-	t_all *all;
+	(void)argc;
+	(void)argv;
+	t_all *tmp;
 	int jopa = 1;
 	int kota = 0;
+	int	i = 0;
+	tmp = init_struct(env);
 	while (!0 && 1 == 1 && jopa != kota/*бескоечный цикл*/)
 	{
 		char *promt = "💀$ ";
@@ -177,7 +229,12 @@ int	main(int argc, char **argv, char **env)
 			free(str);
 			return 0;
 		}
-		parser(&str, env, all);
+		parser(&str, env, tmp);
+		while (tmp->argv[i])
+		{
+			printf("\nARGV %d is \t|\033[32m%s\033[0m|\n", i + 1, tmp->argv[i]);
+			i++;
+		}
 		free(str);
 	}
 }

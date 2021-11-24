@@ -47,6 +47,7 @@ char	*dollar(char **str, int *i, char **env)
 	char	*val;
 	char	*arg;
 
+	(void)env;
 	j = *i;
 	while ((*str)[++(*i)])
 		if (!valid_sym((*str)[*i]))

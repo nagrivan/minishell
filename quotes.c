@@ -75,7 +75,7 @@ static char *clean_all_quotes(char *token)
 	int i;
 	int prev_i;
 	char *res;
-	char *tmp;
+	/*char *tmp;*/
 
 	i = 0;
 	res = token;

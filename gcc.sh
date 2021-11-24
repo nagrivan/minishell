@@ -11,10 +11,10 @@ fi
 
 if [ "$1" = 'leak' ]
 then
-	gcc -g main.c dollar.c quotes.c libft/libft.a
+	gcc -g main.c dollar.c quotes.c func.c libft/libft.a
 	valgrind --leak-check=full ./a.out
 	return
 fi
-gcc $1 $2 main.c dollar.c quotes.c libft/libft.a
+gcc $1 $2 main.c dollar.c quotes.c func.c libft/libft.a
 ./a.out
 
