@@ -100,14 +100,17 @@ int		is_bildins(t_all *all);
 	Функции парсера:
 */
 char	*dollar(char **str, int *i, char **env);
-void	free_all(char **token, int num);
+//void	free_all(char **token, int num);
 char	**clear_tokens(char **tokens, int num);
-char	**trim_tokens(char **str, t_all *tmp);
+//char	**trim_tokens(char **str, t_all *tmp);
+char**	trim_tokens(char **str);
 void	num_of_redir(char **str, t_all *tmp);
 void	num_of_argv(char **str, t_all *tmp);
 void	free_split(char **s);
 int		ft_strcmp(char *s1, char *s2);
 void	fill_argv(char **tokens, t_all *tmp);
+void	fill_redir(char **tokens, t_all *node);
 
+void printf_node(t_all *all);
 
 #endif

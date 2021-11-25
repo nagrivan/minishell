@@ -134,7 +134,39 @@ int find_pipe(char **tokens)
 	return 0;
 }
 
-void	parser(char **str, char **env, t_all *tmp)
+void	fill_new_node(char **tokens, t_all **all, char **env)
+{
+	t_all	*tmp;
+	int		pipe_n;
+	t_all *node;
+	
+	node = init_struct(env);
+	num_of_redir(tokens, node);
+	num_of_argv(tokens, node);
+	fill_argv(tokens, node);
+	if (node->num_redir != 0)
+		fill_redir(tokens, node);
+	if (*all == 0)
+	{
+		*all = node;
+		(*all)->pipe = 0;
+	}
+	else
+	{
+		tmp = *all;
+		pipe_n = 1;
+		while (tmp->next)
+		{
+			tmp = tmp->next;
+			pipe_n++;
+		}
+		tmp->next = node;
+		tmp = tmp->next;
+		tmp->pipe = pipe_n;
+	}
+}
+
+void	parser(char **str, char **env, t_all **all)
 {
 	int		i;
 	int		num;
@@ -143,77 +175,49 @@ void	parser(char **str, char **env, t_all *tmp)
 	i = 0;
 	*str = env_variables(*str, env);
 	num = tokens_number(*str);
-	printf("FINAL NUMBER OF TOKENS IS %d\n", num);
 	tokens = split_tokens(*str, num);
 	tokens = clear_tokens(tokens, num);
-	/*while (tokens[i])*/
-	/*{*/
-		/*printf("Token number %d is \t|\033[32m%s\033[0m|\n", i + 1, tokens[i]);*/
-		/*i++;*/
-	/*}*/
-
 	while (find_pipe(tokens))
 	{
-		num_of_redir(tokens, tmp);
-		num_of_argv(tokens, tmp);
-		fill_argv(tokens, tmp);
-		printf("\n");
-		printf("NUM OF REDIR = %d\n", tmp->num_redir);
-		printf("NUM OF ARGV = %d\n", tmp->num_argv);
-		i = 0;
-		while (ft_strcmp(tokens[i], "|"))
-		{
-			printf("Token number %d is \t|\033[32m%s\033[0m|\n", i + 1, tokens[i]);
-			i++;
-		}
-		tokens = trim_tokens(tokens, tmp);
-		tmp->num_redir = 0;
-		tmp->num_argv = 0;
+		fill_new_node(tokens, all, env);
+		tokens = trim_tokens(tokens);
 	}
-	num_of_redir(tokens, tmp);
-	num_of_argv(tokens, tmp);
-	printf("\n");
-	printf("NUM OF REDIR = %d\n", tmp->num_redir);
-	printf("NUM OF ARGV = %d\n", tmp->num_argv);
-	tmp->num_redir = 0;
-	tmp->num_argv = 0;
-	i = 0;
-	while (tokens[i])
-	{
-		printf("Token number %d is \t|\033[32m%s\033[0m|\n", i + 1, tokens[i]);
-		i++;
-	}
-
-	/*tokens = fill_struct(tokens, tmp);*/
-	/*i = 0;*/
-	/*while (tokens[i])*/
-	/*{*/
-		/*printf("Token number %d is \t|\033[32m%s\033[0m|\n", i + 1, tokens[i]);*/
-		/*i++;*/
-	/*}*/
+		fill_new_node(tokens, all, env);
+	
+	//ВЫВОД
+	printf_node(*all);
 	free_split(tokens);
-	/*free_all(tokens, num);*/
 }
 
-void	free_all(char **token, int num)
+void free_struct(t_all **all)
 {
-	int	i;
+	t_all *plist;
+	t_all *ptmp;
 
-	i = -1;
-	while (++i < num)
-		free(token[i]);
-	free(token);
+	if (!*all)
+		return ;
+	plist = *all;
+	/*printf("in free %p\n", plist);*/
+	ptmp = *all;
+	while (plist)
+	{
+		ptmp = plist->next;
+		free_split(plist->argv);
+		free(plist);
+		plist = ptmp;
+	}
+	*all = 0;
 }
 
 int	main(int argc, char **argv, char **env)
 {
 	(void)argc;
 	(void)argv;
-	t_all *tmp;
+	t_all *all;
 	int jopa = 1;
 	int kota = 0;
 	int	i = 0;
-	tmp = init_struct(env);
+	all = 0;	/*all = init_struct(env);*/
 	while (!0 && 1 == 1 && jopa != kota/*бескоечный цикл*/)
 	{
 		char *promt = "💀$ ";
@@ -229,12 +233,9 @@ int	main(int argc, char **argv, char **env)
 			free(str);
 			return 0;
 		}
-		parser(&str, env, tmp);
-		while (tmp->argv[i])
-		{
-			printf("\nARGV %d is \t|\033[32m%s\033[0m|\n", i + 1, tmp->argv[i]);
-			i++;
-		}
+		parser(&str, env, &all);
+		free_struct(&all);
+		all = 0;
 		free(str);
 	}
 }

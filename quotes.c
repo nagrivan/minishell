@@ -124,6 +124,6 @@ char **clear_tokens(char **tokens, int num)
 			result[i] = ft_strdup(tokens[i]);
 		i++;
 	}
-	free_all(tokens, num);
+	free_split(tokens);
 	return (result);
 }

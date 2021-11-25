@@ -23,6 +23,7 @@ t_all	*init_struct(char **env)
 
 	(void)env;
 	tmp = (t_all *)malloc(sizeof(t_all));
+	/*printf("%p\n", tmp);*/
 	/*if (!tmp)*/
 	/*{*/
 		/*printf("minishell %s\n", strerror(errno));*/
@@ -58,15 +59,9 @@ int ft_strcmp(char *s1, char *s2)
 	int i;
 
 	i = 0;
-	if (!s1 || !s2)
-		return 1;
-	while (s1[i] && s2[i])
-	{
-		if (s1[i] != s2[i])
-			return 1;
+	while (s1[i] == s2[i] && s1[i] && s2[i])
 		i++;
-	}
-	return 0;
+	return (s1[i] - s2[i]);
 }
 
 void	num_of_redir(char **str, t_all *tmp)
@@ -118,13 +113,13 @@ void	free_split(char **s)
 	free(s);
 }
 
-void	fill_argv(char **tokens, t_all *tmp)
+void	fill_argv(char **tokens, t_all *node)
 {
 	int	i;
 	int	j;
 
-	tmp->argv = malloc(sizeof(char *) * (tmp->num_argv + 1));
-	tmp->argv[tmp->num_argv] = 0;
+	node->argv = malloc(sizeof(char *) * (node->num_argv + 1));
+	node->argv[node->num_argv] = 0;
 	i = 0;
 	j = 0;
 	while (tokens[i])
@@ -139,13 +134,58 @@ void	fill_argv(char **tokens, t_all *tmp)
 			i += 2;
 			continue;
 		}
-		tmp->argv[j] = ft_strdup(tokens[i]);
+		node->argv[j] = ft_strdup(tokens[i]);
 		i++;
 		j++;
 	}
 }
 
-char**	trim_tokens(char **str, t_all *tmp)
+void	fill_redir(char **tokens, t_all *node)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	node->redir = ft_calloc(sizeof(t_redirect), node->num_redir + 1);
+	while (tokens[i])
+	{
+		if (ft_strcmp(tokens[i], "|") == 0)
+			break;
+		if (!ft_strcmp(tokens[i], ">"))
+		{
+			node->redir[j].type_redir = ONE_TO;
+			node->redir[j].filename = tokens[i + 1]; 
+			i += 2;
+			j++;
+		}
+		else if (!ft_strcmp(tokens[i], ">>"))
+		{
+			node->redir[j].type_redir = DOB_TO;
+			node->redir[j].filename = tokens[i + 1]; 
+			i += 2;
+			j++;
+		}
+		else if (!ft_strcmp(tokens[i], "<"))
+		{
+			node->redir[j].type_redir = ONE_FROM;
+			node->redir[j].filename = tokens[i + 1]; 
+			i += 2;
+			j++;
+		}
+		else if (!ft_strcmp(tokens[i], "<<"))
+		{
+			node->redir[j].type_redir = HEREDOC;
+			node->redir[j].filename = tokens[i + 1]; 
+			i += 2;
+			j++;
+		}
+		else
+			i++;
+	}
+}
+
+char**	trim_tokens(char **str)
 {
 	char **tmp_jopa = str;
 	char **new_str;
