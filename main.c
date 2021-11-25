@@ -128,6 +128,7 @@ int	main(int argc, char **argv, char **env)
 	(void)argc;
 	(void)argv;
 	str = NULL;
+	all = 0;
 	tmp_env = init_env(env);
 	if (!tmp_env)
 	{
@@ -138,13 +139,13 @@ int	main(int argc, char **argv, char **env)
 	signal_on();
 	while (1)
 	{
-		all = init_struct(tmp_env);
-		if (!all)
-		{
-			ft_free(tmp_env);
-			return (errno);
-		}
-		str = readline("minishell$ ");
+		/*all = init_struct(tmp_env);*/
+		/*if (!all)*/
+		/*{*/
+			/*ft_free(tmp_env);*/
+			/*return (errno);*/
+		/*}*/
+		str = readline("☠️  $ ");
 		if (str)
 			add_history(str);
 		else
@@ -156,22 +157,25 @@ int	main(int argc, char **argv, char **env)
 		}
 		/* Здесь должен быть парсер.
 			А могла быть ваша реклама. */
-		start_minishell(all);
-		tmp_env = init_env(all->env);
+		/*printf("|%s|\n", str);*/
+		parser(&str, env, &all);
+		/*start_minishell(all);*/
+		/*tmp_env = init_env(all->env);*/
 		if (!tmp_env)
 			printf("minishell %s\n", strerror(errno));
 		if (str)
 			free(str);
-		while (all != NULL)
-		{
-			free(all->argv);
-			ft_free(all->env);
-			all = all->next;
-			// free(tmp);
-		}
-		// system("leaks minishell");// для проверки утечек
+		/*while (all != NULL)*/
+		/*{*/
+			/*free(all->argv);*/
+			/*ft_free(all->env);*/
+			/*all = all->next;*/
+			/*// free(tmp);*/
+		/*}*/
+		free_struct(&all);
+		 /*system("leaks minishell");// для проверки утечек*/
 	}
 	clear_history();
-	ft_free(tmp_env);
+	/*ft_free(tmp_env);*/
 	return (0);
 }

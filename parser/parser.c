@@ -140,7 +140,7 @@ void	fill_new_node(char **tokens, t_all **all, char **env)
 	int		pipe_n;
 	t_all *node;
 	
-	node = init_struct(env);
+	node = init_struct_sanya(env);
 	num_of_redir(tokens, node);
 	num_of_argv(tokens, node);
 	fill_argv(tokens, node);
@@ -182,7 +182,7 @@ void	parser(char **str, char **env, t_all **all)
 		fill_new_node(tokens, all, env);
 		tokens = trim_tokens(tokens);
 	}
-		fill_new_node(tokens, all, env);
+	fill_new_node(tokens, all, env);
 	
 	//ВЫВОД
 	printf_node(*all);
@@ -203,6 +203,13 @@ void free_struct(t_all **all)
 	{
 		ptmp = plist->next;
 		free_split(plist->argv);
+		int i = 0;
+		while (i < plist->num_redir)
+		{
+			free(plist->redir[i].filename);
+			i++;
+		}
+		free(plist->redir);
 		free(plist);
 		plist = ptmp;
 	}

@@ -135,6 +135,8 @@ void	fill_argv(char **tokens, t_all *node)
 			continue;
 		}
 		node->argv[j] = ft_strdup(tokens[i]);
+		/*printf("%s == %p\n", node->argv[j], node->argv[j]);*/
+		/*printf("%s\n", node->argv[j]);*/
 		i++;
 		j++;
 	}
@@ -155,28 +157,31 @@ void	fill_redir(char **tokens, t_all *node)
 		if (!ft_strcmp(tokens[i], ">"))
 		{
 			node->redir[j].type_redir = ONE_TO;
-			node->redir[j].filename = tokens[i + 1]; 
+			node->redir[j].filename = ft_strdup(tokens[i + 1]);
 			i += 2;
 			j++;
 		}
 		else if (!ft_strcmp(tokens[i], ">>"))
 		{
 			node->redir[j].type_redir = DOB_TO;
-			node->redir[j].filename = tokens[i + 1]; 
+			/*node->redir[j].filename = tokens[i + 1]; */
+			node->redir[j].filename = ft_strdup(tokens[i + 1]);
 			i += 2;
 			j++;
 		}
 		else if (!ft_strcmp(tokens[i], "<"))
 		{
 			node->redir[j].type_redir = ONE_FROM;
-			node->redir[j].filename = tokens[i + 1]; 
+			/*node->redir[j].filename = tokens[i + 1]; */
+			node->redir[j].filename = ft_strdup(tokens[i + 1]);
 			i += 2;
 			j++;
 		}
 		else if (!ft_strcmp(tokens[i], "<<"))
 		{
 			node->redir[j].type_redir = HEREDOC;
-			node->redir[j].filename = tokens[i + 1]; 
+			/*node->redir[j].filename = tokens[i + 1]; */
+			node->redir[j].filename = ft_strdup(tokens[i + 1]);
 			i += 2;
 			j++;
 		}

@@ -7,8 +7,11 @@ void printf_node(t_all *all)
 	int node_counter = 0;
 	int i = 0;
 	/*printf("%d\n", ft_strcmp("l", "l"));*/
+	/*printf("%p\n", tmp->redir[0].filename);*/
 	while (tmp)
 	{
+		int j = 0;
+		/*printf("%s == %p\n", tmp->argv[j], tmp->argv[j]);*/
 		printf("NODE n= %d REDIRs =%d ARGVs= %d INDEX PIPE=%d filename= %s TYPE_R= %d\n",\
 				node_counter,\
 				tmp->num_redir,\

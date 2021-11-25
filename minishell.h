@@ -55,12 +55,12 @@ typedef struct s_all
 	int				fd[2];
 	t_redirect		*redir;
 	int				num_redir;
+	int				num_argv;
 	pid_t			dother;
 	int				pipe;
 	int				status;
 	struct s_all	*next;
 	//
-	int				num_argv;
 	//
 }	t_all;
 

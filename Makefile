@@ -38,7 +38,7 @@ INCLUDES	= minishell.h
 
 CC	= gcc
 
-CFLAGS	= -g #-Wall -Wextra -Werror
+CFLAGS	= -g -fsanitize=address #-Wall -Wextra -Werror
 
 LDFLAGS		= -L${HOME}/.brew/opt/readline/lib/
 
