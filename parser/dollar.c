@@ -1,0 +1,104 @@
+#include "minishell.h"
+
+static int	valid_sym(char c)
+{
+	if (c == '_' || ft_isalnum(c))
+		return 1;
+	return 0;
+}
+
+static char	*swap(char **str, char *val, int *i, int j)
+{
+	char	*dst;
+	char	*dst2;
+	char	*tmp;
+
+	dst = ft_substr(*str, 0, j);
+	dst2 = ft_strdup(*str + *i);
+	tmp = dst;
+	dst = ft_strjoin(dst, val);
+	free(tmp);
+	tmp = dst;
+	dst = ft_strjoin(dst, dst2);
+	free(tmp);
+	free(dst2);
+	return (dst);
+}
+
+static char	*env_not_exist(char **str, int *i, int j)
+{
+	char	*dst;
+	char	*dst2;
+	char	*res;
+
+	dst = ft_substr(*str, 0, j);
+	dst2 = ft_strdup(*str + *i);
+	res = ft_strjoin(dst, dst2);
+	free(dst);
+	free(dst2);
+	*i -= *i - j;
+	free(*str);
+	return (res);
+}
+
+char	*dollar(char **str, int *i, char **env)
+{
+	int		j;
+	char	*val;
+	char	*arg;
+
+	(void)env;
+	j = *i;
+	while ((*str)[++(*i)])
+		if (!valid_sym((*str)[*i]))
+			break ;
+	if (*i == j + 1)
+		return (*str);
+	arg = ft_substr(*str, j + 1, *i - j - 1);
+	val = getenv(arg);
+	free(arg);
+	if (!val)
+		return (env_not_exist(str, i, j));
+	arg = swap(str, val, i, j);
+	free(*str);
+	if ((*i - j) > ft_strlen(val))
+		*i -= *i - j - ft_strlen(val);
+	else
+		*i += ft_strlen(val) - (*i - j);
+	return (arg);
+}
+
+char *space(char **str, int *i)
+{
+	int		j;
+	char	*res;
+	char	*dst;
+	char	*dst2;
+
+	j = *i;
+	while ((*str)[*i] == ' ' || (*str)[*i] == '\t')
+		(*i)++;
+	dst = ft_substr(*str, 0, j + 1);
+	dst2 = ft_strdup(*str + *i);
+	res = ft_strjoin(dst, dst2);
+	free(dst);
+	free(dst2);
+	*i -= *i - j;
+	free(*str);
+	return (res);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
