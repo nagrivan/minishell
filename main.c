@@ -155,12 +155,12 @@ int	main(int argc, char **argv, char **env)
 			write(1, "\033[Aexit\n", 9);
 			exit(0);
 		}
-		/* Здесь должен быть парсер.
-			А могла быть ваша реклама. */
+		/* Здесь есть парсер.*/
 		/*printf("|%s|\n", str);*/
 		parser(&str, env, &all);
-		/*start_minishell(all);*/
-		/*tmp_env = init_env(all->env);*/
+		/*А здесть нет. */
+		start_minishell(all);
+		tmp_env = init_env(all->env);
 		if (!tmp_env)
 			printf("minishell %s\n", strerror(errno));
 		if (str)
