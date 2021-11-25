@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:21:27 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/12 13:20:29 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/25 18:37:55 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,9 @@ typedef struct s_all
 	int				pipe;
 	int				status;
 	struct s_all	*next;
+	//
+	int				num_argv;
+	//
 }	t_all;
 
 /*
@@ -107,5 +110,31 @@ void	signal_dother(int status);
 void	signal_on_her(void);
 
 // void	rl_replace_line(const char *text, int clear_undo);
+
+/*
+	Функции парсера:
+*/
+char	*dollar(char **str, int *i, char **env);
+//void	free_all(char **token, int num);
+char	**clear_tokens(char **tokens, int num);
+//char	**trim_tokens(char **str, t_all *tmp);
+char**	trim_tokens(char **str);
+void	num_of_redir(char **str, t_all *tmp);
+void	num_of_argv(char **str, t_all *tmp);
+void	free_split(char **s);
+int		ft_strcmp(char *s1, char *s2);
+void	fill_argv(char **tokens, t_all *tmp);
+void	fill_redir(char **tokens, t_all *node);
+char	*env_variables(char *str, char **env);
+int		tokens_number(char	*str);
+char	*new_token(char *start, char *end);
+char	**split_tokens(char *str, int num);
+int		find_pipe(char **tokens);
+void	fill_new_node(char **tokens, t_all **all, char **env);
+void	parser(char **str, char **env, t_all **all);
+void	free_struct(t_all **all);
+
+
+void printf_node(t_all *all);
 
 #endif

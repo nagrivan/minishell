@@ -6,7 +6,7 @@
 #    By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/24 19:45:52 by nagrivan          #+#    #+#              #
-#    Updated: 2021/11/12 14:37:03 by nagrivan         ###   ########.fr        #
+#    Updated: 2021/11/25 18:41:06 by nagrivan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ LIBFT	= ${LIBFT_DIRS}libft.a
 
 LIBFT_INCLUDES	= ${LIBFT_DIRS}libft.h
 
-SRCS_DIRS	=	bildins/	local_func/
+SRCS_DIRS	=	bildins/	local_func/		parser/
 
 VPATH	=	${SRCS_DIRS}
 			
@@ -27,6 +27,8 @@ SRCS		=	main.c \
 				my_export.c		exp_uns_utils.c		my_pwd.c			my_unset.c \
 				my_exit.c \
 				my_pipe.c		my_redirections.c	start_minishell.c	my_signal.c\
+				dollar.c		func.c				parser.c			printf_node.c\
+				quotes.c
 
 OBJS_DIRS	=	.objs/
 
