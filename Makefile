@@ -40,9 +40,9 @@ CC	= gcc
 
 CFLAGS	= -g #-Wall -Wextra -Werror
 
-LDFLAGS		= -L/Users/nagrivan/.brew/opt/readline/lib
+LDFLAGS		= -L${HOME}/.brew/opt/readline/lib/
 
-CPPFLAGS	= -I/Users/nagrivan/.brew/opt/readline/include -I./
+CPPFLAGS	= -I${HOME}/.brew/opt/readline/include/ -I./
 
 RM	= rm -rf
 
