@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:21:27 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/25 18:37:55 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/25 19:05:57 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 # include <fcntl.h>
 # include <signal.h>
 # include <errno.h>
+# include <unistd.h>
+# include <string.h>
 
 # define	STDIN 0
 # define	STDOUT 1
@@ -133,6 +135,7 @@ int		find_pipe(char **tokens);
 void	fill_new_node(char **tokens, t_all **all, char **env);
 void	parser(char **str, char **env, t_all **all);
 void	free_struct(t_all **all);
+t_all	*init_struct_sanya(char **env);
 
 
 void printf_node(t_all *all);

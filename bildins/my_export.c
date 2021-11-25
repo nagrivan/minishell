@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:14:25 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/10 18:09:22 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/25 19:00:32 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,8 +107,10 @@ int	write_argv_exp(char *argv, t_all *all)
 
 	geolock = check_exp(argv, all->env, (check_equals(argv)));
 	if (geolock == -1)
+	{
 		if ((write_env(argv, all)) != 0)
 			return (1);
+	}
 	else
 	{
 		if (!(ft_strchr(argv, '=')))

@@ -17,7 +17,7 @@
     /*return (tmp);*/
 /*}*/
 
-t_all	*init_struct(char **env)
+t_all	*init_struct_sanya(char **env)
 {
 	t_all	*tmp;
 

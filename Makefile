@@ -6,7 +6,7 @@
 #    By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/24 19:45:52 by nagrivan          #+#    #+#              #
-#    Updated: 2021/11/25 18:51:09 by nagrivan         ###   ########.fr        #
+#    Updated: 2021/11/25 19:04:50 by nagrivan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,11 +38,11 @@ INCLUDES	= minishell.h
 
 CC	= gcc
 
-CFLAGS	= -g -Wall -Wextra -Werror
+CFLAGS	= -g #-Wall -Wextra -Werror
 
 LDFLAGS		= -L/Users/nagrivan/.brew/opt/readline/lib
 
-CPPFLAGS	= -I/Users/nagrivan/.brew/opt/readline/include
+CPPFLAGS	= -I/Users/nagrivan/.brew/opt/readline/include -I./
 
 RM	= rm -rf
 
@@ -52,7 +52,7 @@ $(OBJS_DIRS):
 		@mkdir -p $@
 
 $(OBJS_DIRS)%.o : %.c ${INCLUDES} ${LIBFT_INCLUDES} ${LIBFT}
-		${CC} ${CFLAGS} -c $< -o $@
+		${CC} ${CFLAGS} -c $< -o $@ $(CPPFLAGS)
 
 $(NAME): ${OBJS_DIRS} ${OBJS} ${LIBFT} Makefile
 		 ${CC} ${CFLAGS} ${OBJS} ${LIBFT} -o ${NAME} -lreadline ${LDFLAGS} ${CPPFLAGS}

@@ -4,3 +4,5 @@
 *.objs
 *minishell
 *nfo*
+*.o
+libft/libft.a
