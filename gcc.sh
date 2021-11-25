@@ -15,6 +15,6 @@ then
 	valgrind --leak-check=full ./a.out
 	return
 fi
-gcc $1 $2 main.c dollar.c quotes.c func.c printf_node.c libft/libft.a
+gcc $1 $2 main.c dollar.c quotes.c func.c printf_node.c parser.c libft/libft.a
 ./a.out
 

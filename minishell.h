@@ -110,6 +110,15 @@ void	free_split(char **s);
 int		ft_strcmp(char *s1, char *s2);
 void	fill_argv(char **tokens, t_all *tmp);
 void	fill_redir(char **tokens, t_all *node);
+char	*env_variables(char *str, char **env);
+int		tokens_number(char	*str);
+char	*new_token(char *start, char *end);
+char	**split_tokens(char *str, int num);
+int		find_pipe(char **tokens);
+void	fill_new_node(char **tokens, t_all **all, char **env);
+void	parser(char **str, char **env, t_all **all);
+void	free_struct(t_all **all);
+
 
 void printf_node(t_all *all);
 
