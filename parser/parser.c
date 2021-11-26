@@ -149,12 +149,12 @@ void	fill_new_node(char **tokens, t_all **all, char **env)
 	if (*all == 0)
 	{
 		*all = node;
-		(*all)->pipe = 0;
+		(*all)->pipe = 1;
 	}
 	else
 	{
 		tmp = *all;
-		pipe_n = 1;
+		pipe_n = 2;
 		while (tmp->next)
 		{
 			tmp = tmp->next;

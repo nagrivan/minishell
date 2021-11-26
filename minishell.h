@@ -117,6 +117,7 @@ void	signal_on_her(void);
 	Функции парсера:
 */
 char	*dollar(char **str, int *i, char **env);
+//char	*dollar(t_all *all, char **str, int *i, char **env);
 //void	free_all(char **token, int num);
 char	**clear_tokens(char **tokens, int num);
 //char	**trim_tokens(char **str, t_all *tmp);
@@ -128,6 +129,7 @@ int		ft_strcmp(char *s1, char *s2);
 void	fill_argv(char **tokens, t_all *tmp);
 void	fill_redir(char **tokens, t_all *node);
 char	*env_variables(char *str, char **env);
+//char	*env_variables(t_all *all, char *str, char **env);
 int		tokens_number(char	*str);
 char	*new_token(char *start, char *end);
 char	**split_tokens(char *str, int num);

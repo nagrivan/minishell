@@ -8,6 +8,8 @@ void printf_node(t_all *all)
 	int i = 0;
 	/*printf("%d\n", ft_strcmp("l", "l"));*/
 	/*printf("%p\n", tmp->redir[0].filename);*/
+	/*for (int i = 0; all->env[i]; i++)*/
+		/*printf("\033[32m|%s|\033[0m\n", all->env[i]);*/
 	while (tmp)
 	{
 		int j = 0;
