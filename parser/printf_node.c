@@ -27,6 +27,12 @@ void printf_node(t_all *all)
 			i++;
 		}
 		i = 0;
+		printf("NUM of redir in this node = %d\n", tmp->num_redir);
+		while (i < tmp->num_redir)
+		{
+			printf("i)%d type_r = %d filename = %s p=%p\n", i, tmp->redir[i].type_redir, tmp->redir[i].filename, tmp->redir[i].filename);
+			i++;
+		}
 		node_counter++;
 		tmp = tmp->next;
 	}

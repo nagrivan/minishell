@@ -160,18 +160,18 @@ int	main(int argc, char **argv, char **env)
 		parser(&str, tmp_env, &all);
 		/*А здесть нет. */
 		start_minishell(all);
-		tmp_env = init_env(all->env);
+		tmp_env = (all->env);
 		if (!tmp_env)
 			printf("minishell %s\n", strerror(errno));
 		if (str)
 			free(str);
-		/*while (all != NULL)*/
-		/*{*/
-			/*free(all->argv);*/
-			/*ft_free(all->env);*/
-			/*all = all->next;*/
-			/*// free(tmp);*/
-		/*}*/
+		while (all != NULL)
+		{
+			free(all->argv);
+			ft_free(all->env);
+			all = all->next;
+			// free(tmp);
+		}
 		free_struct(&all);
 		 /*system("leaks minishell");// для проверки утечек*/
 	}
