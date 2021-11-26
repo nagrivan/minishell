@@ -19,10 +19,10 @@
 
 t_all	*init_struct_sanya(char **env)
 {
-	t_all	*tmp;
+	/*t_all	*tmp;*/
 
-	(void)env;
-	tmp = (t_all *)malloc(sizeof(t_all));
+	/*(void)env;*/
+	/*tmp = (t_all *)malloc(sizeof(t_all));*/
 	/*printf("%p\n", tmp);*/
 	/*if (!tmp)*/
 	/*{*/
@@ -30,8 +30,8 @@ t_all	*init_struct_sanya(char **env)
 		/*return (NULL);*/
 	/*}*/
 	/*tmp->env = init_env(env);*/
-	tmp->argv = NULL;
-	tmp->dother = 0;
+	/*tmp->argv = NULL;*/
+	/*tmp->dother = 0;*/
 	/*tmp->fd[0] = dup(STDIN_FILENO);*/
 	/*if (tmp->fd[0] == -1)*/
 	/*{*/
@@ -44,6 +44,38 @@ t_all	*init_struct_sanya(char **env)
 		/*printf("minishell %s\n", strerror(errno));*/
 		/*return (NULL);*/
 	/*}*/
+	/*tmp->next = NULL;*/
+	/*tmp->num_redir = 0;*/
+	/*tmp->num_argv = 0;*/
+	/*tmp->path = NULL;*/
+	/*tmp->pipe = 0;*/
+	/*tmp->redir = NULL;*/
+	/*tmp->status = 0;*/
+	/*return (tmp);*/
+
+	t_all	*tmp;
+
+	tmp = (t_all *)malloc(sizeof(t_all));
+	if (!tmp)
+	{
+		printf("minishell %s\n", strerror(errno));
+		return (NULL);
+	}
+	tmp->env = init_env(env);
+	tmp->argv = NULL;
+	tmp->dother = 0;
+	tmp->fd[0] = dup(STDIN_FILENO);
+	if (tmp->fd[0] == -1)
+	{
+		printf("minishell %s\n", strerror(errno));
+		return (NULL);
+	}
+	tmp->fd[1] = dup(STDOUT_FILENO);
+	if (tmp->fd[1] == -1)
+	{
+		printf("minishell %s\n", strerror(errno));
+		return (NULL);
+	}
 	tmp->next = NULL;
 	tmp->num_redir = 0;
 	tmp->num_argv = 0;

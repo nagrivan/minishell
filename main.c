@@ -157,7 +157,7 @@ int	main(int argc, char **argv, char **env)
 		}
 		/* Здесь есть парсер.*/
 		/*printf("|%s|\n", str);*/
-		parser(&str, env, &all);
+		parser(&str, tmp_env, &all);
 		/*А здесть нет. */
 		start_minishell(all);
 		tmp_env = init_env(all->env);

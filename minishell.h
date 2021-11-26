@@ -136,6 +136,7 @@ void	fill_new_node(char **tokens, t_all **all, char **env);
 void	parser(char **str, char **env, t_all **all);
 void	free_struct(t_all **all);
 t_all	*init_struct_sanya(char **env);
+char	**init_env(char **env);
 
 
 void printf_node(t_all *all);

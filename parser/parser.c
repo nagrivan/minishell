@@ -185,7 +185,7 @@ void	parser(char **str, char **env, t_all **all)
 	fill_new_node(tokens, all, env);
 	
 	//ВЫВОД
-	printf_node(*all);
+	/*printf_node(*all);*/
 	free_split(tokens);
 }
 
