@@ -41,6 +41,52 @@ static char	*env_not_exist(char **str, int *i, int j)
 	return (res);
 }
 
+int	find_arg(char *s1, char *s2)
+{
+	int	i;
+
+	i = 0;
+	while (s1[i] != '=' && s1[i])
+	{
+		if (s1[i] != s2[i])
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+int	find_name(char **env, char *arg)
+{
+	int	i;
+
+	i = 0;
+	while (env[i])
+	{
+		if (find_arg(env[i], arg))
+			return (i + 1);
+		i++;
+	}
+	return (0);
+}
+
+char	*get_env(char **env, char *line)
+{
+	int		index;
+	int		i;
+	char	*ret;
+
+	i = -1;
+	index = find_name(env, line) - 1;
+	if (index != -1)
+	{
+		ret = env[index];
+		while (env[index] && env[index][++i] != '=')
+			ret++;
+		return (++ret);
+	}
+	return (0);
+}
+
 char	*dollar(char **str, int *i, char **env)
 {
 	int		j;
@@ -55,7 +101,9 @@ char	*dollar(char **str, int *i, char **env)
 	if (*i == j + 1)
 		return (*str);
 	arg = ft_substr(*str, j + 1, *i - j - 1);
-	val = getenv(arg);
+	/*for (int i = 0; env[i]; i++)*/
+		/*printf("AAA %s\n", env[i]);*/
+	val = get_env(env, arg);
 	free(arg);
 	if (!val)
 		return (env_not_exist(str, i, j));
