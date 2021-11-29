@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 15:06:55 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/29 17:37:43 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/29 19:53:36 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,7 +205,7 @@ void	start_minishell(t_all *all)
 	int		tmp_fd[2];
 	int		status;
 
-	i = -1;
+	i = all->num_redir;
 	count_pipe = num_pipe(all);
 	tmp_fd[0] = dup(STDIN_FILENO);
 	if (tmp_fd[0] == -1)
@@ -232,17 +232,20 @@ void	start_minishell(t_all *all)
 			if (all->argv && all->argv[0] && !(is_bildins(all)))
 				if (!all->redir || all->redir[all->num_redir - 1].file_d != -1)
 					check_execve(all);
-			while (++i < all->num_redir)
+			while (--i >= 0)
 			{
 				if ((close(all->redir[i].fd)) == -1)
 				{
 					printf("minishell: Invalid close\n");
 					return ;
 				}
-				if ((dup2(all->redir[i].tmp_fd, all->redir[i].fd)) == -1)
+				if (all->redir[i].type_redir != HEREDOC)
 				{
-					printf("minishell %s\n", strerror(errno));
-					return ;
+					if ((dup2(all->redir[i].tmp_fd, all->redir[i].fd)) == -1)
+					{
+						printf("minishell %s\n", strerror(errno));
+						return ;
+					}
 				}
 			}
 		}
