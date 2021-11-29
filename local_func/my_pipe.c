@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 13:22:15 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/12 13:29:14 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/29 17:35:32 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,11 @@ void	shaman_fd(t_all *all, int count_pipe, int *tmp_fd)
 	{
 		if ((access(all->argv[0], X_OK)) != 0)
 			create_path(all);
-		execve(all->argv[0], all->argv, all->env);
+		if ((execve(all->argv[0], all->argv, all->env)) == -1)
+		{
+			exit_status = errno;
+			exit(errno);
+		}
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 13:51:10 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/25 18:55:15 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/29 16:10:25 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,8 @@ int	main(int argc, char **argv, char **env)
 			/*ft_free(tmp_env);*/
 			/*return (errno);*/
 		/*}*/
-		str = readline("☠️  $ ");
+		// str = readline("☠️  $ ");
+		str = readline("minishell ");
 		if (str)
 			add_history(str);
 		else
@@ -165,15 +166,15 @@ int	main(int argc, char **argv, char **env)
 			printf("minishell %s\n", strerror(errno));
 		if (str)
 			free(str);
-		while (all != NULL)
-		{
-			free(all->argv);
-			ft_free(all->env);
-			all = all->next;
-			// free(tmp);
-		}
+		// while (all != NULL)
+		// {
+		// 	free(all->argv);
+		// 	ft_free(all->env);
+		// 	all = all->next;
+		// 	// free(tmp);
+		// }
 		free_struct(&all);
-		 /*system("leaks minishell");// для проверки утечек*/
+		// system("leaks minishell");// для проверки утечек
 	}
 	clear_history();
 	/*ft_free(tmp_env);*/
