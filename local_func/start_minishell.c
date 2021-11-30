@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 15:06:55 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/15 16:20:55 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/30 13:22:34 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,17 +40,20 @@ void	one_command(t_all *all, int *tmp_fd, int i)
 	if (all->argv && all->argv[0] && !(is_bildins(all)))
 		if (!all->redir || all->redir[all->num_redir - 1].file_d != -1)
 			check_execve(all);
-	while (++i < all->num_redir)
+	while (--i >= 0)
 	{
 		if ((close(all->redir[i].fd)) == -1)
 		{
 			printf("minishell: Invalid close\n");
 			return ;
 		}
-		if ((dup2(all->redir[i].tmp_fd, all->redir[i].fd)) == -1)
+		if (all->redir[i].type_redir != HEREDOC)
 		{
-			printf("minishell %s\n", strerror(errno));
-			return ;
+			if ((dup2(all->redir[i].tmp_fd, all->redir[i].fd)) == -1)
+			{
+				printf("minishell %s\n", strerror(errno));
+				return ;
+			}
 		}
 	}	
 }
@@ -91,7 +94,7 @@ void	start_minishell(t_all *all)
 	int		count_pipe;
 	int		tmp_fd[2];
 
-	i = -1;
+	i = all->num_redir;
 	count_pipe = num_pipe(all);
 	tmp_fd[0] = dup(STDIN_FILENO);
 	tmp_fd[1] = dup(STDOUT_FILENO);

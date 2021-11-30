@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/15 15:44:56 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/15 15:45:31 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/30 13:33:43 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,14 @@ int	check_patch(t_all *all)
 	return (1);
 }
 
+void	error_path(t_all *all)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(all->argv[0], 2);
+	ft_putendl_fd(": command not found", 2);
+	g_exit_status = 127;
+}
+
 int	create_path(t_all *all)
 {
 	int			geolock;
@@ -94,10 +102,11 @@ int	create_path(t_all *all)
 		return (127);
 	}
 	all->path = ft_split(paths, ':');
-	if (!all->path)
+	if (!all->path || (check_patch(all)))
+	{
+		error_path(all);
 		return (-1);
-	if ((check_patch(all)))
-		return (-1);
+	}
 	ft_free(all->path);
 	free(paths);
 	return (0);
