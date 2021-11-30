@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 13:51:10 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/29 17:57:24 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/30 15:56:23 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ char	**init_env(char **env)
 	int		i;
 	int		size;
 	char	**result;
+	char	*free_tmp;
 
 	i = -1;
 	size = num_argv(env);
@@ -74,10 +75,13 @@ char	**init_env(char **env)
 		return (NULL);
 	while (env[++i])
 	{
+		free_tmp = result[i];
 		result[i] = ft_strdup(env[i]);
+		free(free_tmp);
 		if (!result[i])
 		{
 			printf("minishell %s\n", strerror(errno));
+			free_split(result);
 			return (NULL);
 		}
 	}
@@ -161,6 +165,8 @@ int	main(int argc, char **argv, char **env)
 		parser(&str, tmp_env, &all);
 		/*А здесть нет. */
 		start_minishell(all);
+		if (tmp_env)
+			free_split(tmp_env);
 		tmp_env = (all->env);
 		if (!tmp_env)
 			printf("minishell %s\n", strerror(errno));

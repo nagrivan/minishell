@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 15:06:55 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/29 19:53:36 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/30 16:25:16 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	create_path(t_all *all)
 		exit_status = 127;
 		return (-1);
 	}
-	ft_free(all->path);
+	free_split(all->path);
 	free(paths);
 	return (0);
 }
