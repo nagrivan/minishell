@@ -10,6 +10,8 @@ static int	print_error(char c)
 		printf("error: unclosed quotes\n");
 	if (c == 'r')
 		printf("error: double redirect\n");
+	if (c == 'n')
+		printf("syntax error near unexpected token \'newline\'\n");
 	return (1);
 }
 
@@ -38,7 +40,7 @@ int		mini_preparser(char *str)
 			i++;
 			while (str[i] == ' ' || str[i] == '\t')
 				i++;
-			if (str[i] == '|')
+			if (str[i] == '|' || str[i] == 0)
 				return (print_error('|'));
 		}
 		if (str[i] == '|' || str[i] == ';')
@@ -55,6 +57,8 @@ int		mini_preparser(char *str)
 			i++;
 			while (str[i] == ' ' || str[i] == '\t')
 				i++;
+			if (str[i] == 0)
+				return (print_error('n'));
 			if (ft_strchr("><", str[i]))
 				return (print_error('r'));
 			if (str[i] == '|')
