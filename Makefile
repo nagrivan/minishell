@@ -28,7 +28,7 @@ SRCS		=	main.c \
 				my_exit.c \
 				my_pipe.c		my_redirections.c	start_minishell.c	my_signal.c\
 				dollar.c		func.c				parser.c			printf_node.c\
-				quotes.c
+				quotes.c		errors.c
 
 OBJS_DIRS	=	.objs/
 
