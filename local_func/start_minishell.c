@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 15:06:55 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/30 16:25:16 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/30 18:47:57 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,13 +234,13 @@ void	start_minishell(t_all *all)
 					check_execve(all);
 			while (--i >= 0)
 			{
-				if ((close(all->redir[i].fd)) == -1)
+				if (all->redir[i].tmp_fd != -1 && all->redir[i].fd != -1)
 				{
-					printf("minishell: Invalid close\n");
-					return ;
-				}
-				if (all->redir[i].type_redir != HEREDOC)
-				{
+					if ((close(all->redir[i].fd)) == -1)
+					{
+						printf("minishell: Invalid close\n");
+						return ;
+					}
 					if ((dup2(all->redir[i].tmp_fd, all->redir[i].fd)) == -1)
 					{
 						printf("minishell %s\n", strerror(errno));

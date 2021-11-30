@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/10 15:32:07 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/29 19:44:27 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/11/30 18:48:37 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,6 @@ void	redir_heredoc(t_all *all, int i)
 
 int	replace_fd(t_all *all, int num, int fd)
 {
-	// printf("1.3\n");
 	all->redir[num].tmp_fd = 0;
 	all->redir[num].tmp_fd = dup(fd);
 	if (all->redir[num].tmp_fd == -1)
@@ -109,13 +108,11 @@ int	replace_fd(t_all *all, int num, int fd)
 		return (1);
 	}
 	all->redir[num].fd = fd;
-	// printf("end 1.3\n");
 	return (0);
 }
 
 void	open_file(t_all *all, int i)
 {
-	// printf("1.2\n");
 	if (all->redir[i].type_redir == ONE_FROM && all->redir[i].filename)
 		all->redir[i].file_d = open(all->redir[i].filename, O_RDONLY);
 	if (all->redir[i].type_redir == ONE_TO && all->redir[i].filename)
@@ -127,7 +124,6 @@ void	open_file(t_all *all, int i)
 	if (all->redir[i].file_d == -1)
 		printf("minishell: %s: No such file or directory\n",
 			all->redir[i].filename);
-	// printf("end 1.2\n");
 }
 
 void	what_is_redir(t_all *all)
@@ -137,17 +133,19 @@ void	what_is_redir(t_all *all)
 	i = -1;
 	while (++i < all->num_redir)
 	{
-		// printf("1.1\n");
+		all->redir[i].tmp_fd = -1;
+		all->redir[i].fd = -1;
 		if (all->redir[i].type_redir == HEREDOC && all->redir[i].filename)
 			redir_heredoc(all, i);
 		else
 		{
 			open_file(all, i);
+			if (all->redir[i].file_d == -1)
+				continue ;
 			if (all->redir[i].type_redir == ONE_FROM)
 				replace_fd(all, i, STDIN_FILENO);
 			else
 				replace_fd(all, i, STDOUT_FILENO);
 		}
-		// printf("end 1.1\n");
 	}
 }
