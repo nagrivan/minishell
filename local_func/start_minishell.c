@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 15:06:55 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/30 18:47:57 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/12/01 16:19:15 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,39 +164,6 @@ int	is_bildins(t_all *all)
 		return (0);
 	return (1);
 }
-
-// int	what_bild(t_all *all)
-// {
-// 	if (!(ft_strncmp(all->argv[0], "echo", 5))
-// 		|| !(ft_strncmp(all->argv[0], "cd", 3))
-// 		|| !(ft_strncmp(all->argv[0], "exit", 5))
-// 		|| !(ft_strncmp(all->argv[0], "env", 4))
-// 		|| !(ft_strncmp(all->argv[0], "export", 7))
-// 		|| !(ft_strncmp(all->argv[0], "pwd", 4))
-// 		|| !(ft_strncmp(all->argv[0], "unset", 6)))
-// 		return (1);
-// 	return (0);
-// }
-
-// void	bildin_exec(t_all *all)
-// {
-// 	if (all->next)
-// 	{
-// 		if ((pipe(all->fd)) == -1)
-// 			return ;
-// 		if ((dup2(all->fd[1], STDOUT_FILENO)) == -1)
-// 			return ;
-// 		if ((close(all->fd[1])) == -1)
-// 			return ;
-// 		is_bildins(all);
-// 		if ((dup2(all->fd[0], STDIN_FILENO)) == -1)
-// 			return ;
-// 		if ((close(all->fd[0])) == -1)
-// 			return ;
-// 	}
-// 	else
-// 		is_bildins(all);
-// }
 
 void	start_minishell(t_all *all)
 {
