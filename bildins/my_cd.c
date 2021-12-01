@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:14:06 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/10 17:57:45 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/12/01 14:59:35 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,8 +116,14 @@ int	my_cd(t_all *all)
 	}
 	chdir(result);
 	pwd = getcwd(pwd, 1024);
+	if (!pwd)
+	{
+		printf("minishell %s\n", strerror(errno));
+		return (1);
+	}
 	write_pwd(pwd, all);
-	write_old_pwd(old_pwd, all);
+	if (old_pwd)
+		write_old_pwd(old_pwd, all);
 	free(result);
 	free(old_pwd);
 	free(pwd);
