@@ -69,14 +69,14 @@ int	find_name(char **env, char *arg)
 	return (0);
 }
 
-char	*get_env(char **env, char *line)
+char	*get_env(char **env, char *arg)
 {
 	int		index;
 	int		i;
 	char	*ret;
 
 	i = -1;
-	index = find_name(env, line) - 1;
+	index = find_name(env, arg) - 1;
 	if (index != -1)
 	{
 		ret = env[index];
@@ -95,14 +95,20 @@ char	*dollar(char **str, int *i, char **env)
 
 	(void)env;
 	j = *i;
+	if ((*str)[(*i) + 1] == '?')
+	{
+		(*i) += 2;
+		arg = swap(str, ft_itoa(exit_status), i, j);
+		(*i)--;
+		free(*str);
+		return (arg);
+	}
 	while ((*str)[++(*i)])
 		if (!valid_sym((*str)[*i]))
 			break ;
 	if (*i == j + 1)
 		return (*str);
 	arg = ft_substr(*str, j + 1, *i - j - 1);
-	/*for (int i = 0; env[i]; i++)*/
-		/*printf("AAA %s\n", env[i]);*/
 	val = get_env(env, arg);
 	free(arg);
 	if (!val)
@@ -115,38 +121,3 @@ char	*dollar(char **str, int *i, char **env)
 		*i += ft_strlen(val) - (*i - j);
 	return (arg);
 }
-
-char *space(char **str, int *i)
-{
-	int		j;
-	char	*res;
-	char	*dst;
-	char	*dst2;
-
-	j = *i;
-	while ((*str)[*i] == ' ' || (*str)[*i] == '\t')
-		(*i)++;
-	dst = ft_substr(*str, 0, j + 1);
-	dst2 = ft_strdup(*str + *i);
-	res = ft_strjoin(dst, dst2);
-	free(dst);
-	free(dst2);
-	*i -= *i - j;
-	free(*str);
-	return (res);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

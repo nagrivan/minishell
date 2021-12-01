@@ -138,7 +138,7 @@ void	fill_new_node(char **tokens, t_all **all, char **env)
 {
 	t_all	*tmp;
 	int		pipe_n;
-	t_all *node;
+	t_all	*node;
 	
 	node = init_struct_sanya(env);
 	num_of_redir(tokens, node);

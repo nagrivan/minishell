@@ -176,6 +176,7 @@ char**	trim_tokens(char **str)
 	char **tmp_jopa = str;
 	char **new_str;
 	int i_ = 0;
+
 	while (tmp_jopa[i_] && tmp_jopa[i_][0] != '|')
 		i_++;
 	if (tmp_jopa[i_])
