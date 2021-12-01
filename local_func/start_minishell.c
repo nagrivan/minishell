@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 15:06:55 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/12/01 16:19:15 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/12/01 19:06:22 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,8 @@ int	create_path(t_all *all)
 		ft_putstr_fd(all->argv[0], 2);
 		ft_putendl_fd(": command not found", 2);
 		exit_status = 127;
+		free_split(all->path);
+		free(paths);
 		return (-1);
 	}
 	free_split(all->path);

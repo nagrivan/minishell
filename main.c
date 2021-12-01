@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 13:51:10 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/30 15:56:23 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/12/01 19:29:09 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,10 @@ int	main(int argc, char **argv, char **env)
 		// str = readline("☠️  $ ");
 		str = readline("minishell ");
 		if (str)
-			add_history(str);
+		{
+			if (str && *str)
+				add_history(str);
+		}
 		else
 		{
 			rl_on_new_line();
@@ -176,7 +179,7 @@ int	main(int argc, char **argv, char **env)
 			free(str);
 		while (all != NULL)
 		{
-			free(all->argv);
+			ft_free(all->argv);
 			/*ft_free(all->env);*/
 			all = all->next;
 			// free(tmp);
