@@ -98,7 +98,9 @@ char	*dollar(char **str, int *i, char **env)
 	if ((*str)[(*i) + 1] == '?')
 	{
 		(*i) += 2;
-		arg = swap(str, ft_itoa(exit_status), i, j);
+		val = ft_itoa(exit_status);
+		arg = swap(str, val, i, j);
+		free(val);
 		(*i)--;
 		free(*str);
 		return (arg);

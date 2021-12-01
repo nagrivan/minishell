@@ -126,8 +126,7 @@ t_all	*init_struct(char **env)
 int	main(int argc, char **argv, char **env)
 {
 	char		*str;
-	char		**tmp_env;
-	t_all		*all;
+	char		**tmp_env; t_all		*all;
 
 	(void)argc;
 	(void)argv;
@@ -166,7 +165,10 @@ int	main(int argc, char **argv, char **env)
 		/* Здесь есть парсер.*/
 		/*printf("|%s|\n", str);*/
 		if (mini_preparser(str))
+		{
+			free(str);
 			continue ;
+		}
 		parser(&str, tmp_env, &all);
 		/*А здесть нет. */
 		start_minishell(all);
@@ -177,11 +179,13 @@ int	main(int argc, char **argv, char **env)
 			printf("minishell %s\n", strerror(errno));
 		if (str)
 			free(str);
-		while (all != NULL)
+
+		t_all *alll = all;
+		while (alll)
 		{
-			ft_free(all->argv);
-			/*ft_free(all->env);*/
-			all = all->next;
+			ft_free(alll->argv);
+			// ft_free(all->env);
+			alll = alll->next;
 			// free(tmp);
 		}
 		free_struct(&all);

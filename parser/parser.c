@@ -150,6 +150,7 @@ void	fill_new_node(char **tokens, t_all **all, char **env)
 	{
 		*all = node;
 		(*all)->pipe = 1;
+		(*all)->next = NULL;
 	}
 	else
 	{
@@ -163,6 +164,7 @@ void	fill_new_node(char **tokens, t_all **all, char **env)
 		tmp->next = node;
 		tmp = tmp->next;
 		tmp->pipe = pipe_n;
+		tmp->next = NULL;
 	}
 }
 
@@ -191,13 +193,27 @@ void	parser(char **str, char **env, t_all **all)
 
 void free_struct(t_all **all)
 {
+	if ((*all)->next)
+		free_struct(&(*all)->next);
+	if ((*all)->num_redir != 0)
+	{
+		int i = 0;
+		while (i < (*all)->num_redir)
+			free((*all)->redir[i++].filename);
+		free((*all)->redir);
+	}
+	free(*all);
+	*all = NULL;
+}
+/*void free_struct(t_all **all)
+{
 	t_all *plist;
 	t_all *ptmp;
 
 	if (!*all)
 		return ;
 	plist = *all;
-	/*printf("in free %p\n", plist);*/
+	//printf("in free %p\n", plist);
 	ptmp = *all;
 	while (plist)
 	{
@@ -214,4 +230,4 @@ void free_struct(t_all **all)
 		plist = ptmp;
 	}
 	*all = 0;
-}
+}*/
