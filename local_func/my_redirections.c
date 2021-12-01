@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/10 15:32:07 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/14 16:46:11 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/12/01 16:17:03 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,9 @@ void	what_is_redir(t_all *all)
 
 	i = -1;
 	while (++i < all->num_redir)
-	{		
+	{
+		all->redir[i].tmp_fd = -1;
+		all->redir[i].fd = -1;
 		if (all->redir[i].type_redir == HEREDOC && all->redir[i].filename)
 			redir_heredoc(all, i);
 		else

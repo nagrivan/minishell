@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:14:06 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/14 15:48:36 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/12/01 16:13:10 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,8 +129,8 @@ int	my_cd(t_all *all)
 	}
 	chdir(result);
 	pwd = getcwd(pwd, 1024);
-	write_pwd(pwd, all);
-	write_old_pwd(old_pwd, all);
+	if ((write_pwd_oldpwd(all, old_pwd, pwd)) != 0)
+		return (1);
 	cd_error_free(0, result, old_pwd, pwd);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 14:10:15 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/14 14:29:17 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/12/01 16:13:18 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,4 +74,17 @@ int	check_env(char *argv, char **env)
 	if (!patch)
 		return (-1);
 	return (i);
+}
+
+int	write_pwd_oldpwd(t_all *all, char *old_pwd, char *pwd)
+{
+	if (!pwd)
+	{
+		printf("minishell %s\n", strerror(errno));
+		return (1);
+	}
+	write_pwd(pwd, all);
+	if (old_pwd)
+		write_old_pwd(old_pwd, all);
+	return (0);
 }

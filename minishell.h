@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:21:27 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/15 16:07:26 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/12/01 16:13:43 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ int		check_exp(char *argv, char **env, size_t size);
 int		my_export_argv(char *argv);
 size_t	check_equals(char *argv);
 char	**sort_all(char **env, int len);
+int		write_pwd_oldpwd(t_all *all, char *old_pwd, char *pwd);
 
 /*
 	Запуск команд
