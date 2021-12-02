@@ -56,6 +56,8 @@ void	shaman_fd(t_all *all, int count_pipe, int *tmp_fd)
 			exit_status = errno;
 			return ;
 		}
+		close(all->fd[1]);
+		close(all->fd[0]);
 		if ((close(tmp_fd[1])) == -1)
 		{
 			printf("minishell: Invalid close\n");
@@ -69,6 +71,11 @@ void	shaman_fd(t_all *all, int count_pipe, int *tmp_fd)
 		exit(0);
 	else
 	{
+		/*printf("FDF\n");*/
+		close(all->fd[1]);
+		close(all->fd[0]);
+		close(tmp_fd[0]);
+		close(tmp_fd[1]);
 		if ((access(all->argv[0], X_OK)) != 0)
 			create_path(all);
 		if ((execve(all->argv[0], all->argv, all->env)) == -1)
@@ -81,6 +88,8 @@ void	shaman_fd(t_all *all, int count_pipe, int *tmp_fd)
 
 void	my_pipe(t_all *all, int count_pipe, int *tmp_fd)
 {
+		close(all->fd[0]);
+		close(all->fd[1]);
 	if ((pipe(all->fd)) == -1)
 	{
 		printf("minishell %s\n", strerror(errno));
@@ -93,7 +102,13 @@ void	my_pipe(t_all *all, int count_pipe, int *tmp_fd)
 		return ;
 	}
 	if (all->dother == 0)
+	{
 		shaman_fd(all, count_pipe, tmp_fd);
+		/*close(tmp_fd[0]);*/
+		/*close(tmp_fd[1]);*/
+		close(all->fd[0]);
+		close(all->fd[1]);
+	}
 	else
 	{
 		// signal_off();
@@ -117,5 +132,13 @@ void	my_pipe(t_all *all, int count_pipe, int *tmp_fd)
 			printf("minishell: Invalid close\n");
 			return ;
 		}
+		close(all->fd[0]);
+		close(all->fd[1]);
+		/*close(tmp_fd[0]);*/
+		/*close(tmp_fd[1]);*/
 	}
+	/*close(all->fd[0]);*/
+	/*close(all->fd[1]);*/
+	/*close(tmp_fd[0]);*/
+	/*close(tmp_fd[1]);*/
 }

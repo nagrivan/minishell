@@ -180,12 +180,12 @@ int	main(int argc, char **argv, char **env)
 		if (str)
 			free(str);
 
-		t_all *alll = all;
-		while (alll)
+		t_all *all_s = all;
+		while (all_s)
 		{
-			ft_free(alll->argv);
+			ft_free(all_s->argv);
 			// ft_free(all->env);
-			alll = alll->next;
+			all_s = all_s->next;
 			// free(tmp);
 		}
 		free_struct(&all);

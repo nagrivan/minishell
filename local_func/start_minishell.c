@@ -122,7 +122,10 @@ int	check_execve(t_all *all)
 			printf("minishell: Invalid close\n");
 			return (1);
 		}
+		/*close(fd[0]);*/
+		/*close(fd[1]);*/
 		execve(all->argv[0], all->argv, all->env);
+		return 0;
 	}
 	else
 	{
@@ -143,6 +146,8 @@ int	check_execve(t_all *all)
 			return (1);
 		}
 	}
+	/*close(fd[0]);*/
+	/*close(fd[1]);*/
 	return (0);
 }
 
@@ -193,11 +198,18 @@ void	start_minishell(t_all *all)
 	while (all != NULL)
 	{
 		if (count_pipe > 1)
+		{
 			my_pipe(all, count_pipe, tmp_fd);
+			close(all->fd[0]);
+			close(all->fd[1]);
+		}
 		else // вынести в отдельную функцию
 		{
 			if (all->redir)
+			{
+				/*printf("AAAAAAAAAAAAAAAAAAAAAAAAAAAA\n");*/
 				what_is_redir(all);
+			}
 			if (all->argv && all->argv[0] && !(is_bildins(all)))
 				if (!all->redir || all->redir[all->num_redir - 1].file_d != -1)
 					check_execve(all);
@@ -218,6 +230,8 @@ void	start_minishell(t_all *all)
 				}
 			}
 		}
+		close(all->fd[0]);
+		close(all->fd[1]);
 		all = all->next;
 	}
 	i = -1;
@@ -237,4 +251,6 @@ void	start_minishell(t_all *all)
 		printf("minishell %s\n", strerror(errno));
 		exit_status = errno;
 	}
+	close(tmp_fd[0]);
+	close(tmp_fd[1]);
 }

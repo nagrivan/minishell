@@ -1,29 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   dollar.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ralverta <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/02 12:54:17 by ralverta          #+#    #+#             */
+/*   Updated: 2021/12/02 12:54:27 by ralverta         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
-
-static int	valid_sym(char c)
-{
-	if (c == '_' || ft_isalnum(c))
-		return 1;
-	return 0;
-}
-
-static char	*swap(char **str, char *val, int *i, int j)
-{
-	char	*dst;
-	char	*dst2;
-	char	*tmp;
-
-	dst = ft_substr(*str, 0, j);
-	dst2 = ft_strdup(*str + *i);
-	tmp = dst;
-	dst = ft_strjoin(dst, val);
-	free(tmp);
-	tmp = dst;
-	dst = ft_strjoin(dst, dst2);
-	free(tmp);
-	free(dst2);
-	return (dst);
-}
 
 static char	*env_not_exist(char **str, int *i, int j)
 {
@@ -41,50 +28,18 @@ static char	*env_not_exist(char **str, int *i, int j)
 	return (res);
 }
 
-int	find_arg(char *s1, char *s2)
+static char	*dollar_question(char **str, int *i, int j)
 {
-	int	i;
+	char	*arg;
+	char	*number;
 
-	i = 0;
-	while (s1[i] != '=' && s1[i])
-	{
-		if (s1[i] != s2[i])
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
-int	find_name(char **env, char *arg)
-{
-	int	i;
-
-	i = 0;
-	while (env[i])
-	{
-		if (find_arg(env[i], arg))
-			return (i + 1);
-		i++;
-	}
-	return (0);
-}
-
-char	*get_env(char **env, char *arg)
-{
-	int		index;
-	int		i;
-	char	*ret;
-
-	i = -1;
-	index = find_name(env, arg) - 1;
-	if (index != -1)
-	{
-		ret = env[index];
-		while (env[index] && env[index][++i] != '=')
-			ret++;
-		return (++ret);
-	}
-	return (0);
+	(*i) += 2;
+	number = ft_itoa(exit_status);
+	arg = swap(str, number, i, j);
+	free(number);
+	(*i)--;
+	free(*str);
+	return (arg);
 }
 
 char	*dollar(char **str, int *i, char **env)
@@ -95,16 +50,8 @@ char	*dollar(char **str, int *i, char **env)
 
 	(void)env;
 	j = *i;
-	if ((*str)[(*i) + 1] == '?')
-	{
-		(*i) += 2;
-		val = ft_itoa(exit_status);
-		arg = swap(str, val, i, j);
-		free(val);
-		(*i)--;
-		free(*str);
-		return (arg);
-	}
+	if ((*str)[*i + 1] == '?')
+		return (dollar_question(str, i, j));
 	while ((*str)[++(*i)])
 		if (!valid_sym((*str)[*i]))
 			break ;
@@ -122,4 +69,46 @@ char	*dollar(char **str, int *i, char **env)
 	else
 		*i += ft_strlen(val) - (*i - j);
 	return (arg);
+}
+
+static char	*double_quotes(char **str, char **env, int *i)
+{
+	(*i)++;
+	while ((*str)[*i] != '\"' && (*str)[*i] != '\0')
+	{
+		if ((*str)[*i] == '$')
+			*str = dollar(str, i, env);
+		if ((*str)[*i] == '\"')
+		{
+			(*i)++;
+			break ;
+		}
+		(*i)++;
+	}
+	return (*str);
+}
+
+char	*env_variables(char *str, char **env)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '\"')
+			str = double_quotes(&str, env, &i);
+		else if (str[i] == '\'')
+		{
+			i++;
+			while (str[i] != '\'' && str[i] != '\0')
+				i++;
+			if (str[i] == '\'')
+				i++;
+		}
+		else if (str[i] == '$')
+			str = dollar(&str, &i, env);
+		else
+			i++;
+	}
+	return (str);
 }

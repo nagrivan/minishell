@@ -1,6 +1,6 @@
 # include "minishell.h"
 
-static char	*clean_quotes(char *str, int first/*1 кавычка*/, int last/*последняя кавычка*/)
+static char	*cleaning(char *str, int first/*1 кавычка*/, int last/*последняя кавычка*/)
 {
 	char *res;
 	char *tmp;
@@ -43,7 +43,7 @@ static char	*single_quotes(char *str, int *i, char *token)
 	last = first + 1;
 	while (tmp[last] != '\'')
 		last++; // нашли 2 кавычку
-	res = clean_quotes(tmp, first, last);
+	res = cleaning(tmp, first, last);
 	*i = last - 1;
 	free(tmp);
 	return (res);
@@ -64,7 +64,7 @@ static char	*double_quotes(char *str, int *i, char *token)
 	last = first + 1;
 	while (tmp[last] != '\"')
 		last++; // нашли 2 кавычку
-	res = clean_quotes(tmp, first, last);
+	res = cleaning(tmp, first, last);
 	*i = last - 1;
 	free(tmp);
 	return (res);
@@ -106,7 +106,7 @@ static int quotes_or_not(char *token)
 	return (0);
 }
 
-char **clear_tokens(char **tokens, int num)
+char **clean_tokens(char **tokens, int num)
 {
 	int i;
 	char **result;

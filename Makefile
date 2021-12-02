@@ -28,7 +28,7 @@ SRCS		=	main.c \
 				my_exit.c \
 				my_pipe.c		my_redirections.c	start_minishell.c	my_signal.c\
 				dollar.c		func.c				parser.c			printf_node.c\
-				quotes.c		errors.c
+				quotes.c		errors.c			dollar_adds.c
 
 OBJS_DIRS	=	.objs/
 
@@ -38,7 +38,7 @@ INCLUDES	= minishell.h
 
 CC	= gcc
 
-CFLAGS	= -g #-fsanitize=address #-Wall -Wextra -Werror
+CFLAGS	= -g #-fsanitize=address -Wall -Wextra -Werror
 
 LDFLAGS		= -L${HOME}/.brew/opt/readline/lib/
 

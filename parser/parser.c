@@ -1,43 +1,5 @@
 # include "minishell.h"
 
-char	*env_variables(char *str, char **env)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '\"')
-		{
-			i++;
-			while (str[i] != '\"' && str[i] != '\0')
-			{
-				if (str[i] == '$')
-					str = dollar(&str, &i, env);
-				if (str[i] == '\"')
-				{
-					i++;
-					break ;
-				}
-				i++;
-			}
-		}
-		else if (str[i] == '\'')
-		{
-			i++;
-			while (str[i] != '\'' && str[i] != '\0')
-				i++;
-			if (str[i] == '\'')
-				i++;
-		}
-		else if (str[i] == '$')
-			str = dollar(&str, &i, env);
-		else 
-			i++;
-	}
-	return (str);
-}
-
 int		tokens_number(char	*str)
 {
 	int	i;
@@ -178,7 +140,7 @@ void	parser(char **str, char **env, t_all **all)
 	*str = env_variables(*str, env);
 	num = tokens_number(*str);
 	tokens = split_tokens(*str, num);
-	tokens = clear_tokens(tokens, num);
+	tokens = clean_tokens(tokens, num);
 	while (find_pipe(tokens))
 	{
 		fill_new_node(tokens, all, env);
@@ -204,7 +166,7 @@ void free_struct(t_all **all)
 	}
 	free(*all);
 	*all = NULL;
-}
+}
 /*void free_struct(t_all **all)
 {
 	t_all *plist;
