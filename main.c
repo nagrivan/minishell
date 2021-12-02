@@ -6,192 +6,96 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 13:51:10 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/12/01 19:29:09 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/12/02 19:42:48 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_free(char **my_text)
+char	*readline_str(void)
 {
-	int		i;
+	char		*str;
 
-	i = 0;
-	if (my_text)
+	str = NULL;
+	str = readline("minishell ");
+	if (str)
 	{
-		while (my_text[i])
-		{
-			free(my_text[i]);
-			i++;
-		}
+		if (str && *str)
+			add_history(str);
 	}
-	if (my_text)
-		free(my_text);
-}
-
-char	*get_value(char *str, int *index)
-{
-	int	i;
-
-	i = 0;
-	while (str && str[i] != '=')
-		i++;
-	*index = ++i;
-	return (str + i);
-}
-
-void	init_shlvl(char ***env)
-{
-	int		i;
-	int		numb;
-	int		len;
-	char	*str;
-	char	*number;
-
-	i = check_exp("SHLVL=", *(env), 6);
-	if (i != -1)
+	else
 	{
-		numb = ft_atoi(get_value((*env)[i], &len));
-		str = ft_substr((*env)[i], 0, len);
-		number = ft_itoa(++numb);
-		free((*env)[i]);
-		(*env)[i] = ft_strjoin(str, number);
+		rl_on_new_line();
+		rl_redisplay();
+		write(1, "\033[Aexit\n", 9);
+		exit(0);
+	}
+	return (str);
+}
+
+char	**preparation(int argc, char **argv, char **env)
+{
+	char		**tmp_env;
+
+	(void)argc;
+	(void)argv;
+	tmp_env = init_env(env);
+	if (!tmp_env)
+	{
+		printf("minishell %s\n", strerror(errno));
+		exit(errno);
+	}
+	init_shlvl(&tmp_env);
+	signal_on();
+	return (tmp_env);
+}
+
+void	start(t_all *all, char *str, char **tmp_env)
+{
+	parser(&str, tmp_env, &all);
+	start_minishell(all);
+}
+
+void	free_main(t_all *all, char *str)
+{
+	t_all		*alll;
+
+	if (str)
 		free(str);
-		free(number);
-	}
-}
-
-char	**init_env(char **env)
-{
-	int		i;
-	int		size;
-	char	**result;
-	char	*free_tmp;
-
-	i = -1;
-	size = num_argv(env);
-	result = (char **)ft_calloc(sizeof(char *), size + 1);
-	if (!result)
-		return (NULL);
-	while (env[++i])
+	alll = all;
+	while (alll)
 	{
-		free_tmp = result[i];
-		result[i] = ft_strdup(env[i]);
-		free(free_tmp);
-		if (!result[i])
-		{
-			printf("minishell %s\n", strerror(errno));
-			free_split(result);
-			return (NULL);
-		}
+		ft_free(alll->argv);
+		alll = alll->next;
 	}
-	result[i] = NULL;
-	return (result);
-}
-
-t_all	*init_struct(char **env)
-{
-	t_all	*tmp;
-
-	tmp = (t_all *)malloc(sizeof(t_all));
-	if (!tmp)
-	{
-		printf("minishell %s\n", strerror(errno));
-		return (NULL);
-	}
-	tmp->env = init_env(env);
-	tmp->argv = NULL;
-	tmp->dother = 0;
-	tmp->fd[0] = dup(STDIN_FILENO);
-	if (tmp->fd[0] == -1)
-	{
-		printf("minishell %s\n", strerror(errno));
-		return (NULL);
-	}
-	tmp->fd[1] = dup(STDOUT_FILENO);
-	if (tmp->fd[1] == -1)
-	{
-		printf("minishell %s\n", strerror(errno));
-		return (NULL);
-	}
-	tmp->next = NULL;
-	tmp->num_redir = 0;
-	tmp->path = NULL;
-	tmp->pipe = 0;
-	tmp->redir = NULL;
-	tmp->status = 0;
-	return (tmp);
+	free_struct(&all);
 }
 
 int	main(int argc, char **argv, char **env)
 {
 	char		*str;
-	char		**tmp_env; t_all		*all;
+	char		**tmp_env;
+	t_all		*all;
 
-	(void)argc;
-	(void)argv;
 	str = NULL;
 	all = 0;
-	tmp_env = init_env(env);
-	if (!tmp_env)
-	{
-		printf("minishell %s\n", strerror(errno));
-		return (errno);
-	}
-	init_shlvl(&tmp_env); // leaks
-	signal_on();
+	tmp_env = preparation(argc, argv, env);
 	while (1)
 	{
-		/*all = init_struct(tmp_env);*/
-		/*if (!all)*/
-		/*{*/
-			/*ft_free(tmp_env);*/
-			/*return (errno);*/
-		/*}*/
-		// str = readline("☠️  $ ");
-		str = readline("minishell ");
-		if (str)
-		{
-			if (str && *str)
-				add_history(str);
-		}
-		else
-		{
-			rl_on_new_line();
-			rl_redisplay();
-			write(1, "\033[Aexit\n", 9);
-			exit(0);
-		}
-		/* Здесь есть парсер.*/
-		/*printf("|%s|\n", str);*/
+		str = readline_str();
 		if (mini_preparser(str))
 		{
 			free(str);
 			continue ;
 		}
-		parser(&str, tmp_env, &all);
-		/*А здесть нет. */
-		start_minishell(all);
+		start(all, str, tmp_env);
 		if (tmp_env)
 			free_split(tmp_env);
 		tmp_env = (all->env);
 		if (!tmp_env)
 			printf("minishell %s\n", strerror(errno));
-		if (str)
-			free(str);
-
-		t_all *all_s = all;
-		while (all_s)
-		{
-			ft_free(all_s->argv);
-			// ft_free(all->env);
-			all_s = all_s->next;
-			// free(tmp);
-		}
-		free_struct(&all);
-		// system("leaks minishell");// для проверки утечек
+		free_main(all, str);
 	}
 	clear_history();
-	/*ft_free(tmp_env);*/
 	return (0);
 }

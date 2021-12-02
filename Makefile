@@ -6,7 +6,7 @@
 #    By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/24 19:45:52 by nagrivan          #+#    #+#              #
-#    Updated: 2021/11/25 19:04:50 by nagrivan         ###   ########.fr        #
+#    Updated: 2021/12/02 19:57:28 by nagrivan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,10 +22,11 @@ SRCS_DIRS	=	bildins/	local_func/		parser/
 
 VPATH	=	${SRCS_DIRS}
 			
-SRCS		=	main.c \
+SRCS		=	main.c 			main_utils.c\
 				my_cd.c			cd_utils.c			my_echo.c			my_env.c \
 				my_export.c		exp_uns_utils.c		my_pwd.c			my_unset.c \
-				my_exit.c \
+				my_exit.c 		cd_utils_2.c		sort.c\
+				my_heredoc.c	my_heredoc_sign.c	work_patch.c\
 				my_pipe.c		my_redirections.c	start_minishell.c	my_signal.c\
 				dollar.c		func.c				parser.c			printf_node.c\
 				quotes.c		errors.c			dollar_adds.c
@@ -38,7 +39,7 @@ INCLUDES	= minishell.h
 
 CC	= gcc
 
-CFLAGS	= -g #-fsanitize=address -Wall -Wextra -Werror
+CFLAGS	= -g -Wall -Wextra -Werror #-fsanitize=address 
 
 LDFLAGS		= -L${HOME}/.brew/opt/readline/lib/
 

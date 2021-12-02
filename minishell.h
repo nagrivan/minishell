@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:21:27 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/25 19:05:57 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/12/02 19:50:31 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@
 # define	DOB_TO 2 // >>
 # define	HEREDOC 3 // <<
 
-int	exit_status;
+int	g_exit_status;
 
 typedef struct s_redirect
 {
@@ -60,8 +60,6 @@ typedef struct s_all
 	int				pipe;
 	int				status;
 	struct s_all	*next;
-	//
-	//
 }	t_all;
 
 /*
@@ -74,6 +72,9 @@ int		my_exit(t_all *all);
 int		my_export(t_all *all);
 int		my_pwd(void);
 int		my_unset(t_all *all);
+
+int		write_pwd_oldpwd(t_all *all, char *old_pwd, char *pwd);
+char	**sort_all(char **env, int len);
 
 /*
 	Вспомогательная функция
@@ -88,6 +89,7 @@ int		write_env(char *result, t_all *all);
 int		check_exp(char *argv, char **env, size_t size);
 int		my_export_argv(char *argv);
 size_t	check_equals(char *argv);
+void	init_shlvl(char ***env);
 
 /*
 	Запуск команд
@@ -100,6 +102,7 @@ int		is_bildins(t_all *all);
 	Редиректы и пайпы
 */
 void	what_is_redir(t_all *all);
+void	redir_heredoc(t_all *all, int i);
 void	my_pipe(t_all *all, int count_pipe, int *tmp_fd);
 int		num_pipe(t_all *all);
 
@@ -111,14 +114,12 @@ void	signal_off(void);
 void	signal_dother(int status);
 void	signal_on_her(void);
 
-// void	rl_replace_line(const char *text, int clear_undo);
-
 /*
 	Функции парсера:
 */
 char	*dollar(char **str, int *i, char **env);
 char	**clean_tokens(char **tokens, int num);
-char**	trim_tokens(char **str);
+char	**trim_tokens(char **str);
 void	num_of_redir(char **str, t_all *tmp);
 void	num_of_argv(char **str, t_all *tmp);
 void	free_split(char **s);
@@ -135,13 +136,13 @@ void	parser(char **str, char **env, t_all **all);
 void	free_struct(t_all **all);
 t_all	*init_struct_sanya(char **env);
 char	**init_env(char **env);
-//
+
 int		mini_preparser(char *str);
 
 int		valid_sym(char c);
 char	*swap(char **str, char *val, int *i, int j);
 char	*get_env(char **env, char *arg);
 
-void printf_node(t_all *all);
+void	printf_node(t_all *all);
 
 #endif

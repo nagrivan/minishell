@@ -6,58 +6,52 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:14:50 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/10 17:50:24 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/12/02 14:45:24 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-/*
-	bash-3.2$ unset ""
-	bash: unset: `': not a valid identifier
-	Если переменной нет - ничего не удалять
-	Удаляет сразу несколько переменных, при встрече с невалидным ведет себя 
-	как export
-	bash: unset: `1235': not a valid identifier
-	bash-3.2$ echo $?
-	1
-	Проверено Norminette
-*/
+char	**write_tmp(t_all *all, int i, int geolock)
+{
+	int		j;
+	char	**tmp;
+
+	tmp = (char **)ft_calloc(sizeof(char *), i);
+	if (!tmp)
+	{
+		printf("minishell %s\n", strerror(errno));
+		return (NULL);
+	}
+	i = -1;
+	j = -1;
+	while (all->env[++i])
+	{
+		if (i != geolock)
+		{
+			tmp[++j] = ft_strdup(all->env[i]);
+			if (!tmp[j])
+			{
+				printf("minishell %s\n", strerror(errno));
+				return (NULL);
+			}
+		}
+	}
+	tmp[j] = NULL;
+	return (tmp);
+}
 
 int	delete_env(t_all *all, int geolock)
 {
 	int		i;
-	int		j;
 	char	**tmp;
 	char	**free_env;
 
 	free_env = all->env;
 	i = num_argv(all->env);
-	tmp = (char **)ft_calloc(sizeof(char *), i);
+	tmp = write_tmp(all, i, geolock);
 	if (!tmp)
-	{
-		printf("minishell %s\n", strerror(errno));
-		exit_status = errno;
 		return (1);
-	}
-	i = 0;
-	j = 0;
-	while (all->env[i])
-	{
-		if (i != geolock)
-		{
-			tmp[j] = ft_strdup(all->env[i]);
-			if (!tmp[j])
-			{
-				printf("minishell %s\n", strerror(errno));
-				exit_status = errno;
-				return (1);
-			}
-			j++;
-		}
-		i++;
-	}
-	tmp[j] = NULL;
 	all->env = tmp;
 	ft_free(free_env);
 	return (0);
