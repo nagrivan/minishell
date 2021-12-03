@@ -36,7 +36,7 @@
 # define	DOB_TO 2 // >>
 # define	HEREDOC 3 // <<
 
-int	exit_status;
+int	g_exit_status;
 
 typedef struct s_redirect
 {
@@ -75,6 +75,9 @@ int		my_export(t_all *all);
 int		my_pwd(void);
 int		my_unset(t_all *all);
 
+
+int		write_pwd_oldpwd(t_all *all, char *old_pwd, char *pwd);
+char	**sort_all(char **env, int len);
 /*
 	Вспомогательная функция
 */
@@ -89,19 +92,22 @@ int		check_exp(char *argv, char **env, size_t size);
 int		my_export_argv(char *argv);
 size_t	check_equals(char *argv);
 
+void	init_shlvl(char ***env);
+
 /*
 	Запуск команд
 */
 void	start_minishell(t_all *all);
 int		create_path(t_all *all);
 int		is_bildins(t_all *all);
-
 /*
 	Редиректы и пайпы
 */
 void	what_is_redir(t_all *all);
 void	my_pipe(t_all *all, int count_pipe, int *tmp_fd);
 int		num_pipe(t_all *all);
+
+void	redir_heredoc(t_all *all, int i);
 
 /*
 	Сигналы

@@ -79,7 +79,7 @@ int	create_path(t_all *all)
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(all->argv[0], 2);
 		ft_putendl_fd(": command not found", 2);
-		exit_status = 127;
+		g_exit_status = 127;
 		free_split(all->path);
 		free(paths);
 		return (-1);
@@ -100,14 +100,14 @@ int	check_execve(t_all *all)
 	if ((pipe(fd)) == -1)
 	{
 		printf("minishell %s\n", strerror(errno));
-		exit_status = errno;
+		g_exit_status = errno;
 		return (1);
 	}
 	pid = fork();
 	if (pid == -1)
 	{
 		printf("minishell %s\n", strerror(errno));
-		exit_status = errno;
+		g_exit_status = errno;
 		return (1);
 	}
 	if (pid == 0)
@@ -137,7 +137,7 @@ int	check_execve(t_all *all)
 		if ((dup2(fd[0], STDIN)) == -1)
 		{
 			printf("minishell %s\n", strerror(errno));
-			exit_status = errno;
+			g_exit_status = errno;
 			return (1);
 		}
 		if ((close(fd[0])) == -1)
@@ -154,19 +154,19 @@ int	check_execve(t_all *all)
 int	is_bildins(t_all *all)
 {
 	if (!(ft_strncmp(all->argv[0], "echo", 5)))
-		exit_status = my_echo(all->argv);
+		g_exit_status = my_echo(all->argv);
 	else if (!(ft_strncmp(all->argv[0], "cd", 3)))
-		exit_status = my_cd(all);
+		g_exit_status = my_cd(all);
 	else if (!(ft_strncmp(all->argv[0], "exit", 5)))
-		exit_status = my_exit(all);
+		g_exit_status = my_exit(all);
 	else if (!(ft_strncmp(all->argv[0], "env", 4)))
-		exit_status = my_env(all);
+		g_exit_status = my_env(all);
 	else if (!(ft_strncmp(all->argv[0], "export", 7)))
-		exit_status = my_export(all);
+		g_exit_status = my_export(all);
 	else if (!(ft_strncmp(all->argv[0], "pwd", 4)))
-		exit_status = my_pwd();
+		g_exit_status = my_pwd();
 	else if (!(ft_strncmp(all->argv[0], "unset", 6)))
-		exit_status = my_unset(all);
+		g_exit_status = my_unset(all);
 	else
 		return (0);
 	return (1);
@@ -185,14 +185,14 @@ void	start_minishell(t_all *all)
 	if (tmp_fd[0] == -1)
 	{
 		printf("minishell %s\n", strerror(errno));
-		exit_status = errno;
+		g_exit_status = errno;
 		return ;
 	}
 	tmp_fd[1] = dup(STDOUT_FILENO);
 	if (tmp_fd[1] == -1)
 	{
 		printf("minishell %s\n", strerror(errno));
-		exit_status = errno;
+		g_exit_status = errno;
 		return ;
 	}
 	while (all != NULL)
@@ -242,14 +242,14 @@ void	start_minishell(t_all *all)
 			signal_dother(status);
 		else
 			if (count_pipe || WEXITSTATUS(status))
-				exit_status = WEXITSTATUS(status);
+				g_exit_status = WEXITSTATUS(status);
 		waitpid(0, &status, WUNTRACED);
 		signal_on();
 	}
 	if ((dup2(tmp_fd[0], STDIN_FILENO)) == -1)
 	{
 		printf("minishell %s\n", strerror(errno));
-		exit_status = errno;
+		g_exit_status = errno;
 	}
 	close(tmp_fd[0]);
 	close(tmp_fd[1]);

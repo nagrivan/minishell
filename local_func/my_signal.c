@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 15:01:30 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/11/12 13:41:06 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/12/02 15:19:21 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	my_sigint(int signal)
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
-	exit_status = 1;
+	g_exit_status = 1;
 }
 
 void	my_sigquit(int signal)
@@ -30,7 +30,7 @@ void	my_sigquit(int signal)
 	rl_on_new_line();
 	rl_redisplay();
 	write(1, "  \b\b", 4);
-	exit_status = 0;
+	g_exit_status = 0;
 }
 
 void	signal_on(void)
@@ -49,33 +49,12 @@ void	signal_dother(int status)
 {
 	if (WTERMSIG(status) == 2)
 	{
-		exit_status = 130;
+		g_exit_status = 130;
 		write(1, "\n", 1);
 	}
 	if (WTERMSIG(status) == 3)
 	{
 		write(1, " \bQuit: 3\n", 10);
-		exit_status = 131;
+		g_exit_status = 131;
 	}
-}
-
-static void	my_sigint_her(int signal)
-{
-	(void)signal;
-	write(0, "\b\b  \b\b", 6);
-	exit_status = 130;
-	exit(130);
-}
-
-static void	my_sigquit_her(int signal)
-{
-	(void)signal;
-	write(0, "\b\b  \b\b", 6);
-	exit_status = 0;
-}
-
-void	signal_on_her(void)
-{
-	signal(SIGQUIT, my_sigquit_her);
-	signal(SIGINT, my_sigint_her);
 }

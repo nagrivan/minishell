@@ -94,11 +94,6 @@ t_all	*init_struct(char **env)
 	t_all	*tmp;
 
 	tmp = (t_all *)malloc(sizeof(t_all));
-	if (!tmp)
-	{
-		printf("minishell %s\n", strerror(errno));
-		return (NULL);
-	}
 	tmp->env = init_env(env);
 	tmp->argv = NULL;
 	tmp->dother = 0;

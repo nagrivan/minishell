@@ -6,16 +6,11 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:15:24 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/15 16:49:42 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/12/02 14:44:38 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-/*
-	Проверено Norminette
-	++++
-*/
 
 int	it_is_num(char *argv)
 {

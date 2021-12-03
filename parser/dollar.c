@@ -34,7 +34,7 @@ static char	*dollar_question(char **str, int *i, int j)
 	char	*number;
 
 	(*i) += 2;
-	number = ft_itoa(exit_status);
+	number = ft_itoa(g_exit_status);
 	arg = swap(str, number, i, j);
 	free(number);
 	(*i)--;

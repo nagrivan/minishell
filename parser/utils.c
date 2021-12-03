@@ -65,6 +65,8 @@ void	free_struct(t_all **all)
 			free((*all)->redir[i++].filename);
 		free((*all)->redir);
 	}
+	if ((*all)->pipe != 1)
+		ft_free((*all)->env);
 	free(*all);
 	*all = NULL;
 }
