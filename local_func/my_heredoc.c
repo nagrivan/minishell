@@ -23,6 +23,11 @@ void	parent_heredoc(t_all *all, int *fd)
 		dup2(fd[0], STDIN_FILENO);
 		close(fd[0]);
 	}
+	else
+	{
+		close(fd[1]);
+		close(fd[0]);
+	}
 }
 
 void	dother_heredoc(t_all *all, int *fd, int i)

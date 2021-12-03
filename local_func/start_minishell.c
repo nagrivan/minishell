@@ -227,6 +227,7 @@ void	start_minishell(t_all *all)
 						printf("minishell %s\n", strerror(errno));
 						return ;
 					}
+					close(all->redir[i].tmp_fd);
 				}
 			}
 		}
