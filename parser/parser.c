@@ -1,6 +1,18 @@
-# include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ralverta <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/03 15:15:22 by ralverta          #+#    #+#             */
+/*   Updated: 2021/12/03 15:16:14 by ralverta         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int		tokens_number(char	*str)
+#include "minishell.h"
+
+int	tokens_number(char	*str)
 {
 	int	i;
 	int	num;
@@ -16,7 +28,7 @@ int		tokens_number(char	*str)
 			i = ft_strchr(str + i + 1, str[i]) + 1 - str;
 			if (ft_strchr(" \t><|\0", str[i]))
 				num++;
-			continue;
+			continue ;
 		}
 		if (!ft_strchr(" \t><|\0", str[i]) && ft_strchr(" \t><|\0", str[i + 1]))
 			num++;
@@ -27,27 +39,36 @@ int		tokens_number(char	*str)
 	return (num);
 }
 
-char *new_token(char *start, char *end)
+char	**fill_tokens(char **tokens, char *str, int *i, int *n)
 {
-	char	*tmp;
-	char	*token;
+	int	j;
 
-	token = malloc(sizeof(char) * (end - start) + 1);
-	tmp = start;
-	while(tmp != end)	
+	j = 0;
+	if (!ft_strchr(" \t><|\0", str[*i]))
 	{
-		token[tmp - start] = *tmp;
-		++tmp;
+		j = *i;
+		while (!ft_strchr(" \t><|\0", str[*i]))
+		{
+			if (ft_strchr("\"\'", str[*i]))
+				*i = ft_strchr(str + *i + 1, str[*i]) - str;
+			(*i)++;
+			if (ft_strchr(" \t><|\0", str[*i]))
+				tokens[(*n)++] = new_token(str + j, str + *i);
+		}
 	}
-	token[tmp - start] = '\0';
-	return token;
+	if (ft_strchr("<>|", str[*i]) && str[*i] != '\0')
+	{
+		j = *i;
+		*i += 1 + (str[*i + 1] == str[*i]);
+		tokens[(*n)++] = new_token(str + j, str + *i);
+	}
+	return (tokens);
 }
 
 char	**split_tokens(char *str, int num)
 {
 	char	**tokens;
 	int		i;
-	int 	j; // start
 	int		n;
 
 	tokens = (char **)malloc(sizeof(char *) * (num + 1));
@@ -60,74 +81,34 @@ char	**split_tokens(char *str, int num)
 	{
 		while (str[i] == ' ' || str[i] == '\t')
 			i++;
-		while (str[i] && ft_strchr("\"\'", str[i]) && str[i] == str[i + 1] && ft_strchr("\'\" \t><|\0", str[i + 2]))
+		while (str[i] && ft_strchr("\"\'", str[i]) && str[i] == str[i + 1]
+			&& ft_strchr("\'\" \t><|\0", str[i + 2]))
 			i += 2;
-		if (!ft_strchr(" \t><|\0", str[i]))
-		{
-			j = i;
-			while (!ft_strchr(" \t><|\0", str[i]))
-			{
-				if (ft_strchr("\"\'", str[i]))
-					i = ft_strchr(str + i + 1, str[i]) - str;
-				i++;
-				if (ft_strchr(" \t><|\0", str[i]))
-					tokens[n++] = new_token(str + j, str + i);
-			}
-		}
-		if (ft_strchr("<>|", str[i]) && str[i] != '\0')
-		{
-			j = i;
-			i += 1 + (str[i + 1] == str[i]);
-			tokens[n++] = new_token(str + j, str + i);
-		}
+		tokens = fill_tokens(tokens, str, &i, &n);
 	}
 	return (tokens);
 }
 
-int find_pipe(char **tokens)
+char	**clean_tokens(char **tokens, int num)
 {
-	int i = 0;
+	int		i;
+	char	**result;
+
+	i = -1;
+	result = malloc(sizeof(char *) * (num + 1));
+	while (++i < num + 1)
+		result[i] = 0;
+	i = 0;
 	while (tokens[i])
 	{
-		if (strcmp(tokens[i], "|") == 0)
-			return 1;
+		if (quotes_or_not(tokens[i]))
+			result[i] = clean_all_quotes(tokens[i]);
+		else
+			result[i] = ft_strdup(tokens[i]);
 		i++;
 	}
-	return 0;
-}
-
-void	fill_new_node(char **tokens, t_all **all, char **env)
-{
-	t_all	*tmp;
-	int		pipe_n;
-	t_all	*node;
-	
-	node = init_struct_sanya(env);
-	num_of_redir(tokens, node);
-	num_of_argv(tokens, node);
-	fill_argv(tokens, node);
-	if (node->num_redir != 0)
-		fill_redir(tokens, node);
-	if (*all == 0)
-	{
-		*all = node;
-		(*all)->pipe = 1;
-		(*all)->next = NULL;
-	}
-	else
-	{
-		tmp = *all;
-		pipe_n = 2;
-		while (tmp->next)
-		{
-			tmp = tmp->next;
-			pipe_n++;
-		}
-		tmp->next = node;
-		tmp = tmp->next;
-		tmp->pipe = pipe_n;
-		tmp->next = NULL;
-	}
+	free_split(tokens);
+	return (result);
 }
 
 void	parser(char **str, char **env, t_all **all)
@@ -147,49 +128,5 @@ void	parser(char **str, char **env, t_all **all)
 		tokens = trim_tokens(tokens);
 	}
 	fill_new_node(tokens, all, env);
-	
-	//ВЫВОД
-	/*printf_node(*all);*/
 	free_split(tokens);
 }
-
-void free_struct(t_all **all)
-{
-	if ((*all)->next)
-		free_struct(&(*all)->next);
-	if ((*all)->num_redir != 0)
-	{
-		int i = 0;
-		while (i < (*all)->num_redir)
-			free((*all)->redir[i++].filename);
-		free((*all)->redir);
-	}
-	free(*all);
-	*all = NULL;
-}
-/*void free_struct(t_all **all)
-{
-	t_all *plist;
-	t_all *ptmp;
-
-	if (!*all)
-		return ;
-	plist = *all;
-	//printf("in free %p\n", plist);
-	ptmp = *all;
-	while (plist)
-	{
-		ptmp = plist->next;
-		free_split(plist->argv);
-		int i = 0;
-		while (i < plist->num_redir)
-		{
-			free(plist->redir[i].filename);
-			i++;
-		}
-		free(plist->redir);
-		free(plist);
-		plist = ptmp;
-	}
-	*all = 0;
-}*/

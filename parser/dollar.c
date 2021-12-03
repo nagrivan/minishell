@@ -42,7 +42,7 @@ static char	*dollar_question(char **str, int *i, int j)
 	return (arg);
 }
 
-char	*dollar(char **str, int *i, char **env)
+static char	*dollar(char **str, int *i, char **env)
 {
 	int		j;
 	char	*val;

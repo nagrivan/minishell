@@ -6,7 +6,7 @@
 #    By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/24 19:45:52 by nagrivan          #+#    #+#              #
-#    Updated: 2021/11/25 19:04:50 by nagrivan         ###   ########.fr        #
+#    Updated: 2021/12/03 13:25:21 by ralverta         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,8 +27,8 @@ SRCS		=	main.c \
 				my_export.c		exp_uns_utils.c		my_pwd.c			my_unset.c \
 				my_exit.c \
 				my_pipe.c		my_redirections.c	start_minishell.c	my_signal.c\
-				dollar.c		func.c				parser.c			printf_node.c\
-				quotes.c		errors.c			dollar_adds.c
+				dollar.c		parser.c			argv_redir.c		nodes.c\
+				quotes.c		errors.c			dollar_adds.c		utils.c\
 
 OBJS_DIRS	=	.objs/
 
@@ -38,7 +38,7 @@ INCLUDES	= minishell.h
 
 CC	= gcc
 
-CFLAGS	= -g #-fsanitize=address -Wall -Wextra -Werror
+CFLAGS	= -g -fsanitize=address -Wall -Wextra -Werror
 
 LDFLAGS		= -L${HOME}/.brew/opt/readline/lib/
 

@@ -116,24 +116,8 @@ void	signal_on_her(void);
 /*
 	Функции парсера:
 */
-char	*dollar(char **str, int *i, char **env);
-char	**clean_tokens(char **tokens, int num);
-char**	trim_tokens(char **str);
-void	num_of_redir(char **str, t_all *tmp);
-void	num_of_argv(char **str, t_all *tmp);
-void	free_split(char **s);
-int		ft_strcmp(char *s1, char *s2);
-void	fill_argv(char **tokens, t_all *tmp);
-void	fill_redir(char **tokens, t_all *node);
 char	*env_variables(char *str, char **env);
-int		tokens_number(char	*str);
-char	*new_token(char *start, char *end);
-char	**split_tokens(char *str, int num);
-int		find_pipe(char **tokens);
-void	fill_new_node(char **tokens, t_all **all, char **env);
 void	parser(char **str, char **env, t_all **all);
-void	free_struct(t_all **all);
-t_all	*init_struct_sanya(char **env);
 char	**init_env(char **env);
 //
 int		mini_preparser(char *str);
@@ -142,6 +126,21 @@ int		valid_sym(char c);
 char	*swap(char **str, char *val, int *i, int j);
 char	*get_env(char **env, char *arg);
 
-void printf_node(t_all *all);
+int		quotes_or_not(char *token);
+char	*clean_all_quotes(char *token);
+
+int		find_pipe(char **tokens);
+char	*new_token(char *start, char *end);
+int		ft_strcmp(char *s1, char *s2);
+void	free_struct(t_all **all);
+void	free_split(char **s);
+
+void	num_of_redir(char **str, t_all *tmp);
+void	num_of_argv(char **str, t_all *tmp);
+void	fill_argv(char **tokens, t_all *tmp);
+void	fill_redir(char **tokens, t_all *node);
+
+void	fill_new_node(char **tokens, t_all **all, char **env);
+char	**trim_tokens(char **str);
 
 #endif

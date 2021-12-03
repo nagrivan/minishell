@@ -1,10 +1,22 @@
-# include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   quotes.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ralverta <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/03 15:42:45 by ralverta          #+#    #+#             */
+/*   Updated: 2021/12/03 15:42:48 by ralverta         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-static char	*cleaning(char *str, int first/*1 кавычка*/, int last/*последняя кавычка*/)
+#include "minishell.h"
+
+static char	*cleaning(char *str, int first, int last)
 {
-	char *res;
-	char *tmp;
-	char *strdup;
+	char	*res;
+	char	*tmp;
+	char	*strdup;
 
 	res = 0;
 	str[first] = 0;
@@ -25,7 +37,7 @@ static char	*cleaning(char *str, int first/*1 кавычка*/, int last/*пос
 		free(tmp);
 		free(strdup);
 	}
-	return res;
+	return (res);
 }
 
 static char	*single_quotes(char *str, int *i, char *token)
@@ -33,16 +45,17 @@ static char	*single_quotes(char *str, int *i, char *token)
 	int		first;
 	int		last;
 	char	*res;
+	char	*tmp;
 
-	char *tmp = ft_strdup(str);
+	tmp = ft_strdup(str);
 	if (str != token)
 		free(str);
 	first = *i;
 	while (tmp[first] != '\'')
-		first++; // нашли 1 кавычку
+		first++;
 	last = first + 1;
 	while (tmp[last] != '\'')
-		last++; // нашли 2 кавычку
+		last++;
 	res = cleaning(tmp, first, last);
 	*i = last - 1;
 	free(tmp);
@@ -54,28 +67,28 @@ static char	*double_quotes(char *str, int *i, char *token)
 	int		first;
 	int		last;
 	char	*res;
+	char	*tmp;
 
-	char *tmp = ft_strdup(str);
+	tmp = ft_strdup(str);
 	if (str != token)
 		free(str);
 	first = *i;
 	while (tmp[first] != '\"')
-		first++; // нашли 1 кавычку
+		first++;
 	last = first + 1;
 	while (tmp[last] != '\"')
-		last++; // нашли 2 кавычку
+		last++;
 	res = cleaning(tmp, first, last);
 	*i = last - 1;
 	free(tmp);
 	return (res);
 }
 
-static char *clean_all_quotes(char *token)
+char	*clean_all_quotes(char *token)
 {
-	int i;
-	int prev_i;
-	char *res;
-	/*char *tmp;*/
+	int		i;
+	int		prev_i;
+	char	*res;
 
 	i = 0;
 	res = token;
@@ -89,12 +102,12 @@ static char *clean_all_quotes(char *token)
 		if (i == prev_i)
 			i++;
 	}
-	return res;
+	return (res);
 }
 
-static int quotes_or_not(char *token)
+int	quotes_or_not(char *token)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (token[i])
@@ -104,26 +117,4 @@ static int quotes_or_not(char *token)
 		i++;
 	}
 	return (0);
-}
-
-char **clean_tokens(char **tokens, int num)
-{
-	int i;
-	char **result;
-
-	i = -1;
-	result = malloc(sizeof(char*) * (num + 1));
-	while (++i < num + 1)
-		result[i] = 0;
-	i = 0;
-	while (tokens[i])
-	{
-		if (quotes_or_not(tokens[i]))
-			result[i] = clean_all_quotes(tokens[i]);
-		else
-			result[i] = ft_strdup(tokens[i]);
-		i++;
-	}
-	free_split(tokens);
-	return (result);
 }
