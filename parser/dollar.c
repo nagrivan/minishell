@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dollar.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralverta <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 12:54:17 by ralverta          #+#    #+#             */
-/*   Updated: 2021/12/02 12:54:27 by ralverta         ###   ########.fr       */
+/*   Updated: 2021/12/02 19:51:22 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static char	*dollar_question(char **str, int *i, int j)
 	char	*number;
 
 	(*i) += 2;
-	number = ft_itoa(exit_status);
+	number = ft_itoa(g_exit_status);
 	arg = swap(str, number, i, j);
 	free(number);
 	(*i)--;

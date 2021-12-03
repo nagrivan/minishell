@@ -6,7 +6,7 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 15:06:55 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/12/02 19:51:03 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/12/03 21:40:16 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	end_command(int count_pipe, int *tmp_fd)
 	while (++i <= count_pipe)
 	{
 		signal_off();
-		if (WIFSIGNALED(status))
+		if (WIFSIGNALED(status)) //проблема с одним билдином
 			signal_dother(status);
 		else
 			if (count_pipe || WEXITSTATUS(status))

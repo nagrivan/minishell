@@ -100,7 +100,7 @@ void	fill_argv(char **tokens, t_all *node)
 	int	i;
 	int	j;
 
-	printf("NUM_ARGV = %d\n", node->num_argv);
+	// printf("NUM_ARGV = %d\n", node->num_argv);
 	node->argv = malloc(sizeof(char *) * (node->num_argv + 1));
 	node->argv[node->num_argv] = 0;
 	i = 0;
