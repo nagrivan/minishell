@@ -118,10 +118,48 @@ t_all	*init_struct(char **env)
 	return (tmp);
 }
 
+char	*get_readline(char *str)
+{
+	str = readline("minishell$ ");
+	if (str)
+	{
+		if (str && *str)
+			add_history(str);
+	}
+	else
+	{
+		rl_on_new_line();
+		rl_redisplay();
+		write(1, "\033[Aexit\n", 9);
+		exit(0);
+	}
+	return (str);
+}
+
+int		poihali(char **str, char ***tmp_env, t_all **all) {
+		if (mini_preparser(*str))
+		{
+			free(*str);
+			return (1);
+		}
+		parser(str, *tmp_env, all);
+		start_minishell(*all);
+		if (*tmp_env)
+			free_split(*tmp_env);
+		*tmp_env = ((*all)->env);
+		if (!*tmp_env)
+			printf("minishell %s\n", strerror(errno));
+		if (*str)
+			free(*str);
+		free_struct(all);
+		return (0);
+}
+
 int	main(int argc, char **argv, char **env)
 {
 	char		*str;
-	char		**tmp_env; t_all		*all;
+	char		**tmp_env;
+	t_all		*all;
 
 	(void)argc;
 	(void)argv;
@@ -133,60 +171,14 @@ int	main(int argc, char **argv, char **env)
 		printf("minishell %s\n", strerror(errno));
 		return (errno);
 	}
-	init_shlvl(&tmp_env); // leaks
+	init_shlvl(&tmp_env);
 	signal_on();
 	while (1)
 	{
-		/*all = init_struct(tmp_env);*/
-		/*if (!all)*/
-		/*{*/
-			/*ft_free(tmp_env);*/
-			/*return (errno);*/
-		/*}*/
-		// str = readline("☠️  $ ");
-		str = readline("minishell ");
-		if (str)
-		{
-			if (str && *str)
-				add_history(str);
-		}
-		else
-		{
-			rl_on_new_line();
-			rl_redisplay();
-			write(1, "\033[Aexit\n", 9);
-			exit(0);
-		}
-		/* Здесь есть парсер.*/
-		/*printf("|%s|\n", str);*/
-		if (mini_preparser(str))
-		{
-			free(str);
+		str = get_readline(str);
+		if (poihali(&str, &tmp_env, &all) == 1)
 			continue ;
-		}
-		parser(&str, tmp_env, &all);
-		/*А здесть нет. */
-		start_minishell(all);
-		if (tmp_env)
-			free_split(tmp_env);
-		tmp_env = (all->env);
-		if (!tmp_env)
-			printf("minishell %s\n", strerror(errno));
-		if (str)
-			free(str);
-
-		t_all *all_s = all;
-		while (all_s)
-		{
-			ft_free(all_s->argv);
-			// ft_free(all->env);
-			all_s = all_s->next;
-			// free(tmp);
-		}
-		free_struct(&all);
-		// system("leaks minishell");// для проверки утечек
 	}
 	clear_history();
-	/*ft_free(tmp_env);*/
 	return (0);
 }

@@ -54,7 +54,7 @@ int	ft_strcmp(char *s1, char *s2)
 
 void	free_struct(t_all **all)
 {
-	int	i;
+	int		i;
 
 	if ((*all)->next)
 		free_struct(&(*all)->next);
@@ -65,6 +65,7 @@ void	free_struct(t_all **all)
 			free((*all)->redir[i++].filename);
 		free((*all)->redir);
 	}
+	ft_free((*all)->argv);
 	if ((*all)->pipe != 1)
 		ft_free((*all)->env);
 	free(*all);

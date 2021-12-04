@@ -100,6 +100,7 @@ void	init_shlvl(char ***env);
 void	start_minishell(t_all *all);
 int		create_path(t_all *all);
 int		is_bildins(t_all *all);
+int		one_command(t_all *all);
 /*
 	Редиректы и пайпы
 */

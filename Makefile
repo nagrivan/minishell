@@ -27,7 +27,7 @@ SRCS		=	main.c \
 				my_export.c		exp_uns_utils.c		my_pwd.c			my_unset.c \
 				my_exit.c		cd_utils_2.c		sort.c\
 				\
-				my_heredoc.c	my_heredoc_sign.c\
+				my_heredoc.c	my_heredoc_sign.c	work_patch.c		one_command.c\
 				my_pipe.c		my_redirections.c	start_minishell.c	my_signal.c\
 				\
 				dollar.c		parser.c			argv_redir.c		nodes.c\
@@ -41,7 +41,7 @@ INCLUDES	= minishell.h
 
 CC	= gcc
 
-CFLAGS	= -g #-fsanitize=address -Wall -Wextra -Werror
+CFLAGS	= -g -fsanitize=address -Wall -Wextra -Werror
 
 LDFLAGS		= -L${HOME}/.brew/opt/readline/lib/
 
