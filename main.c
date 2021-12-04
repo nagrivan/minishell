@@ -29,95 +29,6 @@ void	ft_free(char **my_text)
 		free(my_text);
 }
 
-char	*get_value(char *str, int *index)
-{
-	int	i;
-
-	i = 0;
-	while (str && str[i] != '=')
-		i++;
-	*index = ++i;
-	return (str + i);
-}
-
-void	init_shlvl(char ***env)
-{
-	int		i;
-	int		numb;
-	int		len;
-	char	*str;
-	char	*number;
-
-	i = check_exp("SHLVL=", *(env), 6);
-	if (i != -1)
-	{
-		numb = ft_atoi(get_value((*env)[i], &len));
-		str = ft_substr((*env)[i], 0, len);
-		number = ft_itoa(++numb);
-		free((*env)[i]);
-		(*env)[i] = ft_strjoin(str, number);
-		free(str);
-		free(number);
-	}
-}
-
-char	**init_env(char **env)
-{
-	int		i;
-	int		size;
-	char	**result;
-	char	*free_tmp;
-
-	i = -1;
-	size = num_argv(env);
-	result = (char **)ft_calloc(sizeof(char *), size + 1);
-	if (!result)
-		return (NULL);
-	while (env[++i])
-	{
-		free_tmp = result[i];
-		result[i] = ft_strdup(env[i]);
-		free(free_tmp);
-		if (!result[i])
-		{
-			printf("minishell %s\n", strerror(errno));
-			free_split(result);
-			return (NULL);
-		}
-	}
-	result[i] = NULL;
-	return (result);
-}
-
-t_all	*init_struct(char **env)
-{
-	t_all	*tmp;
-
-	tmp = (t_all *)malloc(sizeof(t_all));
-	tmp->env = init_env(env);
-	tmp->argv = NULL;
-	tmp->dother = 0;
-	tmp->fd[0] = dup(STDIN_FILENO);
-	if (tmp->fd[0] == -1)
-	{
-		printf("minishell %s\n", strerror(errno));
-		return (NULL);
-	}
-	tmp->fd[1] = dup(STDOUT_FILENO);
-	if (tmp->fd[1] == -1)
-	{
-		printf("minishell %s\n", strerror(errno));
-		return (NULL);
-	}
-	tmp->next = NULL;
-	tmp->num_redir = 0;
-	tmp->path = NULL;
-	tmp->pipe = 0;
-	tmp->redir = NULL;
-	tmp->status = 0;
-	return (tmp);
-}
-
 char	*get_readline(char *str)
 {
 	str = readline("minishell$ ");
@@ -136,23 +47,24 @@ char	*get_readline(char *str)
 	return (str);
 }
 
-int		poihali(char **str, char ***tmp_env, t_all **all) {
-		if (mini_preparser(*str))
-		{
-			free(*str);
-			return (1);
-		}
-		parser(str, *tmp_env, all);
-		start_minishell(*all);
-		if (*tmp_env)
-			free_split(*tmp_env);
-		*tmp_env = ((*all)->env);
-		if (!*tmp_env)
-			printf("minishell %s\n", strerror(errno));
-		if (*str)
-			free(*str);
-		free_struct(all);
-		return (0);
+int	poihali(char **str, char ***tmp_env, t_all **all)
+{
+	if (mini_preparser(*str))
+	{
+		free(*str);
+		return (1);
+	}
+	parser(str, *tmp_env, all);
+	start_minishell(*all);
+	if (*tmp_env)
+		free_split(*tmp_env);
+	*tmp_env = ((*all)->env);
+	if (!*tmp_env)
+		printf("minishell %s\n", strerror(errno));
+	if (*str)
+		free(*str);
+	free_struct(all);
+	return (0);
 }
 
 int	main(int argc, char **argv, char **env)

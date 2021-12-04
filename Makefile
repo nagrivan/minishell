@@ -25,7 +25,7 @@ VPATH	=	${SRCS_DIRS}
 SRCS		=	main.c \
 				my_cd.c			cd_utils.c			my_echo.c			my_env.c \
 				my_export.c		exp_uns_utils.c		my_pwd.c			my_unset.c \
-				my_exit.c		cd_utils_2.c		sort.c\
+				my_exit.c		cd_utils_2.c		sort.c				init.c\
 				\
 				my_heredoc.c	my_heredoc_sign.c	work_patch.c		one_command.c\
 				my_pipe.c		my_redirections.c	start_minishell.c	my_signal.c\
@@ -41,8 +41,7 @@ INCLUDES	= minishell.h
 
 CC	= gcc
 
-CFLAGS	= -g -fsanitize=address #-Wall -Wextra -Werror
-
+CFLAGS	= -Wall -Wextra -Werror #-g -fsanitize=address 
 LDFLAGS		= -L${HOME}/.brew/opt/readline/lib/
 
 CPPFLAGS	= -I${HOME}/.brew/opt/readline/include/ -I./

@@ -20,15 +20,8 @@ static void	my_sigint_her(int signal)
 	exit(130);
 }
 
-static void	my_sigquit_her(int signal)
-{
-	(void)signal;
-	write(0, "\b\b  \b\b", 6);
-	g_exit_status = 0;
-}
-
 void	signal_on_her(void)
 {
-	signal(SIGQUIT, my_sigquit_her);
+	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, my_sigint_her);
 }

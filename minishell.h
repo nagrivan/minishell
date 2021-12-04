@@ -80,7 +80,6 @@ char	**sort_all(char **env, int len);
 */
 int		num_argv(char **argv);
 void	ft_free(char **my_text);
-t_all	*init_struct(char **env);
 int		write_env(char *result, t_all *all);
 void	ft_print(char **my_text);
 int		check_env(char *argv, char **env);
@@ -90,6 +89,8 @@ int		my_export_argv(char *argv);
 size_t	check_equals(char *argv);
 
 void	init_shlvl(char ***env);
+t_all	*init_struct(char **env);
+char	**init_env(char **env);
 
 /*
 	Запуск команд
