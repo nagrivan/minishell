@@ -55,7 +55,7 @@ static void	*mem_free(char **words, unsigned int i)
 	return (NULL);
 }
 
-char		**ft_split(char const *s, char c)
+char	**ft_split(char const *s, char c)
 {
 	char			**words;
 	unsigned int	i;
@@ -67,7 +67,8 @@ char		**ft_split(char const *s, char c)
 	count = num_of_words((char *)s, c);
 	i = 0;
 	j = 0;
-	if (!(words = (char **)malloc(sizeof(char *) * (count + 1))))
+	words = (char **)malloc(sizeof(char *) * (count + 1));
+	if (!words)
 		return (NULL);
 	while (i < count)
 	{

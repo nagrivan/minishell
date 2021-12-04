@@ -26,7 +26,7 @@ static int	match(char c, char const *set)
 	return (0);
 }
 
-char		*ft_strtrim(char const *s1, char const *set)
+char	*ft_strtrim(char const *s1, char const *set)
 {
 	int		i;
 	int		j;
@@ -40,7 +40,8 @@ char		*ft_strtrim(char const *s1, char const *set)
 		i++;
 	if (i == j + 1)
 	{
-		if (!(nullstr = (char *)malloc(1)))
+		nullstr = (char *)malloc(1);
+		if (!nullstr)
 			return (NULL);
 		*nullstr = '\0';
 		return (nullstr);

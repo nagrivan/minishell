@@ -28,13 +28,13 @@
 # include <unistd.h>
 # include <string.h>
 
-# define	STDIN 0
-# define	STDOUT 1
+# define STDIN 0
+# define STDOUT 1
 
-# define	ONE_FROM 0 // <
-# define	ONE_TO 1 // >
-# define	DOB_TO 2 // >>
-# define	HEREDOC 3 // <<
+# define ONE_FROM 0 // <
+# define ONE_TO 1 // >
+# define DOB_TO 2 // >>
+# define HEREDOC 3 // <<
 
 int	g_exit_status;
 
@@ -60,8 +60,6 @@ typedef struct s_all
 	int				pipe;
 	int				status;
 	struct s_all	*next;
-	//
-	//
 }	t_all;
 
 /*
@@ -74,7 +72,6 @@ int		my_exit(t_all *all);
 int		my_export(t_all *all);
 int		my_pwd(void);
 int		my_unset(t_all *all);
-
 
 int		write_pwd_oldpwd(t_all *all, char *old_pwd, char *pwd);
 char	**sort_all(char **env, int len);

@@ -24,7 +24,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	if (!s1 || !s2)
 		return (NULL);
 	size = ft_strlen(s1) + ft_strlen(s2);
-	if (!(sum = (char *)malloc(size + 1)))
+	sum = (char *)malloc(size + 1);
+	if (!sum)
 		return (NULL);
 	while (s1[i])
 	{
@@ -32,11 +33,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		i++;
 	}
 	while (s2[j])
-	{
-		sum[i] = s2[j];
-		i++;
-		j++;
-	}
+		sum[i++] = s2[j++];
 	sum[i] = '\0';
 	return (sum);
 }

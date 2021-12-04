@@ -42,7 +42,8 @@ char	*ft_itoa(int n)
 	char	*str;
 	int		i;
 
-	if (!(str = (char *)malloc(num_of_dig(n) + 1)))
+	str = (char *)malloc(num_of_dig(n) + 1);
+	if (!str)
 		return (NULL);
 	i = num_of_dig(n) - 1;
 	if (n < 0)
