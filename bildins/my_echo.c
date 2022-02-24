@@ -6,19 +6,11 @@
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:13:35 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/10/16 13:45:18 by nagrivan         ###   ########.fr       */
+/*   Updated: 2021/12/02 14:44:50 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-/*
-	Подумать о сокращении функции text_write
-	(возможно, перенести обработку $? в парсер)
-	проверено Norminette
-	check leaks
-	+++
-*/
 
 void	text_write(int flag, char **text)
 {

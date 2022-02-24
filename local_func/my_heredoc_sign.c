@@ -1,26 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   my_pwd.c                                           :+:      :+:    :+:   */
+/*   my_heredoc_sign.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/09/07 16:11:11 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/12/02 14:44:32 by nagrivan         ###   ########.fr       */
+/*   Created: 2021/11/14 16:52:46 by nagrivan          #+#    #+#             */
+/*   Updated: 2021/11/14 16:53:22 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
-int	my_pwd(void)
+static void	my_sigint_her(int signal)
 {
-	char	*pwd;
+	(void)signal;
+	write(0, "\b\b  \b\b", 6);
+	g_exit_status = 130;
+	exit(130);
+}
 
-	pwd = NULL;
-	pwd = getcwd(pwd, 1024);
-	if (!pwd)
-		return (1);
-	ft_putendl_fd(pwd, 1);
-	free(pwd);
-	return (0);
+void	signal_on_her(void)
+{
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, my_sigint_her);
 }

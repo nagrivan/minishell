@@ -1,26 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   my_pwd.c                                           :+:      :+:    :+:   */
+/*   exp_uns_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nagrivan <nagrivan@21-school.ru>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/09/07 16:11:11 by nagrivan          #+#    #+#             */
-/*   Updated: 2021/12/02 14:44:32 by nagrivan         ###   ########.fr       */
+/*   Created: 2021/10/27 14:14:17 by nagrivan          #+#    #+#             */
+/*   Updated: 2021/10/27 14:15:07 by nagrivan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	my_pwd(void)
+size_t	check_equals(char *argv)
 {
-	char	*pwd;
+	size_t		i;
 
-	pwd = NULL;
-	pwd = getcwd(pwd, 1024);
-	if (!pwd)
-		return (1);
-	ft_putendl_fd(pwd, 1);
-	free(pwd);
-	return (0);
+	i = 0;
+	while (argv[i] && argv[i] != '=')
+		i++;
+	return (i);
+}
+
+int	check_exp(char *argv, char **env, size_t size)
+{
+	int		res;
+	int		i;
+
+	i = 0;
+	while (env[i])
+	{
+		if (!(ft_strchr(env[i], '=')))
+			size = ft_strlen(env[i]);
+		res = ft_strncmp(env[i], argv, size);
+		if (res == 0)
+			break ;
+		i++;
+	}
+	if (res != 0)
+		return (-1);
+	return (i);
 }
